@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SMaP_APP.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,7 +28,12 @@ namespace SMaP_APP
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DataContext = new ViewModel.LoginViewModel();
+            this.DataContext = new LoginViewModel();
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            ((LoginViewModel)this.DataContext).Password = PasswordBox.Password;
         }
     }
 }

@@ -1,38 +1,49 @@
-﻿using System;
+﻿using SMaP_APP.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using SMaP_APP.Model;
+using System.Windows;
+using SMaP_APP.Commands;
 
 namespace SMaP_APP.ViewModel
 {
     class LoginViewModel
     {
-        private DAL.UsersDAL UsersDAL { get; set; }
-        private Model.Users user { get; set; }
-        public Commands.RelayCommand LoginCommand { get; set; }
-        public string userName { get; set; }
-        public string password { get; set; }
+        private UsersDAL UsersDAL { get; set; }
+        private Users User { get; set; }
+        public RelayCommand LoginCommand { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
 
+        private static SMaPEntities _dbContext = null;
+        public static SMaPEntities DbContext
+        {
+            get
+            {
+                if (_dbContext == null)
+                    _dbContext = new SMaPEntities();
+
+                return _dbContext;
+            }
+        }
 
         public LoginViewModel()
         {
-            this.UsersDAL = new DAL.UsersDAL();
-            LoginCommand = new Commands.RelayCommand(LoginUser);
+            this.UsersDAL = new UsersDAL(DbContext);
+            LoginCommand = new RelayCommand(LoginUser, CanLogin);
         }
 
         public void LoginUser(object NA)
         {
-            string passwordHash = ComputeSha256Hash(password);
-            if (UsersDAL != null)
-            {
-                user = UsersDAL.GetUserAuthenticate(userName, passwordHash);
-            }
+            string passwordHash = ComputeSha256Hash(Password);
+            User = UsersDAL.FindAll(x => x.UserName == UserName && x.UserPassword == passwordHash).FirstOrDefault();
+            if (User == null)
+                MessageBox.Show("Ismeretlen felhasználónév vagy jelszó!", "Sikertelen belépés", MessageBoxButton.OK, MessageBoxImage.Error);
             else
-            {
-                throw new NullReferenceException("No UsersDAL Initialized!");
-            }
+                MessageBox.Show("Sikeres login");
         }
 
         static string ComputeSha256Hash(string rawData)
@@ -51,6 +62,10 @@ namespace SMaP_APP.ViewModel
                 }
                 return builder.ToString();
             }
+        }
+        private bool CanLogin(object NA)
+        {
+            return !(String.IsNullOrEmpty(UserName) || String.IsNullOrEmpty(Password));
         }
     }
 }

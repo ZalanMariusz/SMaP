@@ -12,7 +12,7 @@ namespace SMaP_APP.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Users
+    public partial class Users : IBaseModel
     {
         public int ID { get; set; }
         public string NEPTUN { get; set; }
@@ -22,7 +22,6 @@ namespace SMaP_APP.Model
         public string Email { get; set; }
         public string UserName { get; set; }
         public string UserPassword { get; set; }
-        public Nullable<double> UserPasswordSalt { get; set; }
         public Nullable<bool> Deleted { get; set; }
     }
 }

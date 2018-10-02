@@ -4,9 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SMaPModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'SMaP.dbo.Users' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+    <Schema Namespace="SMaPModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="ID" />
@@ -19,30 +17,18 @@ warning 6002: The table/view 'SMaP.dbo.Users' does not have a primary key define
           <Property Name="Email" Type="nvarchar" MaxLength="120" />
           <Property Name="UserName" Type="nvarchar" MaxLength="120" />
           <Property Name="UserPassword" Type="nvarchar" MaxLength="200" />
-          <Property Name="UserPasswordSalt" Type="float" />
           <Property Name="Deleted" Type="bit" />
         </EntityType>
         <EntityContainer Name="SMaPModelStoreContainer">
-          <EntitySet Name="Users" EntityType="Self.Users" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Users].[ID] AS [ID], 
-    [Users].[NEPTUN] AS [NEPTUN], 
-    [Users].[FirstName] AS [FirstName], 
-    [Users].[LastName] AS [LastName], 
-    [Users].[FullName] AS [FullName], 
-    [Users].[Email] AS [Email], 
-    [Users].[UserName] AS [UserName], 
-    [Users].[UserPassword] AS [UserPassword], 
-    [Users].[UserPasswordSalt] AS [UserPasswordSalt], 
-    [Users].[Deleted] AS [Deleted]
-    FROM [dbo].[Users] AS [Users]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SMaPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="SMaPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="SMaPModel.Users" />
+        </EntityContainer>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="ID" />
@@ -55,12 +41,8 @@ warning 6002: The table/view 'SMaP.dbo.Users' does not have a primary key define
           <Property Name="Email" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
           <Property Name="UserName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
           <Property Name="UserPassword" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="UserPasswordSalt" Type="Double" />
           <Property Name="Deleted" Type="Boolean" />
         </EntityType>
-        <EntityContainer Name="SMaPEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Users" EntityType="Self.Users" />
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -70,16 +52,15 @@ warning 6002: The table/view 'SMaP.dbo.Users' does not have a primary key define
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="SMaPModel.Users">
               <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="NEPTUN" ColumnName="NEPTUN" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
-                <ScalarProperty Name="UserPasswordSalt" ColumnName="UserPasswordSalt" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="NEPTUN" ColumnName="NEPTUN" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,36 +1,12 @@
-﻿using System;
-using System.Data.Entity;
-using System.Linq;
+﻿using SMaP_APP.Model;
 
 namespace SMaP_APP.DAL
 {
-    public class UsersDAL
+    public class UsersDAL : GenericDAL<Users>
     {
-        public UsersDAL()
+        public UsersDAL(SMaPEntities applicationDbContext): base(applicationDbContext)
         {
-               
-        }
-        public DbSet<Model.Users> GetUsers()
-        {
-            using (var Context = new Model.SMaPEntities())
-            {
-                return Context.Users;
-            }
-        }
-        public Model.Users GetUserById(int ID)
-        {
-            using (var Context = new Model.SMaPEntities())
-            {
-                return Context.Users.Where(x=>x.ID==ID).FirstOrDefault();
-            }
-        }
-
-        public Model.Users GetUserAuthenticate(string userName, string passwordHash)
-        {
-            using (var Context = new Model.SMaPEntities())
-            {
-                return Context.Users.Where(x => x.UserName == userName && x.UserPassword==passwordHash).FirstOrDefault();
-            }
+            
         }
     }
 }

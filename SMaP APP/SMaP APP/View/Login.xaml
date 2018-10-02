@@ -5,14 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP"
         mc:Ignorable="d"
-        Title="Login" Height="166.072" Width="439.908" Loaded="Window_Loaded">
+        Title="Login" Height="166.072" Width="439.908" Loaded="Window_Loaded"
+        FocusManager.FocusedElement="{Binding ElementName=userNameTB}"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-        <TextBox Text="{Binding userName}" HorizontalAlignment="Left" Height="22" Margin="130,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="292"/>
-        <PasswordBox  HorizontalAlignment="Left" Height="22" Margin="130,76,0,0" VerticalAlignment="Top" Width="292"/>
+        <TextBox Name="userNameTB" Text="{Binding UserName}" HorizontalAlignment="Left" Height="22" Margin="130,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="292"/>
+        <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Name="PasswordBox" HorizontalAlignment="Left" Height="22" Margin="130,76,0,0" VerticalAlignment="Top" Width="292" PasswordChar="*"/>
         <Label Content="Felhasználónév:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="115"/>
         <Label Content="Jelszó" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Width="115" RenderTransformOrigin="0.51,0.192"/>
         <Label Content="Belépési adatok" HorizontalAlignment="Left" Margin="130,10,0,0" VerticalAlignment="Top" Width="115"/>
-        <Button Content="Belépés" HorizontalAlignment="Left" Height="21" Margin="315,103,0,0" VerticalAlignment="Top" Width="107"/>
+        <Button IsDefault="True" Command="{Binding LoginCommand}" Content="Belépés" HorizontalAlignment="Left" Height="21" Margin="315,103,0,0" VerticalAlignment="Top" Width="107"/>
 
     </Grid>
 </Window>
