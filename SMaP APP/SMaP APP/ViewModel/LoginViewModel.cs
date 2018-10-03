@@ -7,13 +7,16 @@ using System.Text;
 using SMaP_APP.Model;
 using System.Windows;
 using SMaP_APP.Commands;
+using SMaP_APP.View;
+using System.Windows.Input;
 
 namespace SMaP_APP.ViewModel
 {
-    class LoginViewModel
+    class LoginWindowViewModel:BaseViewModel
     {
         private UsersDAL UsersDAL { get; set; }
         private Users User { get; set; }
+        private LoginWindow LoginWindow { get; set; }
         public RelayCommand LoginCommand { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
@@ -25,25 +28,27 @@ namespace SMaP_APP.ViewModel
             {
                 if (_dbContext == null)
                     _dbContext = new SMaPEntities();
-
                 return _dbContext;
             }
         }
 
-        public LoginViewModel()
+        public LoginWindowViewModel(LoginWindow loginWindow)
         {
             this.UsersDAL = new UsersDAL(DbContext);
-            LoginCommand = new RelayCommand(LoginUser, CanLogin);
+            this.LoginCommand = new RelayCommand(LoginUser, CanLogin);
+            this.SourceWindow = loginWindow;
         }
 
         public void LoginUser(object NA)
         {
             string passwordHash = ComputeSha256Hash(Password);
-            User = UsersDAL.FindAll(x => x.UserName == UserName && x.UserPassword == passwordHash).FirstOrDefault();
+            User = UsersDAL.FindAll(x => String.Equals(x.UserName,UserName) && x.UserPassword == passwordHash).FirstOrDefault();
             if (User == null)
                 MessageBox.Show("Ismeretlen felhasználónév vagy jelszó!", "Sikertelen belépés", MessageBoxButton.OK, MessageBoxImage.Error);
             else
-                MessageBox.Show("Sikeres login");
+            {
+                SwitchWindows(new TeacherWindow());
+            }
         }
 
         static string ComputeSha256Hash(string rawData)

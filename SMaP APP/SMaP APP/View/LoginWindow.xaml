@@ -1,4 +1,4 @@
-﻿<Window x:Class="SMaP_APP.MainWindow"
+﻿<Window x:Class="SMaP_APP.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,7 +14,7 @@
         <Label Content="Felhasználónév:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="115"/>
         <Label Content="Jelszó" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Width="115" RenderTransformOrigin="0.51,0.192"/>
         <Label Content="Belépési adatok" HorizontalAlignment="Left" Margin="130,10,0,0" VerticalAlignment="Top" Width="115"/>
-        <Button IsDefault="True" Command="{Binding LoginCommand}" Content="Belépés" HorizontalAlignment="Left" Height="21" Margin="315,103,0,0" VerticalAlignment="Top" Width="107"/>
+        <Button IsDefault="True" Command="{Binding LoginCommand}"  Content="Belépés" HorizontalAlignment="Left" Height="21" Margin="315,103,0,0" VerticalAlignment="Top" Width="107"/>
 
     </Grid>
 </Window>

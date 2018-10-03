@@ -9,7 +9,7 @@ CREATE TABLE Users(
 	,LastName nvarchar(120) NULL -- vezetéknév
 	,FullName nvarchar(240) NULL 
 	,Email nvarchar(120) NULL
-	,UserName nvarchar(120) NULL
+	,UserName nvarchar(120) COLLATE HUNGARIAN_CS_AI NULL
 	,UserPassword nvarchar(200) NULL
 	,Deleted bit
 	INDEX NCX_FullName(FullName)

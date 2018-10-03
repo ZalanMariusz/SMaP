@@ -19,21 +19,21 @@ namespace SMaP_APP
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LoginWindow : Window
     {
-        public MainWindow()
+        public LoginWindow()
         {
             InitializeComponent();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DataContext = new LoginViewModel();
+            this.DataContext = new LoginWindowViewModel(this);
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            ((LoginViewModel)this.DataContext).Password = PasswordBox.Password;
+            ((LoginWindowViewModel)this.DataContext).Password = PasswordBox.Password;
         }
     }
 }
