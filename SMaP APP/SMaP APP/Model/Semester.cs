@@ -12,25 +12,22 @@ namespace SMaP_APP.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Users : IBaseModel
+    public partial class Semester : IBaseModel
     {
-        public Users()
+        public Semester()
         {
-            this.Student = new HashSet<Student>();
-            this.Teacher = new HashSet<Teacher>();
+            this.SessionGroup = new HashSet<SessionGroup>();
         }
     
         public int ID { get; set; }
-        public string NEPTUN { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string UserName { get; set; }
-        public string UserPassword { get; set; }
+        public string SemesterName { get; set; }
+        public int SemesterType { get; set; }
+        public Nullable<bool> IsActive { get; set; }
+        public System.DateTime StartDate { get; set; }
+        public System.DateTime EndDate { get; set; }
         public bool Deleted { get; set; }
     
-        public virtual ICollection<Student> Student { get; set; }
-        public virtual ICollection<Teacher> Teacher { get; set; }
+        public virtual Dictionary Dictionary { get; set; }
+        public virtual ICollection<SessionGroup> SessionGroup { get; set; }
     }
 }

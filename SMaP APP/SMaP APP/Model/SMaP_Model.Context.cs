@@ -26,5 +26,11 @@ namespace SMaP_APP.Model
         }
     
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Dictionary> Dictionary { get; set; }
+        public virtual DbSet<Semester> Semester { get; set; }
+        public virtual DbSet<SessionGroup> SessionGroup { get; set; }
+        public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<Teacher> Teacher { get; set; }
+        public virtual DbSet<Team> Team { get; set; }
     }
 }

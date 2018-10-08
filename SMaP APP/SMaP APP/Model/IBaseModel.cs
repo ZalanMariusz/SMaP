@@ -9,6 +9,6 @@ namespace SMaP_APP.Model
     public interface IBaseModel
     {
         int ID { get; set; }
-        Nullable<bool> Deleted { get; set; }
+        bool Deleted { get; set; }
     }
 }

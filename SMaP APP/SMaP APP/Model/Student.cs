@@ -12,25 +12,22 @@ namespace SMaP_APP.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Users : IBaseModel
+    public partial class Student : IBaseModel
     {
-        public Users()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Student()
         {
-            this.Student = new HashSet<Student>();
-            this.Teacher = new HashSet<Teacher>();
+            this.Team = new HashSet<Team>();
         }
     
         public int ID { get; set; }
-        public string NEPTUN { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string UserName { get; set; }
-        public string UserPassword { get; set; }
+        public int UserID { get; set; }
+        public int TeamID { get; set; }
         public bool Deleted { get; set; }
     
-        public virtual ICollection<Student> Student { get; set; }
-        public virtual ICollection<Teacher> Teacher { get; set; }
+        public virtual SessionGroup SessionGroup { get; set; }
+        public virtual Users Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Team> Team { get; set; }
     }
 }

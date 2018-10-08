@@ -17,20 +17,15 @@ using System.Windows.Shapes;
 namespace SMaP_APP.View
 {
     /// <summary>
-    /// Interaction logic for TeacherScreen.xaml
+    /// Interaction logic for SemesterWindow.xaml
     /// </summary>
-    public partial class TeacherWindow : Window
+    public partial class SemesterWindow : Window
     {
-        public Teacher _contextTeacher;
-        public TeacherWindow(Teacher contextTeacher)
+
+        public SemesterWindow(Semester semester)
         {
             InitializeComponent();
-            this._contextTeacher = contextTeacher;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.DataContext = new TeacherWindowViewModel(this);
+            this.DataContext = new SemesterWindowViewModel(this,semester);
         }
     }
 }

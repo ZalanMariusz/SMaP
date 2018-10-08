@@ -12,42 +12,51 @@ using System.Windows.Input;
 
 namespace SMaP_APP.ViewModel
 {
-    class LoginWindowViewModel:BaseViewModel
+    class LoginWindowViewModel:BaseViewModel<Users>
     {
-        private UsersDAL UsersDAL { get; set; }
+        //private UsersDAL UsersDAL { get; set; }
         private Users User { get; set; }
         private LoginWindow LoginWindow { get; set; }
         public RelayCommand LoginCommand { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        private static SMaPEntities _dbContext = null;
-        public static SMaPEntities DbContext
-        {
-            get
-            {
-                if (_dbContext == null)
-                    _dbContext = new SMaPEntities();
-                return _dbContext;
-            }
-        }
-
         public LoginWindowViewModel(LoginWindow loginWindow)
         {
-            this.UsersDAL = new UsersDAL(DbContext);
+            this._contextDal = new UsersDAL(DbContext);
             this.LoginCommand = new RelayCommand(LoginUser, CanLogin);
             this.SourceWindow = loginWindow;
         }
 
-        public void LoginUser(object NA)
+        public void LoginUser()
         {
             string passwordHash = ComputeSha256Hash(Password);
-            User = UsersDAL.FindAll(x => String.Equals(x.UserName,UserName) && x.UserPassword == passwordHash).FirstOrDefault();
+            User = _contextDal.FindAll(x => x.UserName==UserName && x.UserPassword == passwordHash).FirstOrDefault();
             if (User == null)
+            {
                 MessageBox.Show("Ismeretlen felhasználónév vagy jelszó!", "Sikertelen belépés", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             else
             {
-                SwitchWindows(new TeacherWindow());
+                var contextTeacher = _dbContext.Teacher.Where(x => x.UserID == User.ID).FirstOrDefault();
+                if (contextTeacher == null)
+                {
+                    var contextStudent= _dbContext.Student.Where(x => x.UserID == User.ID).FirstOrDefault();
+                    if (contextStudent == null)
+                    {
+                        MessageBox.Show("Érvénytelen jogosultság!", "Érvénytelen jogosultság!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        //TODO - show StudenWindow
+                        MessageBox.Show("Diákok In Progress!");
+                    }
+                }
+                else
+                {
+                    SwitchWindows(new TeacherWindow(contextTeacher));
+                }
+                
             }
         }
 
@@ -68,7 +77,7 @@ namespace SMaP_APP.ViewModel
                 return builder.ToString();
             }
         }
-        private bool CanLogin(object NA)
+        private bool CanLogin()
         {
             return !(String.IsNullOrEmpty(UserName) || String.IsNullOrEmpty(Password));
         }

@@ -63,14 +63,39 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Commands\InterFaces\NavigationCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Converters\SemesterIsActiveConverter.cs" />
     <Compile Include="DAL\GenericDAL.cs" />
+    <Compile Include="DAL\SemesterDal.cs" />
+    <Compile Include="DAL\TeacherDAL.cs" />
     <Compile Include="DAL\UsersDAL.cs" />
+    <Compile Include="Model\Dictionary.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\IBaseModel.cs" />
+    <Compile Include="Model\Semester.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SessionGroup.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Student.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Teacher.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Team.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
     <Compile Include="ViewModel\TeacherWindowViewModel.cs" />
+    <Compile Include="ViewModel\ValidationRules\SemesterNameValidation.cs" />
+    <Compile Include="View\SemesterWindow.xaml.cs">
+      <DependentUpon>SemesterWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TeacherWindow.xaml.cs">
       <DependentUpon>TeacherWindow.xaml</DependentUpon>
     </Compile>
@@ -86,6 +111,10 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\SemesterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\TeacherWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

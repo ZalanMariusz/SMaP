@@ -6,6 +6,20 @@
     <edmx:Diagrams>
       <Diagram DiagramId="8d1f6d55341d474294986e3ab160ef22" Name="Diagram1">
         <EntityTypeShape EntityType="SMaPModel.Users" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SMaPModel.Dictionary" Width="1.5" PointX="3.375" PointY="2.5" />
+        <EntityTypeShape EntityType="SMaPModel.Semester" Width="1.5" PointX="5.625" PointY="2.375" />
+        <EntityTypeShape EntityType="SMaPModel.SessionGroup" Width="1.5" PointX="7.875" PointY="2.375" />
+        <EntityTypeShape EntityType="SMaPModel.Student" Width="1.5" PointX="10.125" PointY="4.75" />
+        <EntityTypeShape EntityType="SMaPModel.Teacher" Width="1.5" PointX="10.125" PointY="1.875" />
+        <EntityTypeShape EntityType="SMaPModel.Team" Width="1.5" PointX="12.375" PointY="3.5" />
+        <AssociationConnector Association="SMaPModel.FK_Semester_SemesterType_Dictionary" />
+        <AssociationConnector Association="SMaPModel.FK_SessionGroup_SemesterID_Semester" />
+        <AssociationConnector Association="SMaPModel.FK_Student_DefaultSessionGroupID_SessionGroup" />
+        <AssociationConnector Association="SMaPModel.FK_Teacher_DefaultSessionGroupID_SessionGroup" />
+        <AssociationConnector Association="SMaPModel.FK_Team_SessionGroupID_SessionGroup" />
+        <AssociationConnector Association="SMaPModel.FK_Student_UserID_User" />
+        <AssociationConnector Association="SMaPModel.FK_Team_TeamCaption_Student" />
+        <AssociationConnector Association="SMaPModel.FK_Teacher_UserID_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -5,10 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP.View"
         mc:Ignorable="d"
-        Title="TeacherScreen" Height="300" Width="300"
+        Title="Adminisztráció" Height="600" Width="800"
         ResizeMode="NoResize"
-        WindowState="Maximized" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded"
+        xmlns:conv="clr-namespace:SMaP_APP.Converters"
+        >
+    <Window.Resources>
+        <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />
+    </Window.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition/>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Border
+            BorderThickness="1,0,1,0" BorderBrush="Gray" Grid.ColumnSpan="2"  Width="10" HorizontalAlignment="Center">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,1"  EndPoint="1,1">
+                    <GradientStop Color="Gray" Offset="0.0" />
+                    <GradientStop Color="LightGray" Offset="0.2" />
+                    <GradientStop Color="Gray" Offset="0.8" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Button Command="{Binding SemesterEditCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Content="Kijelölt félév szerkesztése" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="159"/>
+        <Button Command="{Binding SemesterCreateCommand}" Content="Új Félév" HorizontalAlignment="Left" Margin="174,161,0,0" VerticalAlignment="Top" Width="122"/>
+        <Button Command="{Binding SemesterDeleteCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Content="Félév törlése" HorizontalAlignment="Left" Margin="301,161,0,0" VerticalAlignment="Top" Width="81"/>
+        <ListBox Height="123" Margin="10,33,15,0" VerticalAlignment="Top" ItemsSource="{Binding SemesterList}" Name="SemesterLB">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding SemesterName}"/>
+                        <Label Content="{Binding IsActive,Converter={StaticResource SemesterIsActiveConverter}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Label Content="Félévek" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Width="185"/>
+        <ListBox Height="123" Margin="10,217,15,0" VerticalAlignment="Top"/>
+        <Button Content="Csoportok kezelése" HorizontalAlignment="Left" Margin="10,345,0,0" VerticalAlignment="Top" Width="185"/>
+        <Label Content="Félév csoportjai" HorizontalAlignment="Left" Margin="10,186,0,0" VerticalAlignment="Top" Width="185"/>
+        <ListBox Margin="15,33,10,0" Grid.Column="1" Height="491" VerticalAlignment="Top"/>
+        <Label Content="Csoport Diákjai" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Width="185" Grid.Column="1"/>
+        <ListBox Height="123" Margin="10,401,15,0" VerticalAlignment="Top"/>
+        <Button Content="Csapatok kezelése" HorizontalAlignment="Left" Margin="10,529,0,0" VerticalAlignment="Top" Width="185"/>
+        <Label Content="Csapatok kezelése" HorizontalAlignment="Left" Margin="10,370,0,0" VerticalAlignment="Top" Width="185"/>
+        <Button Content="Csoport diákjainak kezelése" HorizontalAlignment="Left" Margin="15,529,0,0" VerticalAlignment="Top" Width="185" Grid.Column="1"/>
+
+
     </Grid>
 </Window>

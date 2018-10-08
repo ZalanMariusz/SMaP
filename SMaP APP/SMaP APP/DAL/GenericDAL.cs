@@ -11,27 +11,26 @@ namespace SMaP_APP.DAL
 {
     public abstract class GenericDAL<TEntity> where TEntity : class, IBaseModel
     {
-        private readonly SMaPEntities applicationDbContext;
+        internal readonly SMaPEntities applicationDbContext;
 
         public GenericDAL(SMaPEntities applicationDbContext)
         {
             this.applicationDbContext = applicationDbContext;
         }
 
-        public List<TEntity> FindAll(Expression<Func<TEntity, bool>> filterExpression)
+        public List<TEntity> FindAll(Expression<Func<TEntity, bool>> filterExpression=null)
         {
             IQueryable<TEntity> entities = applicationDbContext.Set<TEntity>();
             if (filterExpression != null)
             {
                 entities = entities.Where(filterExpression);
             }
-
-            return entities.ToList();
+            return entities.Where(x=>!x.Deleted).ToList();
         }
 
         public virtual TEntity FindById(int id)
         {
-            return applicationDbContext.Set<TEntity>().FirstOrDefault(d => d.ID == id);
+            return applicationDbContext.Set<TEntity>().FirstOrDefault(d => d.ID == id && !d.Deleted);
         }
 
         public virtual int Create(TEntity entity)
@@ -53,12 +52,12 @@ namespace SMaP_APP.DAL
                 throw new ArgumentNullException("entity");
             }
 
-            applicationDbContext.Set<TEntity>().Attach(entity);
-            applicationDbContext.Entry(entity).State = EntityState.Modified;
+            //applicationDbContext.Entry(entity).State = EntityState.Modified;
+            //applicationDbContext.Set<TEntity>().Attach(entity);
             return applicationDbContext.SaveChanges();
         }
 
-        public virtual int Delete(TEntity entity)
+        public virtual int PhysicalDelete(TEntity entity)
         {
             if (entity == null)
             {
@@ -68,6 +67,17 @@ namespace SMaP_APP.DAL
             applicationDbContext.Set<TEntity>().Attach(entity);
             applicationDbContext.Entry(entity).State = EntityState.Deleted;
             return applicationDbContext.SaveChanges();
+        }
+
+        public virtual int LogicalDelete(TEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+
+            entity.Deleted = true;
+            return Update(entity);
         }
     }
 }

@@ -12,25 +12,24 @@ namespace SMaP_APP.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Users : IBaseModel
+    public partial class SessionGroup : IBaseModel
     {
-        public Users()
+        public SessionGroup()
         {
             this.Student = new HashSet<Student>();
-            this.Teacher = new HashSet<Teacher>();
+            this.Teacher1 = new HashSet<Teacher>();
+            this.Team = new HashSet<Team>();
         }
     
         public int ID { get; set; }
-        public string NEPTUN { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string UserName { get; set; }
-        public string UserPassword { get; set; }
+        public string SessionGroupName { get; set; }
+        public Nullable<int> SemesterID { get; set; }
+        public Nullable<int> Teacher { get; set; }
         public bool Deleted { get; set; }
     
+        public virtual Semester Semester { get; set; }
         public virtual ICollection<Student> Student { get; set; }
-        public virtual ICollection<Teacher> Teacher { get; set; }
+        public virtual ICollection<Teacher> Teacher1 { get; set; }
+        public virtual ICollection<Team> Team { get; set; }
     }
 }
