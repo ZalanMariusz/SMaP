@@ -8,13 +8,13 @@ using System.Windows.Controls;
 
 namespace SMaP_APP.ViewModel.ValidationRules
 {
-    class SemesterNameValidation : ValidationRule
+    class EmptyStringValidation : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (String.IsNullOrEmpty((string)value))
             {
-                return new ValidationResult(false, "Szemeszter neve nem lehet üres!");
+                return new ValidationResult(false, "A mező kitöltése kötelező!");
             }
             else
             {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SMaP_APP.Model;
 using System.Linq.Expressions;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 
 namespace SMaP_APP.DAL
 {
@@ -52,8 +53,7 @@ namespace SMaP_APP.DAL
                 throw new ArgumentNullException("entity");
             }
 
-            //applicationDbContext.Entry(entity).State = EntityState.Modified;
-            //applicationDbContext.Set<TEntity>().Attach(entity);
+            applicationDbContext.Set<TEntity>().AddOrUpdate(entity);
             return applicationDbContext.SaveChanges();
         }
 

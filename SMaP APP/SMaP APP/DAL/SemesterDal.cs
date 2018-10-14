@@ -10,12 +10,11 @@ namespace SMaP_APP.DAL
 {
     class SemesterDal : GenericDAL<Semester>
     {
-        public List<Dictionary> SemesterTypes { get; set; }
-        public List<Semester> AllSemesters { get; set; }
+        public List<Dictionary> SemesterTypes { get; private set; }
+        //public List<Semester> AllSemesters { get; set; }
         public SemesterDal(SMaPEntities applicationDbContext) : base(applicationDbContext)
         {
             this.SemesterTypes = applicationDbContext.Set<Dictionary>().Where(x => !x.Deleted && x.ItemType == "SemesterType").ToList();
-            this.AllSemesters = this.FindAll();
         }
     }
 }

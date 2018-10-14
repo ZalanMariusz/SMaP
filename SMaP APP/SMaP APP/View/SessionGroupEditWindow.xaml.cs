@@ -17,20 +17,14 @@ using System.Windows.Shapes;
 namespace SMaP_APP.View
 {
     /// <summary>
-    /// Interaction logic for TeacherScreen.xaml
+    /// Interaction logic for SessionGroupEditWindow.xaml
     /// </summary>
-    public partial class TeacherWindow : Window
+    public partial class SessionGroupEditWindow : Window
     {
-        public Teacher _contextTeacher;
-        public TeacherWindow(Teacher contextTeacher)
+        public SessionGroupEditWindow(SessionGroup sessionGroup)
         {
             InitializeComponent();
-            this._contextTeacher = contextTeacher;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.DataContext = new TeacherWindowViewModel(this, _contextTeacher);
+            this.DataContext = new SessionGroupEditViewModel(this, sessionGroup);
         }
     }
 }

@@ -7,7 +7,5 @@ CREATE TABLE Semester(
 	,SemesterName nvarchar(30) NOT NULL
 	,SemesterType int NOT NULL 
 	,IsActive bit default 0
-	,StartDate datetime NOT NULL
-	,EndDate datetime NOT NULL 
 	,Deleted bit default 0
 )

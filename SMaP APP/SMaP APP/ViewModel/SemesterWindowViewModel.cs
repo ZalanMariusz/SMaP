@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SMaP_APP.ViewModel
 {
@@ -27,22 +28,36 @@ namespace SMaP_APP.ViewModel
         {
             this.SourceWindow = semesterWindow;
             this._contextDal = new SemesterDal(DbContext);
-
             this.SelectedSemester = selectedSemester;
-            this.SaveCommand = new RelayCommand(SaveSemester);
+            this.SaveCommand = new RelayCommand(SaveSemester, CanSaveSemester);
             SemesterTypes = new ObservableCollection<Dictionary>(((SemesterDal)_contextDal).SemesterTypes);
         }
         public void SaveSemester()
         {
-            if (this._contextDal.FindById(SelectedSemester.ID) == null)
+
+            if (((SemesterDal)this._contextDal).FindAll(x => x.SemesterName == this.selectedSemester.SemesterName && x.ID != selectedSemester.ID).FirstOrDefault() != null)
             {
-                this._contextDal.Create(SelectedSemester);
+                MessageBox.Show("Szemeszter ezzel a névvel már létezik!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
-                this._contextDal.Update(SelectedSemester);
+                if (this._contextDal.FindById(SelectedSemester.ID) == null)
+                {
+                    this._contextDal.Create(SelectedSemester);
+                }
+                else
+                {
+                    this._contextDal.Update(SelectedSemester);
+                }
+                this.SourceWindow.Close();
             }
-            this.SourceWindow.Close();
         }
+        public bool CanSaveSemester()
+        {
+            Semester asd = ((SemesterDal)this._contextDal).FindAll(x => x.SemesterName == this.selectedSemester.SemesterName && x.ID != selectedSemester.ID).FirstOrDefault();
+            return !String.IsNullOrEmpty(this.selectedSemester.SemesterName) 
+                && this.selectedSemester.SemesterType != 0;
+        }
+
     }
 }

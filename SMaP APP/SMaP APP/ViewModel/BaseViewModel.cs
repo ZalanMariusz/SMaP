@@ -16,7 +16,7 @@ namespace SMaP_APP.ViewModel
     {
         internal Window SourceWindow { get; set; }
         internal GenericDAL<TEntity> _contextDal { get; set; }
-        internal static SMaPEntities _dbContext = null;
+        private static SMaPEntities _dbContext = null;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -30,11 +30,11 @@ namespace SMaP_APP.ViewModel
         {
             get
             {
-                if (_dbContext == null)
-                    _dbContext = new SMaPEntities();
+                _dbContext = new SMaPEntities();
                 return _dbContext;
             }
         }
+
 
         internal void SwitchWindows(Window target, bool toModal = false)
         {

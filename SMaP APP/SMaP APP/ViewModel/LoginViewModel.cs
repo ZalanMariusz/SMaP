@@ -30,7 +30,7 @@ namespace SMaP_APP.ViewModel
 
         public void LoginUser()
         {
-            string passwordHash = ComputeSha256Hash(Password);
+            string passwordHash = UsersDAL.ComputeSha256Hash(Password);
             User = _contextDal.FindAll(x => x.UserName==UserName && x.UserPassword == passwordHash).FirstOrDefault();
             if (User == null)
             {
@@ -38,10 +38,10 @@ namespace SMaP_APP.ViewModel
             }
             else
             {
-                var contextTeacher = _dbContext.Teacher.Where(x => x.UserID == User.ID).FirstOrDefault();
+                var contextTeacher = DbContext.Teacher.Where(x => x.UserID == User.ID).FirstOrDefault();
                 if (contextTeacher == null)
                 {
-                    var contextStudent= _dbContext.Student.Where(x => x.UserID == User.ID).FirstOrDefault();
+                    var contextStudent= DbContext.Student.Where(x => x.UserID == User.ID).FirstOrDefault();
                     if (contextStudent == null)
                     {
                         MessageBox.Show("Érvénytelen jogosultság!", "Érvénytelen jogosultság!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -56,17 +56,16 @@ namespace SMaP_APP.ViewModel
                 {
                     SwitchWindows(new TeacherWindow(contextTeacher));
                 }
-                
             }
         }
 
-        static string ComputeSha256Hash(string rawData)
+        static string ComputeSha256Hash(string rawPassword)
         {
             // Create a SHA256   
             using (SHA256 sha256Hash = SHA256.Create())
             {
                 // ComputeHash - returns byte array  
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawPassword));
 
                 // Convert byte array to a string   
                 StringBuilder builder = new StringBuilder();

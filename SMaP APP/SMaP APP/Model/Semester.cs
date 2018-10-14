@@ -14,6 +14,7 @@ namespace SMaP_APP.Model
     
     public partial class Semester : IBaseModel
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Semester()
         {
             this.SessionGroup = new HashSet<SessionGroup>();
@@ -23,11 +24,10 @@ namespace SMaP_APP.Model
         public string SemesterName { get; set; }
         public int SemesterType { get; set; }
         public Nullable<bool> IsActive { get; set; }
-        public System.DateTime StartDate { get; set; }
-        public System.DateTime EndDate { get; set; }
         public bool Deleted { get; set; }
     
         public virtual Dictionary Dictionary { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SessionGroup> SessionGroup { get; set; }
     }
 }

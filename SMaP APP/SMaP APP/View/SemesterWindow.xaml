@@ -6,40 +6,56 @@
         xmlns:local="clr-namespace:SMaP_APP.View"
         mc:Ignorable="d"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
-        Title="Félév szerkesztése" Height="237.459" Width="364.495" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="Félév szerkesztése" Height="183.491" Width="364.495" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Window.Resources>
-        <ControlTemplate x:Key="TextBoxErrorTemplate" TargetType="Control">
-            <Border BorderBrush="Red" BorderThickness="1" Margin="-1"
-                ToolTip="{Binding RelativeSource={RelativeSource self},
-                  Path=Child.AdornedElement.(Validation.Errors)[0].ErrorContent}">
-            </Border>
-        </ControlTemplate>
+        <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="comboBoxError" TargetType="{x:Type ComboBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" 
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
-        <Label Content="Szemeszter neve" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding SelectedSemester.SemesterName}" HorizontalAlignment="Left"  Height="23" Margin="133,26,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="213"  Template="{StaticResource TextBoxErrorTemplate}">
-            <!--<TextBox.Text>
-                <Binding Path="SelectedSemester.SemesterName}" UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <valid:SemesterNameValidation/>
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>-->
+        <Label Content="Szemeszter neve" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top" />
+        <TextBox HorizontalAlignment="Left"  Height="23" Margin="133,26,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="213"  Style="{StaticResource textBoxError}" ToolTipService.InitialShowDelay="0">
+            <Binding Path="SelectedSemester.SemesterName" UpdateSourceTrigger="PropertyChanged">
+                <Binding.ValidationRules>
+                    <valid:SemesterNameValidation ValidatesOnTargetUpdated="True"/>
+                </Binding.ValidationRules>
+            </Binding>
         </TextBox>
         <Label Content="Szemeszter típusa" HorizontalAlignment="Left" Margin="10,53,0,0" VerticalAlignment="Top"/>
-        <Label Content="Kezdő dátum" HorizontalAlignment="Left" Margin="10,84,0,0" VerticalAlignment="Top"/>
-        <Label Content="Végdátum" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top"/>
-        <Label Content="Aktív" HorizontalAlignment="Left" Margin="10,146,0,0" VerticalAlignment="Top"/>
-        <ComboBox HorizontalAlignment="Left" Margin="133,57,0,0" VerticalAlignment="Top" Width="213" 
+                <ComboBox HorizontalAlignment="Left" Margin="133,57,0,0" VerticalAlignment="Top" Width="213" 
             ItemsSource="{Binding SemesterTypes}"
             DisplayMemberPath="ItemName"
             SelectedValuePath="ID"
-            SelectedValue="{Binding Path=SelectedSemester.SemesterType}" />
-        <DatePicker SelectedDate="{Binding SelectedSemester.StartDate}" HorizontalAlignment="Left" Margin="133,86,0,0" VerticalAlignment="Top" Width="213"/>
-        <DatePicker SelectedDate="{Binding SelectedSemester.EndDate}" HorizontalAlignment="Left" Margin="133,117,0,0" VerticalAlignment="Top" Width="213"/>
-        <CheckBox IsChecked="{Binding SelectedSemester.IsActive}" HorizontalAlignment="Left" Margin="133,152,0,0" Height="15" VerticalAlignment="Top" RenderTransformOrigin="0.232,-0.148"/>
-        <Button IsDefault="True" Content="Mentés" HorizontalAlignment="Left" Margin="15,177,0,0" VerticalAlignment="Top" Width="134" Command="{Binding SaveCommand}"/>
-        <Button IsCancel="True" Content="Mégsem" HorizontalAlignment="Left" Margin="271,177,0,0" VerticalAlignment="Top" Width="75" Command="{Binding CloseCommand}"/>
+            ToolTipService.InitialShowDelay="0"
+            Style="{StaticResource comboBoxError}">
+            <ComboBox.SelectedValue>
+                <Binding Path="SelectedSemester.SemesterType" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <valid:SemesterTypeValidation ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.SelectedValue>
+        </ComboBox>
+
+        <Label Content="Aktív" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top"/>
+        <CheckBox Name="asd" IsChecked="{Binding SelectedSemester.IsActive}" HorizontalAlignment="Left" Margin="133,84,0,0" Height="15" VerticalAlignment="Top" RenderTransformOrigin="0.232,-0.148"/>
+        <Button IsDefault="True" Content="Mentés" HorizontalAlignment="Left" Margin="15,109,0,0" VerticalAlignment="Top" Width="134" Command="{Binding SaveCommand}"/>
+        <Button IsCancel="True" Content="Mégsem" HorizontalAlignment="Left" Margin="271,109,0,0" VerticalAlignment="Top" Width="75" Command="{Binding CloseCommand}"/>
 
     </Grid>
 </Window>

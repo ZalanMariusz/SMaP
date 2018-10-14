@@ -65,8 +65,10 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\SemesterIsActiveConverter.cs" />
+    <Compile Include="Converters\TeacherWindowHeaderConverter.cs" />
     <Compile Include="DAL\GenericDAL.cs" />
     <Compile Include="DAL\SemesterDal.cs" />
+    <Compile Include="DAL\SessionGroupDAL.cs" />
     <Compile Include="DAL\TeacherDAL.cs" />
     <Compile Include="DAL\UsersDAL.cs" />
     <Compile Include="Model\Dictionary.cs">
@@ -91,10 +93,21 @@
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
+    <Compile Include="ViewModel\SessionGroupEditViewModel.cs" />
+    <Compile Include="ViewModel\TeacherEditorWindowViewModel.cs" />
     <Compile Include="ViewModel\TeacherWindowViewModel.cs" />
+    <Compile Include="ViewModel\ValidationRules\EmptyIntValueValidation.cs" />
+    <Compile Include="ViewModel\ValidationRules\EmptyStringValidation.cs" />
     <Compile Include="ViewModel\ValidationRules\SemesterNameValidation.cs" />
+    <Compile Include="ViewModel\ValidationRules\SemesterTypeValidation.cs" />
     <Compile Include="View\SemesterWindow.xaml.cs">
       <DependentUpon>SemesterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SessionGroupEditWindow.xaml.cs">
+      <DependentUpon>SessionGroupEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TeacherEditorWindow.xaml.cs">
+      <DependentUpon>TeacherEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TeacherWindow.xaml.cs">
       <DependentUpon>TeacherWindow.xaml</DependentUpon>
@@ -112,6 +125,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\SemesterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SessionGroupEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TeacherEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,7 +5,7 @@ GO
 CREATE TABLE Users(
 	 ID int Identity(1,1) PRIMARY KEY CLUSTERED
 	,NEPTUN nvarchar(6) NULL
-	,FirstName nvarchar(120) NOT NULL -- keresznév
+	,FirstName nvarchar(120) NOT NULL -- keresztnév
 	,LastName nvarchar(120) NOT NULL -- vezetéknév
 	,FullName nvarchar(240) NOT NULL 
 	,Email nvarchar(120) NULL

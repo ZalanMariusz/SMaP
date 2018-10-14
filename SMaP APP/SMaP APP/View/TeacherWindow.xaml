@@ -5,16 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP.View"
         mc:Ignorable="d"
-        Title="Adminisztráció" Height="600" Width="800"
+        Height="768" Width="1024"
         ResizeMode="NoResize"
         WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
+        Background="Beige"
         >
     <Window.Resources>
         <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />
+        <conv:TeacherWindowHeaderConverter x:Key="TeacherWindowHeaderConverter" />
     </Window.Resources>
+    <Window.Title>
+        <Binding Path="ContextTeacher.Users.FullName" Converter="{StaticResource TeacherWindowHeaderConverter}"/>
+    </Window.Title>
     <Grid>
-        <Grid.ColumnDefinitions >
+        <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
@@ -28,30 +33,59 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-
-        <Button Command="{Binding SemesterEditCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Content="Kijelölt félév szerkesztése" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="159"/>
-        <Button Command="{Binding SemesterCreateCommand}" Content="Új Félév" HorizontalAlignment="Left" Margin="174,161,0,0" VerticalAlignment="Top" Width="122"/>
-        <Button Command="{Binding SemesterDeleteCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Content="Félév törlése" HorizontalAlignment="Left" Margin="301,161,0,0" VerticalAlignment="Top" Width="81"/>
+        <Label Content="Félévek" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Width="185"/>
         <ListBox Height="123" Margin="10,33,15,0" VerticalAlignment="Top" ItemsSource="{Binding SemesterList}" Name="SemesterLB">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="{Binding SemesterName}"/>
-                        <Label Content="{Binding IsActive,Converter={StaticResource SemesterIsActiveConverter}}"/>
+                        <Label Content="{Binding SemesterName}" Padding="0"/>
+                        <Label Content="{Binding IsActive,Converter={StaticResource SemesterIsActiveConverter}}" Padding="0"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Label Content="Félévek" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Width="185"/>
-        <ListBox Height="123" Margin="10,217,15,0" VerticalAlignment="Top"/>
-        <Button Content="Csoportok kezelése" HorizontalAlignment="Left" Margin="10,345,0,0" VerticalAlignment="Top" Width="185"/>
-        <Label Content="Félév csoportjai" HorizontalAlignment="Left" Margin="10,186,0,0" VerticalAlignment="Top" Width="185"/>
-        <ListBox Margin="15,33,10,0" Grid.Column="1" Height="491" VerticalAlignment="Top"/>
+        <Button Command="{Binding SemesterEditCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Content="Kijelölt félév szerkesztése" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="159"/>
+        <Button Command="{Binding SemesterCreateCommand}" Content="Új Félév" HorizontalAlignment="Left" Margin="174,161,0,0" VerticalAlignment="Top" Width="99"/>
+        <Button Content="Félév léptetése" HorizontalAlignment="Left" Margin="278,161,0,0" VerticalAlignment="Top" Width="99"/>
+        <Button Command="{Binding SemesterDeleteCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Content="Félév törlése" HorizontalAlignment="Left" Margin="382,161,0,0" VerticalAlignment="Top" Width="112"/>
+        <Label Content="Tanárok" HorizontalAlignment="Left" Margin="10,186,0,0" VerticalAlignment="Top" Width="185"/>
+        <ListBox Margin="10,217,15,0" Height="120" VerticalAlignment="Top" Name="TeacherLB" ItemsSource="{Binding TeacherList}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding Users.FullName}" Padding="0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Command="{Binding TeacherEditCommand}" CommandParameter="{Binding ElementName=TeacherLB}" Content="Kijelölt tanár szerkesztése" HorizontalAlignment="Left" Margin="10,342,0,0" VerticalAlignment="Top" Width="159"/>
+        <Button Command="{Binding TeacherCreateCommand}" Content="Új Tanár" HorizontalAlignment="Left" Margin="174,342,0,0" VerticalAlignment="Top" Width="99"/>
+        <Button Command="{Binding TeacherDeleteCommand}" CommandParameter="{Binding ElementName=TeacherLB}" Content="Tanár törlése" HorizontalAlignment="Left" Margin="382,342,0,0" VerticalAlignment="Top" Width="112"/>
+        <Label Content="Félév csoportjai" HorizontalAlignment="Left" Margin="10,367,0,0" VerticalAlignment="Top" Width="185"/>
+        <ListBox Height="123" Margin="10,398,15,0" VerticalAlignment="Top" Name="SessionGroupLB" ItemsSource="{Binding SessionGroupList}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding SessionGroupName}" Padding="0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Command="{Binding SessionGroupEditCommand}" CommandParameter="{Binding ElementName=SessionGroupLB}" Content="Kijelölt csoport szerkesztése" HorizontalAlignment="Left" Margin="10,526,0,0" VerticalAlignment="Top" Width="159"/>
+        <Button Command="{Binding SessionGroupCreateCommand}" Content="Új Csoport" HorizontalAlignment="Left" Margin="174,526,0,0" VerticalAlignment="Top" Width="99"/>
+        <Button Command="{Binding SessionGroupDeleteCommand}" CommandParameter="{Binding ElementName=SessionGroupLB}" Content="Csoport törlése" HorizontalAlignment="Left" Margin="390,526,0,0" VerticalAlignment="Top" Width="104"/>
+        <Label Content="Csapatok kezelése" HorizontalAlignment="Left" Margin="10,551,0,0" VerticalAlignment="Top" Width="185"/>
+        <ListBox Height="108" Margin="10,582,15,0" VerticalAlignment="Top"/>
+        <Button Content="Csapatok kezelése" HorizontalAlignment="Left" Margin="10,695,0,0" Width="185" Height="20" VerticalAlignment="Top"/>
         <Label Content="Csoport Diákjai" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Width="185" Grid.Column="1"/>
-        <ListBox Height="123" Margin="10,401,15,0" VerticalAlignment="Top"/>
-        <Button Content="Csapatok kezelése" HorizontalAlignment="Left" Margin="10,529,0,0" VerticalAlignment="Top" Width="185"/>
-        <Label Content="Csapatok kezelése" HorizontalAlignment="Left" Margin="10,370,0,0" VerticalAlignment="Top" Width="185"/>
-        <Button Content="Csoport diákjainak kezelése" HorizontalAlignment="Left" Margin="15,529,0,0" VerticalAlignment="Top" Width="185" Grid.Column="1"/>
+        <ListBox Margin="15,33,10,0" Grid.Column="1" Height="657" VerticalAlignment="Top"/>
+        <Button Content="Csoport diákjainak kezelése" HorizontalAlignment="Left" Margin="15,695,0,0" Width="185" Grid.Column="1" Height="20" VerticalAlignment="Top"/>
+        
+        
+        
+        
+        
+        
 
 
     </Grid>

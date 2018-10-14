@@ -25,8 +25,6 @@
           <Property Name="SemesterName" Type="nvarchar" MaxLength="30" Nullable="false" />
           <Property Name="SemesterType" Type="int" Nullable="false" />
           <Property Name="IsActive" Type="bit" />
-          <Property Name="StartDate" Type="datetime" Nullable="false" />
-          <Property Name="EndDate" Type="datetime" Nullable="false" />
           <Property Name="Deleted" Type="bit" />
         </EntityType>
         <EntityType Name="SessionGroup">
@@ -300,8 +298,6 @@
           <Property Name="SemesterName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="SemesterType" Type="Int32" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" />
-          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Deleted" Type="Boolean" />
           <NavigationProperty Name="Dictionary" Relationship="SMaPModel.FK_Semester_SemesterType_Dictionary" FromRole="Semester" ToRole="Dictionary" />
           <NavigationProperty Name="SessionGroup" Relationship="SMaPModel.FK_SessionGroup_SemesterID_Semester" FromRole="Semester" ToRole="SessionGroup" />
@@ -489,8 +485,6 @@
             <EntityTypeMapping TypeName="SMaPModel.Semester">
               <MappingFragment StoreEntitySet="Semester">
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="SemesterType" ColumnName="SemesterType" />
                 <ScalarProperty Name="SemesterName" ColumnName="SemesterName" />
