@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP.View"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
+        xmlns:conv="clr-namespace:SMaP_APP.Converters"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
         Background="Beige"
         Title="Csoport szerkesztése" Height="221.608" Width="300">
     <Window.Resources>
+        <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
@@ -43,9 +45,13 @@
         </TextBox>
         <ComboBox Style="{StaticResource comboBoxError}" HorizontalAlignment="Left" Margin="132,52,0,0" VerticalAlignment="Top" Width="150"
             ItemsSource="{Binding SemesterList}"
-            DisplayMemberPath="SemesterName"
             SelectedValuePath="ID"
             ToolTipService.InitialShowDelay="0">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource SemesterIsActiveConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
             <ComboBox.SelectedValue>
                 <Binding Path="SelectedSessionGroup.SemesterID" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>

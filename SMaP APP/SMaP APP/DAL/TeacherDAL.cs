@@ -16,13 +16,23 @@ namespace SMaP_APP.DAL
 
         public void DeleteSemester(Semester param)
         {
-            SemesterDal sd = new SemesterDal(this.applicationDbContext);
+            SemesterDAL sd = new SemesterDAL(this.applicationDbContext);
             sd.LogicalDelete(param);
         }
         public void DeleteTeacherUser(Teacher param)
         {
             UsersDAL ud = new UsersDAL(this.applicationDbContext);
             ud.LogicalDelete(param.Users);
+        }
+        public void DeleteSessionGroup(SessionGroup param)
+        {
+            SessionGroupDAL sgd = new SessionGroupDAL(this.applicationDbContext);
+            sgd.LogicalDelete(param);
+        }
+        public void DeleteTeam(Team param)
+        {
+            TeamDAL td = new TeamDAL(this.applicationDbContext);
+            td.LogicalDelete(param);
         }
     }
 }

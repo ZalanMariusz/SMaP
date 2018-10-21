@@ -9,19 +9,18 @@ using System.Windows.Data;
 
 namespace SMaP_APP.Converters
 {
-    class SemesterIsActiveConverter : IValueConverter
+    class TeamNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null)
+            if (value == null)
             {
-                Semester toConvert = (Semester)value;
-                string affix = (bool)toConvert.IsActive ? " (aktív)": "";
-                return String.Format("{0}{1}", toConvert.SemesterName, affix);
+                return "";
             }
             else
             {
-                return "";
+                Team item = (Team)value;
+                return String.Format("{0} - {1}", item.TeamName, item.SessionGroup.SessionGroupName);
             }
         }
 

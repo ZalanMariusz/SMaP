@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SMaP_APP.DAL
 {
-    class SemesterDal : GenericDAL<Semester>
+    class SemesterDAL : GenericDAL<Semester>
     {
         public List<Dictionary> SemesterTypes { get; private set; }
         //public List<Semester> AllSemesters { get; set; }
-        public SemesterDal(SMaPEntities applicationDbContext) : base(applicationDbContext)
+        public SemesterDAL(SMaPEntities applicationDbContext) : base(applicationDbContext)
         {
             this.SemesterTypes = applicationDbContext.Set<Dictionary>().Where(x => !x.Deleted && x.ItemType == "SemesterType").ToList();
         }

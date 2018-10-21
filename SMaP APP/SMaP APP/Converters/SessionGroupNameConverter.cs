@@ -9,19 +9,23 @@ using System.Windows.Data;
 
 namespace SMaP_APP.Converters
 {
-    class SemesterIsActiveConverter : IValueConverter
+    class SessionGroupNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null)
+            if (value == null)
             {
-                Semester toConvert = (Semester)value;
-                string affix = (bool)toConvert.IsActive ? " (aktív)": "";
-                return String.Format("{0}{1}", toConvert.SemesterName, affix);
+                return "";
             }
             else
             {
-                return "";
+                SessionGroup sessionGroup = (SessionGroup)value;
+                Teacher teacher;
+                using (var dbContext=new SMaPEntities())
+                {
+                    teacher = dbContext.Teacher.First(x => x.ID == sessionGroup.Teacher);
+                    return String.Format("{0} ({1} - {2})", sessionGroup.SessionGroupName, sessionGroup.Semester.SemesterName, teacher.Users.FullName);
+                }
             }
         }
 

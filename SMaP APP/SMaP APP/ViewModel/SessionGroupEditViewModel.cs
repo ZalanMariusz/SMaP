@@ -8,12 +8,18 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SMaP_APP.ViewModel
 {
     class SessionGroupEditViewModel : BaseViewModel<SessionGroup>
     {
-        public SessionGroup SelectedSessionGroup { get; set; }
+        private SessionGroup selectedSessionGroup;
+        public SessionGroup SelectedSessionGroup
+        {
+            get { return selectedSessionGroup; }
+            set { selectedSessionGroup = value; NotifyPropertyChanged(); }
+        }
         public RelayCommand SaveCommand { get; set; }
         public ObservableCollection<Teacher> TeacherList { get; set; }
         public ObservableCollection<Semester> SemesterList { get; set; }
@@ -30,19 +36,28 @@ namespace SMaP_APP.ViewModel
 
         private void SaveSessionGroup()
         {
-            if (this._contextDal.FindById(SelectedSessionGroup.ID) == null)
+            if (this._contextDal.FindAll().Exists(x => x.ID != SelectedSessionGroup.ID && x.SemesterID == SelectedSessionGroup.SemesterID && x.SessionGroupName == SelectedSessionGroup.SessionGroupName))
             {
-                this._contextDal.Create(SelectedSessionGroup);
+                MessageBox.Show("Az adott félévben már létezik ilyen nevű csoport!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
-                this._contextDal.Update(SelectedSessionGroup);
+                if (this._contextDal.FindById(SelectedSessionGroup.ID) == null)
+                {
+                    this._contextDal.Create(SelectedSessionGroup);
+                }
+                else
+                {
+                    this._contextDal.Update(SelectedSessionGroup);
+                }
+                this.SourceWindow.Close();
             }
-            this.SourceWindow.Close();
         }
         private bool CanSaveSessionGroup()
         {
-            return true;
+            return !string.IsNullOrEmpty(this.SelectedSessionGroup.SessionGroupName) 
+                && !(this.SelectedSessionGroup.Teacher==null || this.SelectedSessionGroup.Teacher==0)
+                && !(this.SelectedSessionGroup.SemesterID==null || this.SelectedSessionGroup.SemesterID == 0);
         }
     }
 }

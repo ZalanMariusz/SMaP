@@ -7,6 +7,8 @@ using SMaP_APP.Model;
 using System.Linq.Expressions;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Core.Objects;
 
 namespace SMaP_APP.DAL
 {
@@ -40,7 +42,6 @@ namespace SMaP_APP.DAL
             {
                 throw new ArgumentNullException("entity");
             }
-
             applicationDbContext.Set<TEntity>().Attach(entity);
             applicationDbContext.Set<TEntity>().Add(entity);
             return applicationDbContext.SaveChanges();
@@ -52,7 +53,6 @@ namespace SMaP_APP.DAL
             {
                 throw new ArgumentNullException("entity");
             }
-
             applicationDbContext.Set<TEntity>().AddOrUpdate(entity);
             return applicationDbContext.SaveChanges();
         }

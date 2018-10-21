@@ -27,15 +27,15 @@ namespace SMaP_APP.ViewModel
         public SemesterWindowViewModel(SemesterWindow semesterWindow, Semester selectedSemester)
         {
             this.SourceWindow = semesterWindow;
-            this._contextDal = new SemesterDal(DbContext);
+            this._contextDal = new SemesterDAL(DbContext);
             this.SelectedSemester = selectedSemester;
             this.SaveCommand = new RelayCommand(SaveSemester, CanSaveSemester);
-            SemesterTypes = new ObservableCollection<Dictionary>(((SemesterDal)_contextDal).SemesterTypes);
+            SemesterTypes = new ObservableCollection<Dictionary>(((SemesterDAL)_contextDal).SemesterTypes);
         }
         public void SaveSemester()
         {
 
-            if (((SemesterDal)this._contextDal).FindAll(x => x.SemesterName == this.selectedSemester.SemesterName && x.ID != selectedSemester.ID).FirstOrDefault() != null)
+            if (((SemesterDAL)this._contextDal).FindAll(x => x.SemesterName == this.selectedSemester.SemesterName && x.ID != selectedSemester.ID).FirstOrDefault() != null)
             {
                 MessageBox.Show("Szemeszter ezzel a névvel már létezik!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -54,7 +54,7 @@ namespace SMaP_APP.ViewModel
         }
         public bool CanSaveSemester()
         {
-            Semester asd = ((SemesterDal)this._contextDal).FindAll(x => x.SemesterName == this.selectedSemester.SemesterName && x.ID != selectedSemester.ID).FirstOrDefault();
+            Semester asd = ((SemesterDAL)this._contextDal).FindAll(x => x.SemesterName == this.selectedSemester.SemesterName && x.ID != selectedSemester.ID).FirstOrDefault();
             return !String.IsNullOrEmpty(this.selectedSemester.SemesterName) 
                 && this.selectedSemester.SemesterType != 0;
         }
