@@ -43,7 +43,7 @@
                 </Binding.ValidationRules>
             </Binding>
         </TextBox>
-        <ComboBox Style="{StaticResource comboBoxError}" HorizontalAlignment="Left" Margin="132,52,0,0" VerticalAlignment="Top" Width="150"
+        <ComboBox Style="{StaticResource comboBoxError}" HorizontalAlignment="Left" Margin="132,52,0,0" VerticalAlignment="Top" Width="150" IsEnabled="False"
             ItemsSource="{Binding SemesterList}"
             SelectedValuePath="ID"
             ToolTipService.InitialShowDelay="0">
@@ -66,7 +66,7 @@
             SelectedValuePath="ID"
             ToolTipService.InitialShowDelay="0">
             <ComboBox.SelectedValue>
-                <Binding Path="SelectedSessionGroup.Teacher" UpdateSourceTrigger="PropertyChanged">
+                <Binding Path="SelectedSessionGroup.TeacherID" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <valid:EmptyIntValueValidation ValidatesOnTargetUpdated="True"/>
                     </Binding.ValidationRules>

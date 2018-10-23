@@ -23,7 +23,7 @@ namespace SMaP_APP.Converters
                 Teacher teacher;
                 using (var dbContext=new SMaPEntities())
                 {
-                    teacher = dbContext.Teacher.First(x => x.ID == sessionGroup.Teacher);
+                    teacher = dbContext.Teacher.First(x => x.ID == sessionGroup.TeacherID);
                     return String.Format("{0} ({1} - {2})", sessionGroup.SessionGroupName, sessionGroup.Semester.SemesterName, teacher.Users.FullName);
                 }
             }

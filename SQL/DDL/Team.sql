@@ -7,5 +7,5 @@ CREATE TABLE Team(
 	,SessionGroupID int NOT NULL
 	,TeamName nvarchar(100) NOT NULL
 	,TeamCaptain int NULL
-	,Deleted bit default 0
+	,Deleted bit default 0 NOT NULL
 )

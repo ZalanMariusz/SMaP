@@ -10,17 +10,12 @@
 namespace SMaP_APP.Model
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Team : IBaseModel
+    public partial class uspGetActiveStudents_Result
     {
         public int ID { get; set; }
-        public int SessionGroupID { get; set; }
-        public string TeamName { get; set; }
-        public Nullable<int> TeamCaptain { get; set; }
+        public int UserID { get; set; }
+        public int TeamID { get; set; }
         public bool Deleted { get; set; }
-    
-        public virtual Student Student { get; set; }
-        public virtual SessionGroup SessionGroup { get; set; }
     }
 }

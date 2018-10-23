@@ -17,22 +17,17 @@ namespace SMaP_APP.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SessionGroup()
         {
-            this.Student = new HashSet<Student>();
-            this.Teacher1 = new HashSet<Teacher>();
             this.Team = new HashSet<Team>();
         }
     
         public int ID { get; set; }
         public string SessionGroupName { get; set; }
         public Nullable<int> SemesterID { get; set; }
-        public Nullable<int> Teacher { get; set; }
+        public Nullable<int> TeacherID { get; set; }
         public bool Deleted { get; set; }
     
         public virtual Semester Semester { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Student> Student { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Teacher> Teacher1 { get; set; }
+        public virtual Teacher Teacher { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Team> Team { get; set; }
     }

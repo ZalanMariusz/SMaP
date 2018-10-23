@@ -12,6 +12,8 @@ namespace SMaP_APP.Model
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class SMaPEntities : DbContext
     {
@@ -25,12 +27,46 @@ namespace SMaP_APP.Model
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<Dictionary> Dictionary { get; set; }
         public virtual DbSet<Semester> Semester { get; set; }
-        public virtual DbSet<SessionGroup> SessionGroup { get; set; }
-        public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<Dictionary> Dictionary { get; set; }
         public virtual DbSet<Teacher> Teacher { get; set; }
         public virtual DbSet<Team> Team { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<SessionGroup> SessionGroup { get; set; }
+    
+        public virtual ObjectResult<Student> uspGetActiveStudents(Nullable<int> sessionGroupID, Nullable<int> teamID, Nullable<int> teacherID)
+        {
+            var sessionGroupIDParameter = sessionGroupID.HasValue ?
+                new ObjectParameter("SessionGroupID", sessionGroupID) :
+                new ObjectParameter("SessionGroupID", typeof(int));
+    
+            var teamIDParameter = teamID.HasValue ?
+                new ObjectParameter("TeamID", teamID) :
+                new ObjectParameter("TeamID", typeof(int));
+    
+            var teacherIDParameter = teacherID.HasValue ?
+                new ObjectParameter("TeacherID", teacherID) :
+                new ObjectParameter("TeacherID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Student>("uspGetActiveStudents", sessionGroupIDParameter, teamIDParameter, teacherIDParameter);
+        }
+    
+        public virtual ObjectResult<Student> uspGetActiveStudents(Nullable<int> sessionGroupID, Nullable<int> teamID, Nullable<int> teacherID, MergeOption mergeOption)
+        {
+            var sessionGroupIDParameter = sessionGroupID.HasValue ?
+                new ObjectParameter("SessionGroupID", sessionGroupID) :
+                new ObjectParameter("SessionGroupID", typeof(int));
+    
+            var teamIDParameter = teamID.HasValue ?
+                new ObjectParameter("TeamID", teamID) :
+                new ObjectParameter("TeamID", typeof(int));
+    
+            var teacherIDParameter = teacherID.HasValue ?
+                new ObjectParameter("TeacherID", teacherID) :
+                new ObjectParameter("TeacherID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Student>("uspGetActiveStudents", mergeOption, sessionGroupIDParameter, teamIDParameter, teacherIDParameter);
+        }
     }
 }

@@ -5,7 +5,6 @@ GO
 CREATE TABLE Teacher(
 	 ID int Identity(1,1) PRIMARY KEY CLUSTERED
 	,UserID int NOT NULL
-	,DefaultSessionGroupID int NULL
-	,Deleted bit default 0
+	,Deleted bit default 0 NOT NULL
 )
 

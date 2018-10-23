@@ -4,17 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Height="747" Width="540"
+        Height="735" Width="550"
         ResizeMode="NoResize"
         WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded"
+        BorderThickness="0"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
-        Background="Beige"
+        Background="LightBlue"
         >
     <Window.Resources>
         <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />
         <conv:TeacherWindowHeaderConverter x:Key="TeacherWindowHeaderConverter" />
         <conv:SessionGroupNameConverter x:Key="SessionGroupNameConverter"/>
         <conv:TeamNameConverter x:Key="TeamNameConverter"/>
+        <conv:StudentTeamConverter x:Key="StudentTeamConverter"/>
+        <conv:StudentSessionGroupConverter x:Key="StudentSessionGroupConverter"/>
         
         <BitmapImage x:Key="EditIco" UriSource="/SMaP APP;component/Images/edit-16.ico" />
         <BitmapImage x:Key="AddIco" UriSource="/SMaP APP;component/Images/plus-16.ico" />
@@ -25,39 +28,87 @@
         <Binding Path="ContextTeacher.Users.FullName" Converter="{StaticResource TeacherWindowHeaderConverter}"/>
     </Window.Title>
     <Grid>
+        <TabControl HorizontalAlignment="Left" Height="664" VerticalAlignment="Top" Width="534" Background="LightBlue">
+            <TabItem Header="Hallgatók">
+                <Grid>
+                    <Label Content="Hallgatók" HorizontalAlignment="Left" Margin="225,2,0,0" VerticalAlignment="Top" Width="185"/>
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding StudentEditCommand}" CommandParameter="{Binding ElementName=StudentGrid}" HorizontalAlignment="Left" Margin="483,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding StudentCreateCommand}" HorizontalAlignment="Left" Margin="458,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding StudentDeleteCommand}" CommandParameter="{Binding ElementName=StudentGrid}" HorizontalAlignment="Left" Margin="508,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+                    </Button>
+                    <DataGrid Name="StudentGrid" ItemsSource="{Binding StudentList}" Margin="225,33,0,20" AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.StudentEditCommand}"
+                                          CommandParameter="{Binding ElementName=StudentGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Név" Binding="{Binding Users.FullName}" Width="1*"/>
+                            <DataGridTextColumn Header="Csapat" Binding="{Binding TeamID, Converter={StaticResource StudentTeamConverter}}" Width="1*"/>
+                            <DataGridTextColumn Header="Csoport" Binding="{Binding TeamID, Converter={StaticResource StudentSessionGroupConverter}}" Width="1*"/>
+                        </DataGrid.Columns>
+                        <!--<Label Content="{Binding Converter={StaticResource StudentNameConverter}}" Padding="0" Grid.Column="0"/>-->
+                    </DataGrid>
+                    <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
+                                    <StackPanel.InputBindings>
+                                       
+                                    </StackPanel.InputBindings>
+                                    
+                                </StackPanel>-->
+                    <!--<ListBox Margin="220,33,10,0" Height="583" VerticalAlignment="Top" Name="StudentLB" ItemsSource="{Binding StudentList}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>-->
 
-        <!--<Border
-            BorderThickness="1,0,1,0" BorderBrush="Gray" Grid.ColumnSpan="2"  Width="10" HorizontalAlignment="Center">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,1"  EndPoint="1,1">
-                    <GradientStop Color="Gray" Offset="0.0" />
-                    <GradientStop Color="LightGray" Offset="0.2" />
-                    <GradientStop Color="Gray" Offset="0.8" />
-                </LinearGradientBrush>
-            </Border.Background>
-        </Border>-->
-
-
-        <TabControl HorizontalAlignment="Left" Height="654" Margin="10,10,0,0" VerticalAlignment="Top" Width="514">
-            <TabItem Header="Diákok">
-                <Grid Background="#FFE5E5E5">
-
-                    <Label Content="Hallgatók" HorizontalAlignment="Left" Margin="137,0,0,0" VerticalAlignment="Top" Width="185"/>
-                    <ListBox Margin="137,33,10,0" Height="583" VerticalAlignment="Top"/>
-                    <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,60,0,0" VerticalAlignment="Top" Width="129"/>
-                    <Label Content="Félév" HorizontalAlignment="Left" Height="23" Margin="3,32,0,0" VerticalAlignment="Top" Width="129"/>
-                    <Label Content="Tanár" HorizontalAlignment="Left" Height="23" Margin="3,87,0,0" VerticalAlignment="Top" Width="129"/>
-                    <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,115,0,0" VerticalAlignment="Top" Width="129"/>
-                    <Label Content="Csoport" HorizontalAlignment="Left" Height="28" Margin="3,142,0,0" VerticalAlignment="Top" Width="129"/>
-                    <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,175,0,0" VerticalAlignment="Top" Width="129"/>
-                    <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,234,0,0" VerticalAlignment="Top" Width="129"/>
-                    <Label Content="Csapat" HorizontalAlignment="Left" Height="27" Margin="3,202,0,0" VerticalAlignment="Top" Width="129"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,33,308,20">
+                        <Grid HorizontalAlignment="Left" Height="258" Margin="0,0,-1,0" VerticalAlignment="Top" Width="219">
+                            <Button Margin="189,61,0,0" Width="20" Height="20"
+                                ToolTip="Szűrő törlése" ToolTipService.InitialShowDelay="0" Command="{Binding DeleteFilter}" CommandParameter="{Binding ElementName=TeacherCB}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+                            </Button>
+                            <Label Content="Tanár" HorizontalAlignment="Left" Height="23" Margin="3,33,0,0" VerticalAlignment="Top" Width="129"/>
+                            <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,61,-45,0" VerticalAlignment="Top" Width="179" 
+                                      Name="TeacherCB"
+                                      ItemsSource="{Binding TeacherList}"
+                                      DisplayMemberPath="Users.FullName"
+                                      SelectedValuePath="ID"
+                                      SelectedItem="{Binding TeacherFilter}"/>
+                            <Label Content="Csoport" HorizontalAlignment="Left" Height="28" Margin="3,91,0,0" VerticalAlignment="Top" Width="129"/>
+                            <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,124,-45,0" VerticalAlignment="Top" Width="179"
+                                      Name="SessionGroupCB"
+                                      ItemsSource="{Binding SessionGroupList}"
+                                      DisplayMemberPath="SessionGroupName"
+                                      SelectedValuePath="ID"
+                                      SelectedItem="{Binding SessionGroupFilter}"/>
+                            <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,183,0,0" VerticalAlignment="Top" Width="179"
+                                      Name="TeamCB"  
+                                      ItemsSource="{Binding TeamList}"
+                                      DisplayMemberPath="TeamName"
+                                      SelectedValuePath="ID"
+                                      SelectedItem="{Binding TeamFilter}"/>
+                            <Label Content="Csapat" HorizontalAlignment="Left" Height="27" Margin="3,151,0,0" VerticalAlignment="Top" Width="129"/>
+                            <Label Content="Szűrők" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="122"/>
+                            <Button Margin="189,124,10,114" Width="20" Height="20"
+                                ToolTip="Szűrő törlése" ToolTipService.InitialShowDelay="0" Command="{Binding DeleteFilter}" CommandParameter="{Binding ElementName=SessionGroupCB}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+                            </Button>
+                            <Button Margin="189,183,10,55" Width="20" Height="20" ToolTip="Szűrő törlése" ToolTipService.InitialShowDelay="0" Command="{Binding DeleteFilter}"  CommandParameter="{Binding ElementName=TeamCB}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+                            </Button>
+                        </Grid>
+                    </Border>
                 </Grid>
             </TabItem>
             <TabItem Header="Egyéb adatok">
-                <Grid Background="#FFE5E5E5">
-                    <Label Content="Félévek" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Width="56"/>
-                    <ListBox HorizontalContentAlignment="Stretch"  Height="123" Margin="10,33,15,0" VerticalAlignment="Top" ItemsSource="{Binding SemesterList}" Name="SemesterLB">
+                <Grid>
+                    <Label Content="Félévek" HorizontalAlignment="Left" Margin="10,168,0,0" VerticalAlignment="Top" Width="56" Padding="0"/>
+                    <ListBox HorizontalContentAlignment="Stretch"  Height="123" Margin="10,189,15,0" VerticalAlignment="Top" ItemsSource="{Binding SemesterList}" Name="SemesterLB">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
@@ -71,20 +122,20 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Width="20" Height="20" Command="{Binding SemesterEditCommand}" CommandParameter="{Binding ElementName=SemesterLB}" HorizontalAlignment="Left" Margin="448,0,0,598" VerticalAlignment="Bottom">
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Width="20" Height="20" Command="{Binding SemesterEditCommand}" CommandParameter="{Binding ElementName=SemesterLB}" HorizontalAlignment="Left" Margin="468,0,0,452" VerticalAlignment="Bottom">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterCreateCommand}" HorizontalAlignment="Left" Margin="423,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterCreateCommand}" HorizontalAlignment="Left" Margin="443,164,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Félév másolása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="398,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Félév másolása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="418,164,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource CopyIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterDeleteCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Margin="473,8,15,598" Width="20" Height="20">
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterDeleteCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Margin="493,164,15,452" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <Label Content="Tanárok" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Width="185"/>
-                    <ListBox Margin="10,192,15,0" Height="120" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Name="TeacherLB" ItemsSource="{Binding TeacherList}">
+                    <Label Content="Tanárok" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top" Width="185" Padding="0"/>
+                    <ListBox Margin="10,33,15,0" Height="120" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Name="TeacherLB" ItemsSource="{Binding TeacherList}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
@@ -97,17 +148,17 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherEditCommand}" CommandParameter="{Binding ElementName=TeacherLB}" HorizontalAlignment="Left" Margin="448,167,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherEditCommand}" CommandParameter="{Binding ElementName=TeacherLB}" HorizontalAlignment="Left" Margin="468,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherCreateCommand}" HorizontalAlignment="Left" Margin="423,167,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherCreateCommand}" HorizontalAlignment="Left" Margin="443,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherDeleteCommand}" CommandParameter="{Binding ElementName=TeacherLB}" HorizontalAlignment="Left" Margin="473,167,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherDeleteCommand}" CommandParameter="{Binding ElementName=TeacherLB}" HorizontalAlignment="Left" Margin="493,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <Label Content="Félév csoportjai" HorizontalAlignment="Left" Margin="10,317,0,0" VerticalAlignment="Top" Width="185"/>
-                    <ListBox Height="123" Margin="10,348,15,0" VerticalAlignment="Top" Name="SessionGroupLB" HorizontalContentAlignment="Stretch" ItemsSource="{Binding SessionGroupList}">
+                    <Label Content="Aktív félév csoportjai" HorizontalAlignment="Left" Margin="10,327,0,0" VerticalAlignment="Top" Width="185" Padding="0"/>
+                    <ListBox Height="278" Margin="10,348,275,0" VerticalAlignment="Top" Name="SessionGroupLB" HorizontalContentAlignment="Stretch" ItemsSource="{Binding SessionGroupList}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Stretch">
@@ -115,22 +166,22 @@
                                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SessionGroupEditCommand}"
                                           CommandParameter="{Binding ElementName=SessionGroupLB}"/>
                                     </StackPanel.InputBindings>
-                                    <Label Content="{Binding Converter={StaticResource SessionGroupNameConverter}}" Padding="0"/>
+                                    <Label Content="{Binding Converter={StaticResource SessionGroupNameConverter},UpdateSourceTrigger=PropertyChanged}" Padding="0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupEditCommand}" CommandParameter="{Binding ElementName=SessionGroupLB}" HorizontalAlignment="Left" Margin="448,320,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupEditCommand}" CommandParameter="{Binding ElementName=SessionGroupLB}" HorizontalAlignment="Left" Margin="208,323,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupCreateCommand}" HorizontalAlignment="Left" Margin="423,320,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupCreateCommand}" HorizontalAlignment="Left" Margin="183,323,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupDeleteCommand}" CommandParameter="{Binding ElementName=SessionGroupLB}"  HorizontalAlignment="Left" Margin="473,320,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupDeleteCommand}" CommandParameter="{Binding ElementName=SessionGroupLB}"  HorizontalAlignment="Left" Margin="233,323,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <Label Content="Csapatok kezelése" HorizontalAlignment="Left" Margin="10,476,0,0" VerticalAlignment="Top" Width="185"/>
-                    <ListBox Height="108" Margin="10,507,15,0" VerticalAlignment="Top" Name="TeamLB" HorizontalContentAlignment="Stretch" ItemsSource="{Binding TeamList}">
+                    <Label Content="Aktív félév csapatai" HorizontalAlignment="Left" Margin="263,327,0,0" VerticalAlignment="Top" Width="108" Padding="0"/>
+                    <ListBox Height="278" Margin="263,348,15,0" VerticalAlignment="Top" Name="TeamLB" HorizontalContentAlignment="Stretch" ItemsSource="{Binding TeamList}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Stretch">
@@ -143,21 +194,22 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding TeamEditCommand}" CommandParameter="{Binding ElementName=TeamLB}" HorizontalAlignment="Left" Margin="448,479,0,0" Width="20" Height="20" VerticalAlignment="Top">
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding TeamEditCommand}" CommandParameter="{Binding ElementName=TeamLB}" HorizontalAlignment="Left" Margin="468,323,0,0" Width="20" Height="20" VerticalAlignment="Top">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding TeamCreateCommand}" HorizontalAlignment="Left" Margin="423,479,0,0" Width="20" Height="20" VerticalAlignment="Top">
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding TeamCreateCommand}" HorizontalAlignment="Left" Margin="443,323,0,0" Width="20" Height="20" VerticalAlignment="Top">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding TeamDeleteCommand}" CommandParameter="{Binding ElementName=TeamLB}"  HorizontalAlignment="Left" Margin="473,479,0,0" Width="20" Height="20" VerticalAlignment="Top">
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding TeamDeleteCommand}" CommandParameter="{Binding ElementName=TeamLB}"  HorizontalAlignment="Left" Margin="493,323,0,0" Width="20" Height="20" VerticalAlignment="Top">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <CheckBox IsChecked="{Binding OnlyActiveData}" Content="Csak aktív félév adatai" HorizontalAlignment="Left" Margin="256,10,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
 
+
+
         </TabControl>
-        <Button Content="Kijelentkezés" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Height="24" Margin="10,669,0,0" VerticalAlignment="Top" Width="127"/>
+        <Button Content="Kijelentkezés" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Margin="10,669,0,0" Width="127" Height="21" VerticalAlignment="Top"/>
 
 
 

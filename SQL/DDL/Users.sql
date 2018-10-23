@@ -11,7 +11,7 @@ CREATE TABLE Users(
 	,Email nvarchar(120) NULL
 	,UserName nvarchar(120) COLLATE HUNGARIAN_CS_AI NOT NULL
 	,UserPassword nvarchar(200) NOT NULL
-	,Deleted bit DEFAULT 0
+	,Deleted bit DEFAULT 0 NOT NULL
 
 	INDEX NCX_FullName(FullName)
 )
@@ -39,8 +39,6 @@ DECLARE @id INT = SCOPE_IDENTITY();
 
 INSERT INTO Teacher(
 	 UserID
-	,DefaultSessionGroupID
-	,Deleted
-) VALUES(@id,null,0)
+) VALUES(@id)
 
 

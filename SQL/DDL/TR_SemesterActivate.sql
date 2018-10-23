@@ -1,3 +1,4 @@
+use [SMaP]
 IF OBJECT_ID('TR_SemesterActivate') IS NOT NULL
 	DROP TRIGGER TR_SemesterActivate
 GO

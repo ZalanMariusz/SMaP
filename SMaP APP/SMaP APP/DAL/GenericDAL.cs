@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Objects;
+using System.Collections.ObjectModel;
 
 namespace SMaP_APP.DAL
 {
@@ -19,6 +20,13 @@ namespace SMaP_APP.DAL
         public GenericDAL(SMaPEntities applicationDbContext)
         {
             this.applicationDbContext = applicationDbContext;
+        }
+
+        public void RefreshContext()
+        {
+            var context = ((IObjectContextAdapter)applicationDbContext).ObjectContext;
+            var refreshableObjects = applicationDbContext.ChangeTracker.Entries().Select(c => c.Entity).ToList();
+            context.Refresh(RefreshMode.StoreWins, refreshableObjects);
         }
 
         public List<TEntity> FindAll(Expression<Func<TEntity, bool>> filterExpression=null)

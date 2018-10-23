@@ -9,7 +9,7 @@ CREATE TABLE Dictionary(
 	,ValidFrom datetime NULL
 	,ValidTo datetime NULL
 	,ItemType nvarchar(100) NOT NULL
-	,Deleted bit default 0
+	,Deleted bit default 0 NOT NULL
 )
 
 INSERT INTO Dictionary(

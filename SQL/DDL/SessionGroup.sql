@@ -6,6 +6,6 @@ CREATE TABLE SessionGroup(
 	 ID int Identity(1,1) PRIMARY KEY CLUSTERED
 	,SessionGroupName nvarchar(100)
 	,SemesterID int
-	,Teacher int
-	,Deleted bit
+	,TeacherID int
+	,Deleted bit DEFAULT 0 NOT NULL
 )

@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace SMaP_APP.Converters
 {
-    class TeamNameConverter : IValueConverter
+    class StudentNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -19,13 +19,12 @@ namespace SMaP_APP.Converters
             }
             else
             {
-                Team item = (Team)value;
-                SessionGroup sg;
-                using (var DbContext = new SMaPEntities())
+                Student student = (Student)value;
+                using (var context = new SMaPEntities())
                 {
-                    sg = DbContext.SessionGroup.Where(x => x.ID == item.SessionGroupID).FirstOrDefault();
+                    Team studentTeam = context.Team.Where(x => x.ID == student.TeamID).FirstOrDefault();
+                    return String.Format("{0} ({1})", student.Users.FullName, studentTeam.TeamName);
                 }
-                return String.Format("{0} - {1}", item.TeamName, sg.SessionGroupName);
             }
         }
 

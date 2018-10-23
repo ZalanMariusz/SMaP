@@ -66,11 +66,15 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\SemesterIsActiveConverter.cs" />
     <Compile Include="Converters\SessionGroupNameConverter.cs" />
+    <Compile Include="Converters\StudentNameConverter.cs" />
+    <Compile Include="Converters\StudentSessionGroupConverter.cs" />
+    <Compile Include="Converters\StudentTeamConverter.cs" />
     <Compile Include="Converters\TeacherWindowHeaderConverter.cs" />
     <Compile Include="Converters\TeamNameConverter.cs" />
     <Compile Include="DAL\GenericDAL.cs" />
     <Compile Include="DAL\SemesterDAL.cs" />
     <Compile Include="DAL\SessionGroupDAL.cs" />
+    <Compile Include="DAL\StudentDAL.cs" />
     <Compile Include="DAL\TeacherDAL.cs" />
     <Compile Include="DAL\TeamDAL.cs" />
     <Compile Include="DAL\UsersDAL.cs" />
@@ -93,10 +97,14 @@
     <Compile Include="Model\Team.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\uspGetActiveStudents_Result.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
     <Compile Include="ViewModel\SessionGroupEditViewModel.cs" />
+    <Compile Include="ViewModel\StudentEditorWindowViewModel.cs" />
     <Compile Include="ViewModel\TeacherEditorWindowViewModel.cs" />
     <Compile Include="ViewModel\TeacherWindowViewModel.cs" />
     <Compile Include="ViewModel\TeamEditorWindowViewModel.cs" />
@@ -109,6 +117,9 @@
     </Compile>
     <Compile Include="View\SessionGroupEditWindow.xaml.cs">
       <DependentUpon>SessionGroupEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StudentEditorWindow.xaml.cs">
+      <DependentUpon>StudentEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TeacherEditorWindow.xaml.cs">
       <DependentUpon>TeacherEditorWindow.xaml</DependentUpon>
@@ -136,6 +147,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SessionGroupEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StudentEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

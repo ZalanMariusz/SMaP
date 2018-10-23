@@ -32,6 +32,10 @@ namespace SMaP_APP.ViewModel
             this.SaveCommand = new RelayCommand(SaveSessionGroup, CanSaveSessionGroup);
             this.TeacherList = new ObservableCollection<Teacher>(((SessionGroupDAL)_contextDal).TeacherList);
             this.SemesterList = new ObservableCollection<Semester>(((SessionGroupDAL)_contextDal).SemesterList);
+            if (SelectedSessionGroup.Semester == null)
+            {
+                this.SelectedSessionGroup.SemesterID = SemesterList.Where(x => x.IsActive).FirstOrDefault().ID;
+            }
         }
 
         private void SaveSessionGroup()
@@ -56,7 +60,7 @@ namespace SMaP_APP.ViewModel
         private bool CanSaveSessionGroup()
         {
             return !string.IsNullOrEmpty(this.SelectedSessionGroup.SessionGroupName) 
-                && !(this.SelectedSessionGroup.Teacher==null || this.SelectedSessionGroup.Teacher==0)
+                && !(this.SelectedSessionGroup.TeacherID==null || this.SelectedSessionGroup.TeacherID == 0)
                 && !(this.SelectedSessionGroup.SemesterID==null || this.SelectedSessionGroup.SemesterID == 0);
         }
     }

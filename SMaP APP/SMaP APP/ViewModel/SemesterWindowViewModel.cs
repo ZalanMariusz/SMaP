@@ -54,7 +54,6 @@ namespace SMaP_APP.ViewModel
         }
         public bool CanSaveSemester()
         {
-            Semester asd = ((SemesterDAL)this._contextDal).FindAll(x => x.SemesterName == this.selectedSemester.SemesterName && x.ID != selectedSemester.ID).FirstOrDefault();
             return !String.IsNullOrEmpty(this.selectedSemester.SemesterName) 
                 && this.selectedSemester.SemesterType != 0;
         }

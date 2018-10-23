@@ -35,7 +35,6 @@ namespace SMaP_APP.ViewModel
             }
         }
 
-
         internal void SwitchWindows(Window target, bool toModal = false)
         {
             if (!toModal)

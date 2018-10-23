@@ -14,12 +14,18 @@ namespace SMaP_APP.Model
     
     public partial class Teacher : IBaseModel
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Teacher()
+        {
+            this.SessionGroup = new HashSet<SessionGroup>();
+        }
+    
         public int ID { get; set; }
         public int UserID { get; set; }
-        public Nullable<int> DefaultSessionGroupID { get; set; }
         public bool Deleted { get; set; }
     
-        public virtual SessionGroup SessionGroup { get; set; }
         public virtual Users Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SessionGroup> SessionGroup { get; set; }
     }
 }

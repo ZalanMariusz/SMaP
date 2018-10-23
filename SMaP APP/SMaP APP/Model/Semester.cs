@@ -23,7 +23,7 @@ namespace SMaP_APP.Model
         public int ID { get; set; }
         public string SemesterName { get; set; }
         public int SemesterType { get; set; }
-        public Nullable<bool> IsActive { get; set; }
+        public bool IsActive { get; set; }
         public bool Deleted { get; set; }
     
         public virtual Dictionary Dictionary { get; set; }

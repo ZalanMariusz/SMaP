@@ -29,6 +29,12 @@ namespace SMaP_APP.ViewModel
         public RelayCommand TeamCreateCommand { get; set; }
         public RelayCommand TeamEditCommand { get; set; }
         public RelayCommand TeamDeleteCommand { get; set; }
+        public RelayCommand DeleteFilter { get; set; }
+
+        public RelayCommand StudentCreateCommand { get; set; }
+        public RelayCommand StudentEditCommand { get; set; }
+        public RelayCommand StudentDeleteCommand { get; set; }
+
         public RelayCommand LogoutCommand { get; set; }
         #endregion Commands
 
@@ -37,45 +43,83 @@ namespace SMaP_APP.ViewModel
         private ObservableCollection<Teacher> teacherList;
         private ObservableCollection<SessionGroup> sessionGroupList;
         private ObservableCollection<Team> teamList;
+        private ObservableCollection<Student> studentList;
         public Teacher ContextTeacher { get; set; }
-        private bool onlyActiveData;
+        private Teacher teacherFilter;
+        private SessionGroup sessionGroupFilter;
+        private Team teamFilter;
 
-        public bool OnlyActiveData
-        {
-            get { return onlyActiveData;}
-            set { onlyActiveData = value;NotifyPropertyChanged(); }
+        public Teacher TeacherFilter {
+            get { return teacherFilter; }
+            set { teacherFilter = value; NotifyPropertyChanged("StudentList"); }
         }
+
+        public SessionGroup SessionGroupFilter
+        {
+            get { return sessionGroupFilter; }
+            set { sessionGroupFilter = value; NotifyPropertyChanged("StudentList"); }
+        }
+        public Team TeamFilter
+        {
+            get { return teamFilter; }
+            set { teamFilter = value; NotifyPropertyChanged("StudentList"); }
+        }
+
         public ObservableCollection<Semester> SemesterList
         {
             get { return semesterList; }
-            set { this.semesterList = value; NotifyPropertyChanged(); }
+            set { this.semesterList = value; NotifyPropertyChanged(); NotifyPropertyChanged("SessionGroupList"); NotifyPropertyChanged("TeamList"); }
         }
         public ObservableCollection<Teacher> TeacherList
         {
             get { return teacherList; }
-            set { teacherList = value; NotifyPropertyChanged(); }
+            set { teacherList = value; NotifyPropertyChanged(); NotifyPropertyChanged("SessionGroupList"); NotifyPropertyChanged("StudentList"); }
         }
         public ObservableCollection<SessionGroup> SessionGroupList
         {
             get { return sessionGroupList; }
-            set { sessionGroupList = value; NotifyPropertyChanged(); }
+            set { sessionGroupList = value; NotifyPropertyChanged(); NotifyPropertyChanged("TeamList"); }
         }
         public ObservableCollection<Team> TeamList
         {
             get { return teamList; }
             set { teamList = value; NotifyPropertyChanged(); }
         }
+        public ObservableCollection<Student> StudentList
+        {
+            get { return ReloadStudentList(); }
+            set { studentList = value; NotifyPropertyChanged(); }
+        }
         #endregion Properties and Fields
 
         #region DALs
-        public SemesterDAL SemesterDal { get; set; }
-        public SessionGroupDAL SessionGroupDal { get; set; }
-        public TeamDAL TeamDal { get; set; }
         #endregion DALs
+
+        private ObservableCollection<SessionGroup> ReloadActiveSessionGroupList()
+        {
+            return new ObservableCollection<SessionGroup>(((TeacherDAL)_contextDal).ActiveSessionGroupList());
+        }
+
+        private ObservableCollection<Team> ReloadActiveTeamList()
+        {
+            return new ObservableCollection<Team>(((TeacherDAL)_contextDal).ActiveTeamList());
+        }
+
+        private ObservableCollection<Semester> ReloadSemesterList()
+        {
+            return new ObservableCollection<Semester>(((TeacherDAL)_contextDal).SemesterList());
+        }
+
+        private ObservableCollection<Student> ReloadStudentList()
+        {
+            int? SessionGroupFilterID = SessionGroupFilter == null ? null : (int?)SessionGroupFilter.ID;
+            int? TeamFilterID= TeamFilter == null ? null : (int?)TeamFilter.ID;
+            int? TeacherFilterID= TeacherFilter == null ? null : (int?)TeacherFilter.ID;
+            return new ObservableCollection<Student>(((TeacherDAL)_contextDal).StudentList(SessionGroupFilterID, TeamFilterID, TeacherFilterID));
+        }
 
         public TeacherWindowViewModel(TeacherWindow teacherWindow, Teacher ContextTeacher)
         {
-            OnlyActiveData = true;
             this.SourceWindow = teacherWindow;
             this.ContextTeacher = ContextTeacher;
 
@@ -95,30 +139,45 @@ namespace SMaP_APP.ViewModel
             this.TeamEditCommand = new RelayCommand(EditTeam, CanEditTeam);
             this.TeamDeleteCommand = new RelayCommand(DeleteTeam, CanDeleteTeam);
 
-            this._contextDal = new TeacherDAL(DbContext);
-            this.SessionGroupDal = new SessionGroupDAL(DbContext);
-            this.SemesterDal = new SemesterDAL(DbContext);
-            this.TeamDal = new TeamDAL(DbContext);
+            this.StudentCreateCommand = new RelayCommand(CreateStudent);
+            this.StudentEditCommand = new RelayCommand(EditStudent, CanEditStudent);
+            this.StudentDeleteCommand = new RelayCommand(DeleteStudent, CanDeleteStudent);
 
-            this.SemesterList = new ObservableCollection<Semester>(SemesterDal.FindAll());
+            this.DeleteFilter = new RelayCommand(DeleteSelectedFilter);
+            this._contextDal = new TeacherDAL(DbContext);
+
+            this.SemesterList = ReloadSemesterList();
             this.TeacherList = new ObservableCollection<Teacher>(_contextDal.FindAll());
-            this.SessionGroupList = new ObservableCollection<SessionGroup>(SessionGroupDal.FindAll());
-            this.TeamList = new ObservableCollection<Team>(TeamDal.FindAll());
+            this.SessionGroupList = ReloadActiveSessionGroupList();
+            this.TeamList = ReloadActiveTeamList();
+            this.StudentList = ReloadStudentList();
 
             this.LogoutCommand = new RelayCommand(Logout);
         }
-        //private Expression onlyActiveFilter()
-        //{
-        //    if (OnlyActiveData)
-        //    {
-        //        return
-        //    }
-        //}
+
+        private void DeleteSelectedFilter(object param)
+        {
+            ComboBox cb = (ComboBox)param;
+            switch (cb.Name)
+            {
+                case "TeacherCB":
+                    TeacherFilter = null;
+                    break;
+                case "SessionGroupCB":
+                    SessionGroupFilter = null;
+                    break;
+                case "TeamCB":
+                    TeamFilter = null;
+                    break;
+            }
+            ((ComboBox)param).SelectedItem = null;
+        }
+
         private void Logout()
         {
             SwitchWindows(new LoginWindow());
         }
-       
+
         #region CommandMethods
         private void CreateSemester()
         {
@@ -128,7 +187,7 @@ namespace SMaP_APP.ViewModel
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
-            this.SemesterList = new ObservableCollection<Semester>(SemesterDal.FindAll());
+            this.SemesterList = ReloadSemesterList();
         }
         private void EditSemester(object param)
         {
@@ -137,7 +196,9 @@ namespace SMaP_APP.ViewModel
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
-            this.SemesterList = new ObservableCollection<Semester>(DbContext.Set<Semester>().Where(x => !x.Deleted));
+            this.SemesterList = ReloadSemesterList();
+            this.SessionGroupList = ReloadActiveSessionGroupList();
+            this.TeamList = ReloadActiveTeamList();
         }
         private void DeleteSemester(object param)
         {
@@ -176,6 +237,8 @@ namespace SMaP_APP.ViewModel
             SwitchWindows(target, true);
             this.TeacherList = new ObservableCollection<Teacher>(
                _contextDal.FindAll());
+            this.SessionGroupList = ReloadActiveSessionGroupList();
+            this.TeamList = ReloadActiveTeamList();
         }
         private void DeleteTeacher(object param)
         {
@@ -195,16 +258,19 @@ namespace SMaP_APP.ViewModel
                 }
             }
         }
-
+        
         private void CreateSessionGroup()
         {
-            SessionGroup sessionGroup = new SessionGroup();
+            SessionGroup sessionGroup = new SessionGroup
+            {
+                TeacherID = ContextTeacher.ID
+            };
             SessionGroupEditWindow target = new SessionGroupEditWindow(sessionGroup)
             {
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
-            this.SessionGroupList = new ObservableCollection<SessionGroup>(SessionGroupDal.FindAll());
+            this.SessionGroupList = ReloadActiveSessionGroupList();
         }
         private void EditSessionGroup(object param)
         {
@@ -213,7 +279,8 @@ namespace SMaP_APP.ViewModel
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
-            this.SessionGroupList = new ObservableCollection<SessionGroup>(new ObservableCollection<SessionGroup>(_contextDal.applicationDbContext.Set<SessionGroup>().Where(x => !x.Deleted)));
+            this.SessionGroupList = ReloadActiveSessionGroupList();
+            this.TeamList = ReloadActiveTeamList();
         }
         private void DeleteSessionGroup(object param)
         {
@@ -234,7 +301,7 @@ namespace SMaP_APP.ViewModel
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
-            this.TeamList = new ObservableCollection<Team>(TeamDal.FindAll());
+            this.TeamList = ReloadActiveTeamList();
         }
         private void EditTeam(object param)
         {
@@ -243,7 +310,7 @@ namespace SMaP_APP.ViewModel
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
-            this.TeamList = new ObservableCollection<Team>(new ObservableCollection<Team>(_contextDal.applicationDbContext.Set<Team>().Where(x => !x.Deleted)));
+            this.TeamList = ReloadActiveTeamList();
         }
         private void DeleteTeam(object param)
         {
@@ -253,6 +320,36 @@ namespace SMaP_APP.ViewModel
             {
                 TeamList.Remove(selectedTeam);
                 ((TeacherDAL)_contextDal).DeleteTeam(selectedTeam);
+            }
+        }
+
+        private void CreateStudent()
+        {
+            Student student = new Student();
+            StudentEditorWindow target = new StudentEditorWindow(student)
+            {
+                Owner = this.SourceWindow
+            };
+            SwitchWindows(target, true);
+            this.StudentList = ReloadStudentList();
+        }
+        private void EditStudent(object param)
+        {
+            StudentEditorWindow target = new StudentEditorWindow((Student)((DataGrid)param).SelectedItem)
+            {
+                Owner = this.SourceWindow
+            };
+            SwitchWindows(target, true);
+            this.StudentList = ReloadStudentList();
+        }
+        private void DeleteStudent(object param)
+        {
+            Student selectedStudent= (Student)((DataGrid)param).SelectedItem;
+            MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                StudentList.Remove(selectedStudent);
+                ((TeacherDAL)_contextDal).DeleteStudent(selectedStudent);
             }
         }
         #endregion CommandMethods
@@ -291,6 +388,16 @@ namespace SMaP_APP.ViewModel
         private bool CanDeleteTeam(object param)
         {
             return (Team)((ListBox)param).SelectedItem != null;
+        }
+
+        private bool CanDeleteStudent(object param)
+        {
+            return (Student)((DataGrid)param).SelectedItem != null;
+        }
+
+        private bool CanEditStudent(object param)
+        {
+            return (Student)((DataGrid)param).SelectedItem != null;
         }
         #endregion CanExecutes
     }

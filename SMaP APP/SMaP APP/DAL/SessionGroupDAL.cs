@@ -15,7 +15,7 @@ namespace SMaP_APP.DAL
         public SessionGroupDAL(SMaPEntities applicationDbContext) : base(applicationDbContext)
         {
             TeacherList= applicationDbContext.Set<Teacher>().Where(x => !x.Deleted).ToList();
-            SemesterList = applicationDbContext.Set<Semester>().Where(x => !x.Deleted).ToList();
+            SemesterList = applicationDbContext.Set<Semester>().Where(x => !x.Deleted && x.IsActive).ToList();
         }
     }
 }
