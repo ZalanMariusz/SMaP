@@ -11,10 +11,15 @@ namespace SMaP_APP.DAL
     class SemesterDAL : GenericDAL<Semester>
     {
         public List<Dictionary> SemesterTypes { get; private set; }
-        //public List<Semester> AllSemesters { get; set; }
-        public SemesterDAL(SMaPEntities applicationDbContext) : base(applicationDbContext)
+        public SemesterDAL()
         {
-            this.SemesterTypes = applicationDbContext.Set<Dictionary>().Where(x => !x.Deleted && x.ItemType == "SemesterType").ToList();
+            int TypeID = applicationDbContext.Set<DictionaryType>().Where(x => !x.Deleted && x.TypeName == "Félév típusok").SingleOrDefault().ID;
+            this.SemesterTypes = applicationDbContext.Set<Dictionary>().Where(x => !x.Deleted && x.DictionaryTypeID==TypeID).ToList();
+        }
+        public void CopySemester(int sourceId,string newSemesterName, int newSemesterTypedId)
+        {
+            RefreshContext();
+            applicationDbContext.uspCopySemester(sourceId, newSemesterName, newSemesterTypedId);
         }
     }
 }

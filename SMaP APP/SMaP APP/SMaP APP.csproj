@@ -64,14 +64,22 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Converters\BoolNegator.cs" />
     <Compile Include="Converters\SemesterIsActiveConverter.cs" />
-    <Compile Include="Converters\SessionGroupNameConverter.cs" />
+    <Compile Include="Converters\SessionGroupCBVisibilityConverter.cs" />
+    <Compile Include="Converters\SessionGroupSemesterNameConverter.cs" />
+    <Compile Include="Converters\SessionGroupTeacherNameConverter.cs" />
     <Compile Include="Converters\StudentNameConverter.cs" />
     <Compile Include="Converters\StudentSessionGroupConverter.cs" />
     <Compile Include="Converters\StudentTeamConverter.cs" />
     <Compile Include="Converters\TeacherWindowHeaderConverter.cs" />
+    <Compile Include="Converters\TeamCaptainNameConverter.cs" />
     <Compile Include="Converters\TeamNameConverter.cs" />
+    <Compile Include="Converters\TeamSessionGroupNameConverter.cs" />
+    <Compile Include="DAL\DictionaryDAL.cs" />
+    <Compile Include="DAL\DictionaryTypeDAL.cs" />
     <Compile Include="DAL\GenericDAL.cs" />
+    <Compile Include="DAL\GetContext.cs" />
     <Compile Include="DAL\SemesterDAL.cs" />
     <Compile Include="DAL\SessionGroupDAL.cs" />
     <Compile Include="DAL\StudentDAL.cs" />
@@ -81,12 +89,30 @@
     <Compile Include="Model\Dictionary.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\DictionaryType.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\IBaseModel.cs" />
     <Compile Include="Model\Semester.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\SessionGroup.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SMaP_Model.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SMaP_Model.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SMaP_Model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SMaP_Model.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SMaP_Model.edmx</DependentUpon>
     </Compile>
     <Compile Include="Model\Student.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
@@ -97,11 +123,17 @@
     <Compile Include="Model\Team.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Users.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\uspGetActiveStudents_Result.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\DictionaryTypeViewModel.cs" />
+    <Compile Include="ViewModel\DictionaryViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\SemesterCopyViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
     <Compile Include="ViewModel\SessionGroupEditViewModel.cs" />
     <Compile Include="ViewModel\StudentEditorWindowViewModel.cs" />
@@ -110,8 +142,18 @@
     <Compile Include="ViewModel\TeamEditorWindowViewModel.cs" />
     <Compile Include="ViewModel\ValidationRules\EmptyIntValueValidation.cs" />
     <Compile Include="ViewModel\ValidationRules\EmptyStringValidation.cs" />
+    <Compile Include="ViewModel\ValidationRules\NeptunLengthValidation.cs" />
     <Compile Include="ViewModel\ValidationRules\SemesterNameValidation.cs" />
     <Compile Include="ViewModel\ValidationRules\SemesterTypeValidation.cs" />
+    <Compile Include="View\CopySemesterWindow.xaml.cs">
+      <DependentUpon>CopySemesterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DictionaryEditWindow.xaml.cs">
+      <DependentUpon>DictionaryEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DictionaryTypeEditWindow.xaml.cs">
+      <DependentUpon>DictionaryTypeEditWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SemesterWindow.xaml.cs">
       <DependentUpon>SemesterWindow.xaml</DependentUpon>
     </Compile>
@@ -130,6 +172,18 @@
     <Compile Include="View\TeamEditorWindow.xaml.cs">
       <DependentUpon>TeamEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\CopySemesterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DictionaryEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DictionaryTypeEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\LoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -168,24 +222,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\SMaP_Model.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SMaP_Model.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\SMaP_Model.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SMaP_Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\SMaP_Model.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SMaP_Model.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Users.cs">
-      <DependentUpon>SMaP_Model.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -217,14 +253,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Resource Include="Images\edit-16.ico" />
-    <Resource Include="Images\plus-16.ico" />
-    <Resource Include="Images\x-mark-16.ico" />
-    <Resource Include="Images\copy-16.ico" />
     <Content Include="Model\SMaP_Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>SMaP_Model.edmx</DependentUpon>
@@ -235,6 +268,12 @@
       <DependentUpon>SMaP_Model.edmx</DependentUpon>
       <LastGenOutput>SMaP_Model.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\edit-16.ico" />
+    <Resource Include="Images\plus-16.ico" />
+    <Resource Include="Images\x-mark-16.ico" />
+    <Resource Include="Images\copy-16.ico" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

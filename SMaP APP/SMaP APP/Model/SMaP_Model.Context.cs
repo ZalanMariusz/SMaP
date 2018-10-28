@@ -20,6 +20,7 @@ namespace SMaP_APP.Model
         public SMaPEntities()
             : base("name=SMaPEntities")
         {
+            Database.Connection.ConnectionString = Database.Connection.ConnectionString.Replace("*******", "Szakdoga2");
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -27,13 +28,31 @@ namespace SMaP_APP.Model
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Semester> Semester { get; set; }
         public virtual DbSet<Dictionary> Dictionary { get; set; }
+        public virtual DbSet<Semester> Semester { get; set; }
+        public virtual DbSet<SessionGroup> SessionGroup { get; set; }
+        public virtual DbSet<Student> Student { get; set; }
         public virtual DbSet<Teacher> Teacher { get; set; }
         public virtual DbSet<Team> Team { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<Student> Student { get; set; }
-        public virtual DbSet<SessionGroup> SessionGroup { get; set; }
+        public virtual DbSet<DictionaryType> DictionaryType { get; set; }
+    
+        public virtual int uspCopySemester(Nullable<int> sourceId, string newSemesterName, Nullable<int> newSemesterTypeID)
+        {
+            var sourceIdParameter = sourceId.HasValue ?
+                new ObjectParameter("sourceId", sourceId) :
+                new ObjectParameter("sourceId", typeof(int));
+    
+            var newSemesterNameParameter = newSemesterName != null ?
+                new ObjectParameter("newSemesterName", newSemesterName) :
+                new ObjectParameter("newSemesterName", typeof(string));
+    
+            var newSemesterTypeIDParameter = newSemesterTypeID.HasValue ?
+                new ObjectParameter("newSemesterTypeID", newSemesterTypeID) :
+                new ObjectParameter("newSemesterTypeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspCopySemester", sourceIdParameter, newSemesterNameParameter, newSemesterTypeIDParameter);
+        }
     
         public virtual ObjectResult<Student> uspGetActiveStudents(Nullable<int> sessionGroupID, Nullable<int> teamID, Nullable<int> teacherID)
         {

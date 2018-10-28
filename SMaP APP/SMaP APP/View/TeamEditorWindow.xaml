@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SMaP_APP.View"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         mc:Ignorable="d"
+        Background="LightBlue"
         Title="Csapat szerkesztése" Height="214.925" Width="300" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Window.Resources>
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
@@ -28,8 +29,8 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Button Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="10,137,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Left" Margin="207,137,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button IsDefault="True" Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="10,137,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button IsCancel="True"  Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Left" Margin="207,137,0,0" VerticalAlignment="Top" Width="75"/>
         <Label Content="Csapat neve" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Width="105"/>
         <Label Content="Féléves csoport" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Width="105"/>
         <Label Content="Csapatvezető" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" Width="105"/>
@@ -57,6 +58,7 @@
             ItemsSource="{Binding StudentList}"
             DisplayMemberPath="Users.FullName"
             SelectedValuePath="ID"
+            SelectedValue="{Binding SelectedTeam.TeamCaptain}"
             ToolTipService.InitialShowDelay="0"/>
     </Grid>
 </Window>

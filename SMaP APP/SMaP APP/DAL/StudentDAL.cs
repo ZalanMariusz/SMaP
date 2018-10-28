@@ -10,7 +10,7 @@ namespace SMaP_APP.DAL
 {
     class StudentDAL : GenericDAL<Student>
     {
-        public StudentDAL(SMaPEntities applicationDbContext): base(applicationDbContext)
+        public StudentDAL()
         {
         }
 

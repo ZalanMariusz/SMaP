@@ -23,12 +23,12 @@ namespace SMaP_APP.Model
         public int ID { get; set; }
         public string ItemName { get; set; }
         public string ShortItemName { get; set; }
-        public Nullable<System.DateTime> ValidFrom { get; set; }
-        public Nullable<System.DateTime> ValidTo { get; set; }
-        public string ItemType { get; set; }
+        public int DictionaryTypeID { get; set; }
+        public bool IsProtected { get; set; }
         public bool Deleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Semester> Semester { get; set; }
+        public virtual DictionaryType DictionaryType { get; set; }
     }
 }

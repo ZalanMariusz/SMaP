@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
         Title="Tanár szerkesztése" Height="209" Width="412.863"
-        Background="Beige"
+        Background="LightBlue"
         >
     <Window.Resources>
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
@@ -23,8 +23,8 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Button  Content="Mentés" HorizontalAlignment="Left" Height="24" Margin="10,138,0,0" VerticalAlignment="Top" Width="135" Command="{Binding SaveCommand}"/>
-        <Button Content="Mégsem" HorizontalAlignment="Left" Height="24" Margin="260,138,0,0" VerticalAlignment="Top" Width="135" Command="{Binding CloseCommand}"/>
+        <Button IsDefault="True"  Content="Mentés" HorizontalAlignment="Left" Height="24" Margin="10,138,0,0" VerticalAlignment="Top" Width="135" Command="{Binding SaveCommand}"/>
+        <Button IsCancel="True"  Content="Mégsem" HorizontalAlignment="Left" Height="24" Margin="260,138,0,0" VerticalAlignment="Top" Width="135" Command="{Binding CloseCommand}"/>
         <Label Content="Vezetéknév" HorizontalAlignment="Left" Height="27" Margin="10,15,0,0" VerticalAlignment="Top" Width="135"/>
         <Label Content="Keresztnév" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="135"/>
         <Label Content="NEPTUN" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Width="135"/>
@@ -47,6 +47,7 @@
             <Binding Path="SelectedTeacher.Users.NEPTUN" UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
                     <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
+                    <valid:NeptunLengthValidation ValidatesOnTargetUpdated="True"/>
                 </Binding.ValidationRules>
             </Binding>
         </TextBox>

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP.View"
         mc:Ignorable="d"
+        Background="LightBlue"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         Title="Félév szerkesztése" Height="183.491" Width="364.495" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Window.Resources>
@@ -29,7 +30,7 @@
     </Window.Resources>
     <Grid>
         <Label Content="Szemeszter neve" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top" />
-        <TextBox  Name="wtf" HorizontalAlignment="Left"  Height="23" Margin="133,26,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="213"  Style="{StaticResource textBoxError}" ToolTipService.InitialShowDelay="0">
+        <TextBox HorizontalAlignment="Left"  Height="23" Margin="133,26,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="213"  Style="{StaticResource textBoxError}" ToolTipService.InitialShowDelay="0">
             <Binding Path="SelectedSemester.SemesterName" UpdateSourceTrigger="PropertyChanged" ValidatesOnNotifyDataErrors="True" NotifyOnValidationError="True">
                 <Binding.ValidationRules>
                     <valid:SemesterNameValidation ValidatesOnTargetUpdated="True"/>
@@ -56,7 +57,6 @@
         <CheckBox Name="asd" IsChecked="{Binding SelectedSemester.IsActive}" HorizontalAlignment="Left" Margin="133,84,0,0" Height="15" VerticalAlignment="Top" RenderTransformOrigin="0.232,-0.148"/>
         <Button IsDefault="True" Content="Mentés" HorizontalAlignment="Left" Margin="15,109,0,0" VerticalAlignment="Top" Width="134" Command="{Binding SaveCommand}"/>
         <Button IsCancel="True" Content="Mégsem" HorizontalAlignment="Left" Margin="271,109,0,0" VerticalAlignment="Top" Width="75" Command="{Binding CloseCommand}"/>
-        <Button IsDefault="True" Content="Mentés" HorizontalAlignment="Left" Margin="183,109,0,0" VerticalAlignment="Top" Width="43" Click="Button_Click"/>
 
     </Grid>
 </Window>

@@ -20,21 +20,33 @@ namespace SMaP_APP.ViewModel
         public RelayCommand SemesterEditCommand { get; set; }
         public RelayCommand SemesterCreateCommand { get; set; }
         public RelayCommand SemesterDeleteCommand { get; set; }
+
         public RelayCommand TeacherEditCommand { get; set; }
         public RelayCommand TeacherCreateCommand { get; set; }
         public RelayCommand TeacherDeleteCommand { get; set; }
+
         public RelayCommand SessionGroupCreateCommand { get; set; }
         public RelayCommand SessionGroupEditCommand { get; set; }
         public RelayCommand SessionGroupDeleteCommand { get; set; }
+
         public RelayCommand TeamCreateCommand { get; set; }
         public RelayCommand TeamEditCommand { get; set; }
         public RelayCommand TeamDeleteCommand { get; set; }
-        public RelayCommand DeleteFilter { get; set; }
 
         public RelayCommand StudentCreateCommand { get; set; }
         public RelayCommand StudentEditCommand { get; set; }
         public RelayCommand StudentDeleteCommand { get; set; }
 
+        public RelayCommand DictionaryCreateCommand { get; set; }
+        public RelayCommand DictionaryEditCommand { get; set; }
+        public RelayCommand DictionaryDeleteCommand { get; set; }
+
+        public RelayCommand DictionaryTypeCreateCommand { get; set; }
+        public RelayCommand DictionaryTypeEditCommand { get; set; }
+        public RelayCommand DictionaryTypeDeleteCommand { get; set; }
+
+        public RelayCommand CopySemesterCommand { get; set; }
+        public RelayCommand DeleteFilter { get; set; }
         public RelayCommand LogoutCommand { get; set; }
         #endregion Commands
 
@@ -44,25 +56,55 @@ namespace SMaP_APP.ViewModel
         private ObservableCollection<SessionGroup> sessionGroupList;
         private ObservableCollection<Team> teamList;
         private ObservableCollection<Student> studentList;
+        private ObservableCollection<Dictionary> dictionaryList;
+        private ObservableCollection<DictionaryType> dictionaryTypeList;
+
         public Teacher ContextTeacher { get; set; }
+
         private Teacher teacherFilter;
         private SessionGroup sessionGroupFilter;
+        private SessionGroup sessionGroupTeamFilter;
         private Team teamFilter;
+        private DictionaryType dictionaryTypeFilter;
 
-        public Teacher TeacherFilter {
+        public DictionaryType DictionaryTypeFilter
+        {
+            get { return dictionaryTypeFilter; }
+            set { dictionaryTypeFilter = value; NotifyPropertyChanged(); DictionaryList = ReloadDictionaryList(); }
+        }
+        public SessionGroup SessionGroupTeamFilter
+        {
+            get { return sessionGroupTeamFilter; }
+            set { sessionGroupTeamFilter = value; NotifyPropertyChanged(); TeamList = ReloadActiveTeamList(); }
+        }
+
+        public Teacher TeacherFilter
+        {
             get { return teacherFilter; }
-            set { teacherFilter = value; NotifyPropertyChanged("StudentList"); }
+            set { teacherFilter = value; this.StudentList = ReloadStudentList(); }
         }
 
         public SessionGroup SessionGroupFilter
         {
             get { return sessionGroupFilter; }
-            set { sessionGroupFilter = value; NotifyPropertyChanged("StudentList"); }
+            set { sessionGroupFilter = value; this.StudentList = ReloadStudentList(); }
         }
         public Team TeamFilter
         {
             get { return teamFilter; }
-            set { teamFilter = value; NotifyPropertyChanged("StudentList"); }
+            set { teamFilter = value; this.StudentList = ReloadStudentList(); }
+        }
+
+        public ObservableCollection<Dictionary> DictionaryList
+        {
+            get { return dictionaryList; }
+            set { this.dictionaryList = value; NotifyPropertyChanged(); }
+        }
+
+        public ObservableCollection<DictionaryType> DictionaryTypeList
+        {
+            get { return dictionaryTypeList; }
+            set { this.dictionaryTypeList = value; NotifyPropertyChanged(); }
         }
 
         public ObservableCollection<Semester> SemesterList
@@ -92,9 +134,6 @@ namespace SMaP_APP.ViewModel
         }
         #endregion Properties and Fields
 
-        #region DALs
-        #endregion DALs
-
         private ObservableCollection<SessionGroup> ReloadActiveSessionGroupList()
         {
             return new ObservableCollection<SessionGroup>(((TeacherDAL)_contextDal).ActiveSessionGroupList());
@@ -102,6 +141,10 @@ namespace SMaP_APP.ViewModel
 
         private ObservableCollection<Team> ReloadActiveTeamList()
         {
+            if (SessionGroupTeamFilter != null)
+            {
+                return new ObservableCollection<Team>(((TeacherDAL)_contextDal).ActiveTeamList().Where(x => x.SessionGroupID == SessionGroupTeamFilter.ID));
+            }
             return new ObservableCollection<Team>(((TeacherDAL)_contextDal).ActiveTeamList());
         }
 
@@ -113,10 +156,25 @@ namespace SMaP_APP.ViewModel
         private ObservableCollection<Student> ReloadStudentList()
         {
             int? SessionGroupFilterID = SessionGroupFilter == null ? null : (int?)SessionGroupFilter.ID;
-            int? TeamFilterID= TeamFilter == null ? null : (int?)TeamFilter.ID;
-            int? TeacherFilterID= TeacherFilter == null ? null : (int?)TeacherFilter.ID;
+            int? TeamFilterID = TeamFilter == null ? null : (int?)TeamFilter.ID;
+            int? TeacherFilterID = TeacherFilter == null ? null : (int?)TeacherFilter.ID;
             return new ObservableCollection<Student>(((TeacherDAL)_contextDal).StudentList(SessionGroupFilterID, TeamFilterID, TeacherFilterID));
         }
+
+        private ObservableCollection<Dictionary> ReloadDictionaryList()
+        {
+            if (DictionaryTypeFilter != null)
+            {
+                return new ObservableCollection<Dictionary>(((TeacherDAL)_contextDal).DictionaryList().Where(x=>x.DictionaryTypeID==dictionaryTypeFilter.ID));
+            }
+            return new ObservableCollection<Dictionary>(((TeacherDAL)_contextDal).DictionaryList());
+        }
+
+        private ObservableCollection<DictionaryType> ReloadDictionaryTypeList()
+        {
+            return new ObservableCollection<DictionaryType>(((TeacherDAL)_contextDal).DictionaryTypeList());
+        }
+
 
         public TeacherWindowViewModel(TeacherWindow teacherWindow, Teacher ContextTeacher)
         {
@@ -124,35 +182,48 @@ namespace SMaP_APP.ViewModel
             this.ContextTeacher = ContextTeacher;
 
             this.SemesterCreateCommand = new RelayCommand(CreateSemester);
-            this.SemesterEditCommand = new RelayCommand(EditSemester, CanEditSemester);
-            this.SemesterDeleteCommand = new RelayCommand(DeleteSemester, CanDeleteSemester);
+            this.SemesterEditCommand = new RelayCommand(EditSemester, CanEditOrDeleteSelectedItem);
+            this.SemesterDeleteCommand = new RelayCommand(DeleteSemester, CanEditOrDeleteSelectedItem);
 
             this.TeacherCreateCommand = new RelayCommand(CreateTeacher);
-            this.TeacherEditCommand = new RelayCommand(EditTeacher, CanEditTeacher);
-            this.TeacherDeleteCommand = new RelayCommand(DeleteTeacher, CanDeleteTeacher);
+            this.TeacherEditCommand = new RelayCommand(EditTeacher, CanEditOrDeleteSelectedItem);
+            this.TeacherDeleteCommand = new RelayCommand(DeleteTeacher, CanEditOrDeleteSelectedItem);
 
             this.SessionGroupCreateCommand = new RelayCommand(CreateSessionGroup);
-            this.SessionGroupEditCommand = new RelayCommand(EditSessionGroup, CanEditSessionGroup);
-            this.SessionGroupDeleteCommand = new RelayCommand(DeleteSessionGroup, CanDeleteSessionGroup);
+            this.SessionGroupEditCommand = new RelayCommand(EditSessionGroup, CanEditOrDeleteSelectedItem);
+            this.SessionGroupDeleteCommand = new RelayCommand(DeleteSessionGroup, CanEditOrDeleteSelectedItem);
 
             this.TeamCreateCommand = new RelayCommand(CreateTeam);
-            this.TeamEditCommand = new RelayCommand(EditTeam, CanEditTeam);
-            this.TeamDeleteCommand = new RelayCommand(DeleteTeam, CanDeleteTeam);
+            this.TeamEditCommand = new RelayCommand(EditTeam, CanEditOrDeleteSelectedItem);
+            this.TeamDeleteCommand = new RelayCommand(DeleteTeam, CanEditOrDeleteSelectedItem);
 
             this.StudentCreateCommand = new RelayCommand(CreateStudent);
-            this.StudentEditCommand = new RelayCommand(EditStudent, CanEditStudent);
-            this.StudentDeleteCommand = new RelayCommand(DeleteStudent, CanDeleteStudent);
+            this.StudentEditCommand = new RelayCommand(EditStudent, CanEditOrDeleteSelectedItem);
+            this.StudentDeleteCommand = new RelayCommand(DeleteStudent, CanEditOrDeleteSelectedItem);
 
+            this.DictionaryCreateCommand = new RelayCommand(CreateDictionary);
+            this.DictionaryEditCommand = new RelayCommand(EditDictionary, CanEditOrDeleteSelectedItem);
+            this.DictionaryDeleteCommand = new RelayCommand(DeleteDictionary, CanDeleteDictionary);
+
+            this.DictionaryTypeCreateCommand = new RelayCommand(CreateDictionaryType);
+            this.DictionaryTypeEditCommand = new RelayCommand(EditDictionaryType, CanEditOrDeleteSelectedItem);
+            this.DictionaryTypeDeleteCommand = new RelayCommand(DeleteDictionaryType, CanEditOrDeleteSelectedItem);
+
+            this.CopySemesterCommand = new RelayCommand(CopySelectedSemester, CanEditOrDeleteSelectedItem);
             this.DeleteFilter = new RelayCommand(DeleteSelectedFilter);
-            this._contextDal = new TeacherDAL(DbContext);
+            this._contextDal = new TeacherDAL();
 
             this.SemesterList = ReloadSemesterList();
             this.TeacherList = new ObservableCollection<Teacher>(_contextDal.FindAll());
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
             this.StudentList = ReloadStudentList();
+            this.DictionaryList = ReloadDictionaryList();
+            this.DictionaryTypeList = ReloadDictionaryTypeList();
 
             this.LogoutCommand = new RelayCommand(Logout);
+            this.TeacherFilter = _contextDal.FindById(ContextTeacher.ID);
+            this.DictionaryTypeFilter = DictionaryTypeList[0];
         }
 
         private void DeleteSelectedFilter(object param)
@@ -168,6 +239,12 @@ namespace SMaP_APP.ViewModel
                     break;
                 case "TeamCB":
                     TeamFilter = null;
+                    break;
+                case "SessionGroupTeamFilterCB":
+                    SessionGroupTeamFilter = null;
+                    break;
+                case "DictionaryTypeFilterCB":
+                    DictionaryTypeFilter = null;
                     break;
             }
             ((ComboBox)param).SelectedItem = null;
@@ -191,7 +268,7 @@ namespace SMaP_APP.ViewModel
         }
         private void EditSemester(object param)
         {
-            SemesterWindow target = new SemesterWindow((Semester)((ListBox)param).SelectedItem)
+            SemesterWindow target = new SemesterWindow((Semester)((DataGrid)param).SelectedItem)
             {
                 Owner = this.SourceWindow
             };
@@ -199,13 +276,19 @@ namespace SMaP_APP.ViewModel
             this.SemesterList = ReloadSemesterList();
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
+            this.StudentList = ReloadStudentList();
         }
         private void DeleteSemester(object param)
         {
-            Semester selectedSemester = (Semester)((ListBox)param).SelectedItem;
+            Semester selectedSemester = (Semester)((DataGrid)param).SelectedItem;
+            SessionGroupDAL sessionGroupDal=new SessionGroupDAL();
             if (selectedSemester.IsActive == true)
             {
                 MessageBox.Show("Aktív szemeszter nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else if (sessionGroupDal.FindAll(x=>x.SemesterID==selectedSemester.ID).FirstOrDefault()!=null)
+            {
+                MessageBox.Show("A félévhez tartozik csoport, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
@@ -230,22 +313,25 @@ namespace SMaP_APP.ViewModel
         }
         private void EditTeacher(object param)
         {
-            TeacherEditorWindow target = new TeacherEditorWindow((Teacher)((ListBox)param).SelectedItem)
+            TeacherEditorWindow target = new TeacherEditorWindow((Teacher)((DataGrid)param).SelectedItem)
             {
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
-            this.TeacherList = new ObservableCollection<Teacher>(
-               _contextDal.FindAll());
+            this.TeacherList = new ObservableCollection<Teacher>(_contextDal.FindAll());
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
         }
         private void DeleteTeacher(object param)
         {
-            Teacher selectedTeacher = (Teacher)((ListBox)param).SelectedItem;
+            Teacher selectedTeacher = (Teacher)((DataGrid)param).SelectedItem;
             if (selectedTeacher.ID == ContextTeacher.ID)
             {
                 MessageBox.Show("Bejelentkezett felhasználó nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else if (this.SessionGroupList.Where(x=>x.TeacherID==selectedTeacher.ID).FirstOrDefault() != null)
+            {
+                MessageBox.Show("Az otkatóhoz tartozik csoport, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
@@ -258,7 +344,7 @@ namespace SMaP_APP.ViewModel
                 }
             }
         }
-        
+
         private void CreateSessionGroup()
         {
             SessionGroup sessionGroup = new SessionGroup
@@ -271,25 +357,35 @@ namespace SMaP_APP.ViewModel
             };
             SwitchWindows(target, true);
             this.SessionGroupList = ReloadActiveSessionGroupList();
+            this.TeamList = ReloadActiveTeamList();
         }
         private void EditSessionGroup(object param)
         {
-            SessionGroupEditWindow target = new SessionGroupEditWindow((SessionGroup)((ListBox)param).SelectedItem)
+            SessionGroupEditWindow target = new SessionGroupEditWindow((SessionGroup)((DataGrid)param).SelectedItem)
             {
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
+            this.StudentList = ReloadStudentList();
         }
         private void DeleteSessionGroup(object param)
         {
-            SessionGroup selectedSessionGroup = (SessionGroup)((ListBox)param).SelectedItem;
-            MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (messageBoxResult == MessageBoxResult.Yes)
+            
+            SessionGroup selectedSessionGroup = (SessionGroup)((DataGrid)param).SelectedItem;
+            if (this.TeamList.FirstOrDefault(x => x.SessionGroupID==selectedSessionGroup.ID)!=null)
             {
-                SessionGroupList.Remove(selectedSessionGroup);
-                ((TeacherDAL)_contextDal).DeleteSessionGroup(selectedSessionGroup);
+                MessageBox.Show("A csoporthoz tartozik csapat, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    SessionGroupList.Remove(selectedSessionGroup);
+                    ((TeacherDAL)_contextDal).DeleteSessionGroup(selectedSessionGroup);
+                }
             }
         }
 
@@ -305,22 +401,30 @@ namespace SMaP_APP.ViewModel
         }
         private void EditTeam(object param)
         {
-            TeamEditorWindow target = new TeamEditorWindow((Team)((ListBox)param).SelectedItem)
+            TeamEditorWindow target = new TeamEditorWindow((Team)((DataGrid)param).SelectedItem)
             {
                 Owner = this.SourceWindow
             };
             SwitchWindows(target, true);
             this.TeamList = ReloadActiveTeamList();
+            this.StudentList = ReloadStudentList();
         }
         private void DeleteTeam(object param)
         {
-            Team selectedTeam = (Team)((ListBox)param).SelectedItem;
-            MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (messageBoxResult == MessageBoxResult.Yes)
+            Team selectedTeam = (Team)((DataGrid)param).SelectedItem;
+            if (this.StudentList.FirstOrDefault(x => x.TeamID == selectedTeam.ID) != null)
             {
-                TeamList.Remove(selectedTeam);
-                ((TeacherDAL)_contextDal).DeleteTeam(selectedTeam);
+                MessageBox.Show("A csapathoz tartozik hallgató, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
+            else
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    TeamList.Remove(selectedTeam);
+                    ((TeacherDAL)_contextDal).DeleteTeam(selectedTeam);
+                }
+            }   
         }
 
         private void CreateStudent()
@@ -341,63 +445,121 @@ namespace SMaP_APP.ViewModel
             };
             SwitchWindows(target, true);
             this.StudentList = ReloadStudentList();
+            this.TeamList = ReloadActiveTeamList();
         }
         private void DeleteStudent(object param)
         {
-            Student selectedStudent= (Student)((DataGrid)param).SelectedItem;
+            Student selectedStudent = (Student)((DataGrid)param).SelectedItem;
+            Team studentTeam = _contextDal.applicationDbContext.Team.FirstOrDefault(x => x.TeamCaptain == selectedStudent.ID);
+            if (studentTeam != null && selectedStudent.Team.First().TeamCaptain ==selectedStudent.ID)
+            {
+                MessageBox.Show("Csapatkapitány nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    ((TeacherDAL)_contextDal).DeleteStudentUser(selectedStudent);
+                    StudentList.Remove(selectedStudent);
+                    ((TeacherDAL)_contextDal).DeleteStudent(selectedStudent);
+                }
+            }
+            this.StudentList = ReloadStudentList();
+        }
+
+        private void CreateDictionary()
+        {
+            Dictionary dictionary = new Dictionary();
+            DictionaryEditWindow target = new DictionaryEditWindow(dictionary)
+            {
+                Owner = this.SourceWindow
+            };
+            SwitchWindows(target, true);
+            this.DictionaryList = ReloadDictionaryList();
+        }
+        private void EditDictionary(object param)
+        {
+            DictionaryEditWindow target = new DictionaryEditWindow((Dictionary)((DataGrid)param).SelectedItem)
+            {
+                Owner = this.SourceWindow
+            };
+            SwitchWindows(target, true);
+            this.DictionaryList = ReloadDictionaryList();
+        }
+        private void DeleteDictionary(object param)
+        {
+            Dictionary selectedDictionary = (Dictionary)((DataGrid)param).SelectedItem;
             MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                StudentList.Remove(selectedStudent);
-                ((TeacherDAL)_contextDal).DeleteStudent(selectedStudent);
+                DictionaryList.Remove(selectedDictionary);
+                ((TeacherDAL)_contextDal).DeleteDictionary(selectedDictionary);
             }
         }
+
+        private void CreateDictionaryType()
+        {
+            DictionaryType dictionaryType = new DictionaryType();
+            DictionaryTypeEditWindow target = new DictionaryTypeEditWindow(dictionaryType)
+            {
+                Owner = this.SourceWindow
+            };
+            SwitchWindows(target, true);
+            this.DictionaryTypeList = ReloadDictionaryTypeList();
+        }
+        private void EditDictionaryType(object param)
+        {
+            DictionaryTypeEditWindow target = new DictionaryTypeEditWindow((DictionaryType)((DataGrid)param).SelectedItem)
+            {
+                Owner = this.SourceWindow
+            };
+            SwitchWindows(target, true);
+            this.DictionaryList = ReloadDictionaryList();
+        }
+        private void DeleteDictionaryType(object param)
+        {
+            DictionaryType selectedDictionaryType = (DictionaryType)((DataGrid)param).SelectedItem;
+            if (this.DictionaryList.FirstOrDefault(x => x.DictionaryTypeID==selectedDictionaryType.ID)!=null)
+            {
+                MessageBox.Show("A szótár típushoz tartozik szótár elem, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    DictionaryTypeList.Remove(selectedDictionaryType);
+                    ((TeacherDAL)_contextDal).DeleteDictionaryType(selectedDictionaryType);
+                }
+            }
+        }
+
+        private void CopySelectedSemester(object param)
+        {
+            Semester selectedSemester = (Semester)((DataGrid)param).SelectedItem;
+            CopySemesterWindow target = new CopySemesterWindow(selectedSemester)
+            {
+                Owner = this.SourceWindow
+            };
+            SwitchWindows(target, true);
+            this.SemesterList = ReloadSemesterList();
+            this.SessionGroupList = ReloadActiveSessionGroupList();
+            this.TeamList = ReloadActiveTeamList();
+            this.StudentList = ReloadStudentList();
+        }
+
         #endregion CommandMethods
         #region CanExecutes
-        private bool CanEditSemester(object param)
+        private bool CanDeleteDictionary(object param)
         {
-            return (Semester)((ListBox)param).SelectedItem != null;
-        }
-        private bool CanDeleteSemester(object param)
-        {
-            return (Semester)((ListBox)param).SelectedItem != null;
+            Dictionary item = (Dictionary)((DataGrid)param).SelectedItem;
+            return item != null && !item.IsProtected;
         }
 
-        private bool CanEditTeacher(object param)
+        private bool CanEditOrDeleteSelectedItem(object param)
         {
-            return (Teacher)((ListBox)param).SelectedItem != null;
-        }
-        private bool CanDeleteTeacher(object param)
-        {
-            return (Teacher)((ListBox)param).SelectedItem != null;
-        }
-
-        private bool CanEditSessionGroup(object param)
-        {
-            return (SessionGroup)((ListBox)param).SelectedItem != null;
-        }
-        private bool CanDeleteSessionGroup(object param)
-        {
-            return (SessionGroup)((ListBox)param).SelectedItem != null;
-        }
-
-        private bool CanEditTeam(object param)
-        {
-            return (Team)((ListBox)param).SelectedItem != null;
-        }
-        private bool CanDeleteTeam(object param)
-        {
-            return (Team)((ListBox)param).SelectedItem != null;
-        }
-
-        private bool CanDeleteStudent(object param)
-        {
-            return (Student)((DataGrid)param).SelectedItem != null;
-        }
-
-        private bool CanEditStudent(object param)
-        {
-            return (Student)((DataGrid)param).SelectedItem != null;
+            return ((DataGrid)param).SelectedItem != null;
         }
         #endregion CanExecutes
     }

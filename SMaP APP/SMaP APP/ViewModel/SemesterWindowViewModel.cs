@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SMaP_APP.ViewModel
 {
@@ -27,14 +28,13 @@ namespace SMaP_APP.ViewModel
         public SemesterWindowViewModel(SemesterWindow semesterWindow, Semester selectedSemester)
         {
             this.SourceWindow = semesterWindow;
-            this._contextDal = new SemesterDAL(DbContext);
+            this._contextDal = new SemesterDAL();
             this.SelectedSemester = selectedSemester;
-            this.SaveCommand = new RelayCommand(SaveSemester, CanSaveSemester);
+            this.SaveCommand = new RelayCommand(SaveSemester, CanExecute);
             SemesterTypes = new ObservableCollection<Dictionary>(((SemesterDAL)_contextDal).SemesterTypes);
         }
         public void SaveSemester()
         {
-
             if (((SemesterDAL)this._contextDal).FindAll(x => x.SemesterName == this.selectedSemester.SemesterName && x.ID != selectedSemester.ID).FirstOrDefault() != null)
             {
                 MessageBox.Show("Szemeszter ezzel a névvel már létezik!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -52,11 +52,5 @@ namespace SMaP_APP.ViewModel
                 this.SourceWindow.Close();
             }
         }
-        public bool CanSaveSemester()
-        {
-            return !String.IsNullOrEmpty(this.selectedSemester.SemesterName) 
-                && this.selectedSemester.SemesterType != 0;
-        }
-
     }
 }

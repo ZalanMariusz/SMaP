@@ -22,26 +22,15 @@ namespace SMaP_APP.ViewModel
         public StudentEditorWindowViewModel(StudentEditorWindow teacherEditorWindow, Student student)
         {
             this.SourceWindow = teacherEditorWindow;
-            this._contextDal = new StudentDAL(DbContext);
-            this.UsersDal = new UsersDAL(DbContext);
+            this._contextDal = new StudentDAL();
+            this.UsersDal = new UsersDAL();
             this.SelectedStudent = student;
-            this.SaveCommand = new RelayCommand(SaveStudent, CanSaveStudent);
+            this.SaveCommand = new RelayCommand(SaveStudent, CanExecute);
             this.TeamList = new ObservableCollection<Team>(((StudentDAL)_contextDal).TeamList());
             if (SelectedStudent.Users == null)
             {
                 SelectedStudent.Users = new Users();
             }
-        }
-
-        private bool CanSaveStudent()
-        {
-            if (!String.IsNullOrEmpty(SelectedStudent.Users.LastName) && !String.IsNullOrEmpty(SelectedStudent.Users.FirstName) &&
-                !String.IsNullOrEmpty(SelectedStudent.Users.NEPTUN) && !String.IsNullOrEmpty(SelectedStudent.Users.Email)
-                )
-            {
-                return true;
-            }
-            return false;
         }
 
         private void SaveStudent()
@@ -58,13 +47,24 @@ namespace SMaP_APP.ViewModel
                     this.SelectedStudent.Users.FullName = String.Format("{0} {1}", SelectedStudent.Users.LastName, SelectedStudent.Users.FirstName);
                     this.SelectedStudent.Users.UserName = SelectedStudent.Users.Email;
                     this.SelectedStudent.Users.UserPassword = UsersDAL.ComputeSha256Hash(SelectedStudent.Users.Email);
-                    this.UsersDal.Create(SelectedStudent.Users);
-                    SelectedStudent.UserID = SelectedStudent.Users.ID;
-                    this._contextDal.Create(SelectedStudent);
+
+                    Users u = SelectedStudent.Users;
+                    this.UsersDal.Create(u);
+                    SelectedStudent.UserID = u.ID;
+                    u.Student.Add(SelectedStudent);
+                    this.UsersDal.Update(u);
                 }
                 else
                 {
                     this.SelectedStudent.Users.FullName = String.Format("{0} {1}", SelectedStudent.Users.LastName, SelectedStudent.Users.FirstName);
+                    Team studentTeamCaptain = _contextDal.applicationDbContext.Team.FirstOrDefault(x => x.TeamCaptain == SelectedStudent.ID);
+                    if (studentTeamCaptain != null && studentTeamCaptain.ID != SelectedStudent.TeamID)
+                    {
+                        studentTeamCaptain.TeamCaptain = null;
+                        TeamDAL td = new TeamDAL();
+                        td.Update(studentTeamCaptain);
+                        SelectedStudent.Team = null;
+                    }
                     this.UsersDal.Update(SelectedStudent.Users);
                     this._contextDal.Update(SelectedStudent);
                 }

@@ -28,15 +28,12 @@ namespace SMaP_APP.ViewModel
         public TeamEditorWindowViewModel(TeamEditorWindow teamEditWindow, Team selectedTeam)
         {
             this.SourceWindow = teamEditWindow;
-            this._contextDal = new TeamDAL(DbContext);
+            this._contextDal = new TeamDAL();
             this.SelectedTeam = selectedTeam;
-            this.SaveCommand = new RelayCommand(SaveTeam, CanSaveTeam);
-            this.StudentList = new ObservableCollection<Student>(((TeamDAL)_contextDal).StudentList);
+            this.SaveCommand = new RelayCommand(SaveTeam, CanExecute);
+            
+            this.StudentList = new ObservableCollection<Student>(((TeamDAL)_contextDal).StudentList.Where(x=>x.TeamID==selectedTeam.ID));
             this.SessionGroupList = new ObservableCollection<SessionGroup>(((TeamDAL)_contextDal).SessionGroupList);
-        }
-        private bool CanSaveTeam()
-        {
-            return (!string.IsNullOrEmpty(SelectedTeam.TeamName) && SelectedTeam.SessionGroupID!=0);
         }
 
         private void SaveTeam()

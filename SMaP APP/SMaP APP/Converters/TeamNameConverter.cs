@@ -20,12 +20,7 @@ namespace SMaP_APP.Converters
             else
             {
                 Team item = (Team)value;
-                SessionGroup sg;
-                using (var DbContext = new SMaPEntities())
-                {
-                    sg = DbContext.SessionGroup.Where(x => x.ID == item.SessionGroupID).FirstOrDefault();
-                }
-                return String.Format("{0} - {1}", item.TeamName, sg.SessionGroupName);
+                return item.SessionGroup.SessionGroupName;
             }
         }
 

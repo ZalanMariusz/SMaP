@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="Login" Height="166.072" Width="439.908" Loaded="Window_Loaded"
         FocusManager.FocusedElement="{Binding ElementName=userNameTB}"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="LightBlue">
     <Grid>
         <TextBox Name="userNameTB" Text="{Binding UserName}" HorizontalAlignment="Left" Height="22" Margin="130,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="292"/>
         <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Name="PasswordBox" HorizontalAlignment="Left" Height="22" Margin="130,76,0,0" VerticalAlignment="Top" Width="292" PasswordChar="*"/>

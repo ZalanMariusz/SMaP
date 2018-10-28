@@ -23,7 +23,7 @@ namespace SMaP_APP.ViewModel
 
         public LoginWindowViewModel(LoginWindow loginWindow)
         {
-            this._contextDal = new UsersDAL(DbContext);
+            this._contextDal = new UsersDAL();
             this.LoginCommand = new RelayCommand(LoginUser, CanLogin);
             this.SourceWindow = loginWindow;
         }
@@ -59,6 +59,11 @@ namespace SMaP_APP.ViewModel
             }
         }
 
+        public bool CanLogin()
+        {
+            return !(String.IsNullOrEmpty(UserName) || String.IsNullOrEmpty(Password));
+        }
+
         static string ComputeSha256Hash(string rawPassword)
         {
             // Create a SHA256   
@@ -75,10 +80,6 @@ namespace SMaP_APP.ViewModel
                 }
                 return builder.ToString();
             }
-        }
-        private bool CanLogin()
-        {
-            return !(String.IsNullOrEmpty(UserName) || String.IsNullOrEmpty(Password));
         }
     }
 }

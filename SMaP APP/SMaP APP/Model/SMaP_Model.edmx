@@ -12,9 +12,16 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ItemName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ShortItemName" Type="nvarchar" MaxLength="100" />
-          <Property Name="ValidFrom" Type="datetime" />
-          <Property Name="ValidTo" Type="datetime" />
-          <Property Name="ItemType" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DictionaryTypeID" Type="int" Nullable="false" />
+          <Property Name="IsProtected" Type="bit" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DictionaryType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Semester">
@@ -78,6 +85,18 @@
           <Property Name="UserPassword" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Dictionary_DictionaryTypeID_DictionaryType">
+          <End Role="DictionaryType" Type="Self.DictionaryType" Multiplicity="1" />
+          <End Role="Dictionary" Type="Self.Dictionary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DictionaryType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Dictionary">
+              <PropertyRef Name="DictionaryTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Semester_SemesterType_Dictionary">
           <End Role="Dictionary" Type="Self.Dictionary" Multiplicity="1" />
           <End Role="Semester" Type="Self.Semester" Multiplicity="*" />
@@ -162,6 +181,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="uspCopySemester" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="sourceId" Type="int" Mode="In" />
+          <Parameter Name="newSemesterName" Type="nvarchar" Mode="In" />
+          <Parameter Name="newSemesterTypeID" Type="int" Mode="In" />
+        </Function>
         <Function Name="uspGetActiveStudents" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SessionGroupID" Type="int" Mode="In" />
           <Parameter Name="TeamID" Type="int" Mode="In" />
@@ -169,12 +193,17 @@
         </Function>
         <EntityContainer Name="SMaPModelStoreContainer">
           <EntitySet Name="Dictionary" EntityType="Self.Dictionary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DictionaryType" EntityType="Self.DictionaryType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Semester" EntityType="Self.Semester" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SessionGroup" EntityType="Self.SessionGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Team" EntityType="Self.Team" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Dictionary_DictionaryTypeID_DictionaryType" Association="Self.FK_Dictionary_DictionaryTypeID_DictionaryType">
+            <End Role="DictionaryType" EntitySet="DictionaryType" />
+            <End Role="Dictionary" EntitySet="Dictionary" />
+          </AssociationSet>
           <AssociationSet Name="FK_Semester_SemesterType_Dictionary" Association="Self.FK_Semester_SemesterType_Dictionary">
             <End Role="Dictionary" EntitySet="Dictionary" />
             <End Role="Semester" EntitySet="Semester" />
@@ -209,8 +238,20 @@
     <edmx:ConceptualModels>
       <Schema Namespace="SMaPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="SMaPEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Semester" EntityType="SMaPModel.Semester" />
+          <FunctionImport Name="uspCopySemester">
+            <Parameter Name="sourceId" Mode="In" Type="Int32" />
+            <Parameter Name="newSemesterName" Mode="In" Type="String" />
+            <Parameter Name="newSemesterTypeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetActiveStudents" EntitySet="Student" ReturnType="Collection(SMaPModel.Student)">
+            <Parameter Name="SessionGroupID" Mode="In" Type="Int32" />
+            <Parameter Name="TeamID" Mode="In" Type="Int32" />
+            <Parameter Name="TeacherID" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="Dictionary" EntityType="SMaPModel.Dictionary" />
+          <EntitySet Name="Semester" EntityType="SMaPModel.Semester" />
+          <EntitySet Name="SessionGroup" EntityType="SMaPModel.SessionGroup" />
+          <EntitySet Name="Student" EntityType="SMaPModel.Student" />
           <EntitySet Name="Teacher" EntityType="SMaPModel.Teacher" />
           <EntitySet Name="Team" EntityType="SMaPModel.Team" />
           <EntitySet Name="Users" EntityType="SMaPModel.Users" />
@@ -218,20 +259,6 @@
             <End Role="Dictionary" EntitySet="Dictionary" />
             <End Role="Semester" EntitySet="Semester" />
           </AssociationSet>
-          <AssociationSet Name="FK_Teacher_UserID_User" Association="SMaPModel.FK_Teacher_UserID_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Teacher" EntitySet="Teacher" />
-          </AssociationSet>
-          <EntitySet Name="Student" EntityType="SMaPModel.Student" />
-          <AssociationSet Name="FK_Student_UserID_User" Association="SMaPModel.FK_Student_UserID_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Student" EntitySet="Student" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Team_TeamCaption_Student" Association="SMaPModel.FK_Team_TeamCaption_Student">
-            <End Role="Student" EntitySet="Student" />
-            <End Role="Team" EntitySet="Team" />
-          </AssociationSet>
-          <EntitySet Name="SessionGroup" EntityType="SMaPModel.SessionGroup" />
           <AssociationSet Name="FK_SessionGroup_SemesterID_Semester" Association="SMaPModel.FK_SessionGroup_SemesterID_Semester">
             <End Role="Semester" EntitySet="Semester" />
             <End Role="SessionGroup" EntitySet="SessionGroup" />
@@ -244,24 +271,30 @@
             <End Role="SessionGroup" EntitySet="SessionGroup" />
             <End Role="Team" EntitySet="Team" />
           </AssociationSet>
-          <FunctionImport Name="uspGetActiveStudents" EntitySet="Student" ReturnType="Collection(SMaPModel.Student)" >
-            <Parameter Name="SessionGroupID" Mode="In" Type="Int32" />
-            <Parameter Name="TeamID" Mode="In" Type="Int32" />
-            <Parameter Name="TeacherID" Mode="In" Type="Int32" />
-          </FunctionImport>
+          <AssociationSet Name="FK_Student_UserID_User" Association="SMaPModel.FK_Student_UserID_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Team_TeamCaption_Student" Association="SMaPModel.FK_Team_TeamCaption_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="Team" EntitySet="Team" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teacher_UserID_User" Association="SMaPModel.FK_Teacher_UserID_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Teacher" EntitySet="Teacher" />
+          </AssociationSet>
+          <EntitySet Name="DictionaryType" EntityType="SMaPModel.DictionaryType" />
+          <AssociationSet Name="FK_Dictionary_DictionaryTypeID_DictionaryType" Association="SMaPModel.FK_Dictionary_DictionaryTypeID_DictionaryType">
+            <End Role="DictionaryType" EntitySet="DictionaryType" />
+            <End Role="Dictionary" EntitySet="Dictionary" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Semester">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
-          <Property Name="SemesterName" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="SemesterType" Nullable="false" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Dictionary" Relationship="SMaPModel.FK_Semester_SemesterType_Dictionary" FromRole="Semester" ToRole="Dictionary" />
-          <NavigationProperty Name="SessionGroup" Relationship="SMaPModel.FK_SessionGroup_SemesterID_Semester" FromRole="Semester" ToRole="SessionGroup" />
-        </EntityType>
+        <ComplexType Name="uspGetActiveStudents_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="Int32" Name="TeamID" Nullable="false" />
+          <Property Type="Boolean" Name="Deleted" Nullable="false" />
+        </ComplexType>
         <EntityType Name="Dictionary">
           <Key>
             <PropertyRef Name="ID" />
@@ -269,11 +302,47 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ItemName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="ShortItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="ValidFrom" Type="DateTime" Precision="3" />
-          <Property Name="ValidTo" Type="DateTime" Precision="3" />
-          <Property Name="ItemType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DictionaryTypeID" Type="Int32" Nullable="false" />
+          <Property Name="IsProtected" Type="Boolean" Nullable="false" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Semester" Relationship="SMaPModel.FK_Semester_SemesterType_Dictionary" FromRole="Dictionary" ToRole="Semester" />
+          <NavigationProperty Name="DictionaryType" Relationship="SMaPModel.FK_Dictionary_DictionaryTypeID_DictionaryType" FromRole="Dictionary" ToRole="DictionaryType" />
+        </EntityType>
+        <EntityType Name="Semester">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SemesterName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SemesterType" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Dictionary" Relationship="SMaPModel.FK_Semester_SemesterType_Dictionary" FromRole="Semester" ToRole="Dictionary" />
+          <NavigationProperty Name="SessionGroup" Relationship="SMaPModel.FK_SessionGroup_SemesterID_Semester" FromRole="Semester" ToRole="SessionGroup" />
+        </EntityType>
+        <EntityType Name="SessionGroup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SessionGroupName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SemesterID" Type="Int32" />
+          <Property Name="TeacherID" Type="Int32" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Semester" Relationship="SMaPModel.FK_SessionGroup_SemesterID_Semester" FromRole="SessionGroup" ToRole="Semester" />
+          <NavigationProperty Name="Teacher" Relationship="SMaPModel.FK_SessionGroup_TeacherID_Teacher" FromRole="SessionGroup" ToRole="Teacher" />
+          <NavigationProperty Name="Team" Relationship="SMaPModel.FK_Team_SessionGroupID_SessionGroup" FromRole="SessionGroup" ToRole="Team" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="TeamID" Type="Int32" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="SMaPModel.FK_Student_UserID_User" FromRole="Student" ToRole="Users" />
+          <NavigationProperty Name="Team" Relationship="SMaPModel.FK_Team_TeamCaption_Student" FromRole="Student" ToRole="Team" />
         </EntityType>
         <EntityType Name="Teacher">
           <Key>
@@ -282,8 +351,8 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Users" Relationship="SMaPModel.FK_Teacher_UserID_User" FromRole="Teacher" ToRole="Users" />
           <NavigationProperty Name="SessionGroup" Relationship="SMaPModel.FK_SessionGroup_TeacherID_Teacher" FromRole="Teacher" ToRole="SessionGroup" />
+          <NavigationProperty Name="Users" Relationship="SMaPModel.FK_Teacher_UserID_User" FromRole="Teacher" ToRole="Users" />
         </EntityType>
         <EntityType Name="Team">
           <Key>
@@ -294,8 +363,8 @@
           <Property Name="TeamName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="TeamCaptain" Type="Int32" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Student" Relationship="SMaPModel.FK_Team_TeamCaption_Student" FromRole="Team" ToRole="Student" />
           <NavigationProperty Name="SessionGroup" Relationship="SMaPModel.FK_Team_SessionGroupID_SessionGroup" FromRole="Team" ToRole="SessionGroup" />
+          <NavigationProperty Name="Student" Relationship="SMaPModel.FK_Team_TeamCaption_Student" FromRole="Team" ToRole="Student" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -310,8 +379,8 @@
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="120" FixedLength="false" Unicode="true" />
           <Property Name="UserPassword" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Teacher" Relationship="SMaPModel.FK_Teacher_UserID_User" FromRole="Users" ToRole="Teacher" />
           <NavigationProperty Name="Student" Relationship="SMaPModel.FK_Student_UserID_User" FromRole="Users" ToRole="Student" />
+          <NavigationProperty Name="Teacher" Relationship="SMaPModel.FK_Teacher_UserID_User" FromRole="Users" ToRole="Teacher" />
         </EntityType>
         <Association Name="FK_Semester_SemesterType_Dictionary">
           <End Type="SMaPModel.Dictionary" Role="Dictionary" Multiplicity="1" />
@@ -325,66 +394,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Teacher_UserID_User">
-          <End Type="SMaPModel.Users" Role="Users" Multiplicity="1" />
-          <End Type="SMaPModel.Teacher" Role="Teacher" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Teacher">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Student">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="TeamID" Type="Int32" Nullable="false" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Users" Relationship="SMaPModel.FK_Student_UserID_User" FromRole="Student" ToRole="Users" />
-          <NavigationProperty Name="Team" Relationship="SMaPModel.FK_Team_TeamCaption_Student" FromRole="Student" ToRole="Team" />
-        </EntityType>
-        <Association Name="FK_Student_UserID_User">
-          <End Type="SMaPModel.Users" Role="Users" Multiplicity="1" />
-          <End Type="SMaPModel.Student" Role="Student" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Student">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Team_TeamCaption_Student">
-          <End Type="SMaPModel.Student" Role="Student" Multiplicity="0..1" />
-          <End Type="SMaPModel.Team" Role="Team" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Team">
-              <PropertyRef Name="TeamCaptain" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="SessionGroup">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SessionGroupName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="SemesterID" Type="Int32" />
-          <Property Name="TeacherID" Type="Int32" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Semester" Relationship="SMaPModel.FK_SessionGroup_SemesterID_Semester" FromRole="SessionGroup" ToRole="Semester" />
-          <NavigationProperty Name="Teacher" Relationship="SMaPModel.FK_SessionGroup_TeacherID_Teacher" FromRole="SessionGroup" ToRole="Teacher" />
-          <NavigationProperty Name="Team" Relationship="SMaPModel.FK_Team_SessionGroupID_SessionGroup" FromRole="SessionGroup" ToRole="Team" />
-        </EntityType>
         <Association Name="FK_SessionGroup_SemesterID_Semester">
           <End Type="SMaPModel.Semester" Role="Semester" Multiplicity="0..1" />
           <End Type="SMaPModel.SessionGroup" Role="SessionGroup" Multiplicity="*" />
@@ -421,18 +430,84 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="uspGetActiveStudents_Result">
-          <Property Type="Int32" Name="ID" Nullable="false" />
-          <Property Type="Int32" Name="UserID" Nullable="false" />
-          <Property Type="Int32" Name="TeamID" Nullable="false" />
-          <Property Type="Boolean" Name="Deleted" Nullable="false" />
-        </ComplexType>
+        <Association Name="FK_Student_UserID_User">
+          <End Type="SMaPModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="SMaPModel.Student" Role="Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Team_TeamCaption_Student">
+          <End Type="SMaPModel.Student" Role="Student" Multiplicity="0..1" />
+          <End Type="SMaPModel.Team" Role="Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="TeamCaptain" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teacher_UserID_User">
+          <End Type="SMaPModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="SMaPModel.Teacher" Role="Teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DictionaryType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Dictionary" Relationship="SMaPModel.FK_Dictionary_DictionaryTypeID_DictionaryType" FromRole="DictionaryType" ToRole="Dictionary" />
+        </EntityType>
+        <Association Name="FK_Dictionary_DictionaryTypeID_DictionaryType">
+          <End Type="SMaPModel.DictionaryType" Role="DictionaryType" Multiplicity="1" />
+          <End Type="SMaPModel.Dictionary" Role="Dictionary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DictionaryType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Dictionary">
+              <PropertyRef Name="DictionaryTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="SMaPModelStoreContainer" CdmEntityContainer="SMaPEntities">
+          <FunctionImportMapping FunctionImportName="uspCopySemester" FunctionName="SMaPModel.Store.uspCopySemester" />
+          <FunctionImportMapping FunctionImportName="uspGetActiveStudents" FunctionName="SMaPModel.Store.uspGetActiveStudents">
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Dictionary">
+            <EntityTypeMapping TypeName="SMaPModel.Dictionary">
+              <MappingFragment StoreEntitySet="Dictionary">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="IsProtected" ColumnName="IsProtected" />
+                <ScalarProperty Name="DictionaryTypeID" ColumnName="DictionaryTypeID" />
+                <ScalarProperty Name="ShortItemName" ColumnName="ShortItemName" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Semester">
             <EntityTypeMapping TypeName="SMaPModel.Semester">
               <MappingFragment StoreEntitySet="Semester">
@@ -444,15 +519,23 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Dictionary">
-            <EntityTypeMapping TypeName="SMaPModel.Dictionary">
-              <MappingFragment StoreEntitySet="Dictionary">
+          <EntitySetMapping Name="SessionGroup">
+            <EntityTypeMapping TypeName="SMaPModel.SessionGroup">
+              <MappingFragment StoreEntitySet="SessionGroup">
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
-                <ScalarProperty Name="ValidTo" ColumnName="ValidTo" />
-                <ScalarProperty Name="ValidFrom" ColumnName="ValidFrom" />
-                <ScalarProperty Name="ShortItemName" ColumnName="ShortItemName" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
+                <ScalarProperty Name="SemesterID" ColumnName="SemesterID" />
+                <ScalarProperty Name="SessionGroupName" ColumnName="SessionGroupName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Student">
+            <EntityTypeMapping TypeName="SMaPModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -492,29 +575,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Student">
-            <EntityTypeMapping TypeName="SMaPModel.Student">
-              <MappingFragment StoreEntitySet="Student">
+          <EntitySetMapping Name="DictionaryType">
+            <EntityTypeMapping TypeName="SMaPModel.DictionaryType">
+              <MappingFragment StoreEntitySet="DictionaryType">
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SessionGroup">
-            <EntityTypeMapping TypeName="SMaPModel.SessionGroup">
-              <MappingFragment StoreEntitySet="SessionGroup">
-                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
-                <ScalarProperty Name="SemesterID" ColumnName="SemesterID" />
-                <ScalarProperty Name="SessionGroupName" ColumnName="SessionGroupName" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="uspGetActiveStudents" FunctionName="SMaPModel.Store.uspGetActiveStudents">
-          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

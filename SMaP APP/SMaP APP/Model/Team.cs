@@ -20,7 +20,7 @@ namespace SMaP_APP.Model
         public Nullable<int> TeamCaptain { get; set; }
         public bool Deleted { get; set; }
     
-        public virtual Student Student { get; set; }
         public virtual SessionGroup SessionGroup { get; set; }
+        public virtual Student Student { get; set; }
     }
 }

@@ -9,10 +9,12 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
-        Background="Beige"
+        Background="LightBlue"
         Title="Csoport szerkesztése" Height="221.608" Width="300">
     <Window.Resources>
         <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />
+        <conv:SessionGroupCBVisibilityConverter x:Key="SessionGroupCBVisibilityConverter" />
+        
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
@@ -73,7 +75,8 @@
                 </Binding>
             </ComboBox.SelectedValue>
         </ComboBox>
-        <Button Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="10,152,0,0" Width="102" Height="21" VerticalAlignment="Top"/>
-        <Button Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Left" Margin="180,152,0,0" Width="102" Height="21" VerticalAlignment="Top"/>
+        <Button IsDefault="True" Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="10,152,0,0" Width="102" Height="21" VerticalAlignment="Top"/>
+        <Button IsCancel="True"  Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Left" Margin="180,152,0,0" Width="102" Height="21" VerticalAlignment="Top"/>
+        <CheckBox IsChecked="{Binding GenerateTeams}" Visibility="{Binding Path=SelectedSessionGroup.ID, Converter={StaticResource SessionGroupCBVisibilityConverter}}" Content="Csapatok generálása" HorizontalAlignment="Left" Height="17" Margin="132,116,0,0" VerticalAlignment="Top" Width="150"/>
     </Grid>
 </Window>

@@ -12,12 +12,14 @@
         Background="LightBlue"
         >
     <Window.Resources>
-        <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />
         <conv:TeacherWindowHeaderConverter x:Key="TeacherWindowHeaderConverter" />
-        <conv:SessionGroupNameConverter x:Key="SessionGroupNameConverter"/>
+        <conv:SessionGroupSemesterNameConverter x:Key="SessionGroupSemesterNameConverter"/>
+        <conv:SessionGroupTeacherNameConverter x:Key="SessionGroupTeacherNameConverter"/>
         <conv:TeamNameConverter x:Key="TeamNameConverter"/>
         <conv:StudentTeamConverter x:Key="StudentTeamConverter"/>
         <conv:StudentSessionGroupConverter x:Key="StudentSessionGroupConverter"/>
+        <conv:TeamSessionGroupNameConverter x:Key="TeamSessionGroupNameConverter"/>
+        <conv:TeamCaptainNameConverter x:Key="TeamCaptainNameConverter"/>
         
         <BitmapImage x:Key="EditIco" UriSource="/SMaP APP;component/Images/edit-16.ico" />
         <BitmapImage x:Key="AddIco" UriSource="/SMaP APP;component/Images/plus-16.ico" />
@@ -41,31 +43,22 @@
                     <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding StudentDeleteCommand}" CommandParameter="{Binding ElementName=StudentGrid}" HorizontalAlignment="Left" Margin="508,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <DataGrid Name="StudentGrid" ItemsSource="{Binding StudentList}" Margin="225,33,0,20" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid AlternatingRowBackground="LightBlue" SelectionMode="Single" Name="StudentGrid" ItemsSource="{Binding StudentList}" Margin="225,33,0,20" AutoGenerateColumns="False" IsReadOnly="True">
                         <DataGrid.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.StudentEditCommand}"
                                           CommandParameter="{Binding ElementName=StudentGrid}"/>
                         </DataGrid.InputBindings>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Név" Binding="{Binding Users.FullName}" Width="1*"/>
                             <DataGridTextColumn Header="Csapat" Binding="{Binding TeamID, Converter={StaticResource StudentTeamConverter}}" Width="1*"/>
                             <DataGridTextColumn Header="Csoport" Binding="{Binding TeamID, Converter={StaticResource StudentSessionGroupConverter}}" Width="1*"/>
                         </DataGrid.Columns>
-                        <!--<Label Content="{Binding Converter={StaticResource StudentNameConverter}}" Padding="0" Grid.Column="0"/>-->
                     </DataGrid>
-                    <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
-                                    <StackPanel.InputBindings>
-                                       
-                                    </StackPanel.InputBindings>
-                                    
-                                </StackPanel>-->
-                    <!--<ListBox Margin="220,33,10,0" Height="583" VerticalAlignment="Top" Name="StudentLB" ItemsSource="{Binding StudentList}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>-->
-
                     <Border BorderBrush="Black" BorderThickness="1" Margin="0,33,308,20">
                         <Grid HorizontalAlignment="Left" Height="258" Margin="0,0,-1,0" VerticalAlignment="Top" Width="219">
                             <Button Margin="189,61,0,0" Width="20" Height="20"
@@ -78,7 +71,7 @@
                                       ItemsSource="{Binding TeacherList}"
                                       DisplayMemberPath="Users.FullName"
                                       SelectedValuePath="ID"
-                                      SelectedItem="{Binding TeacherFilter}"/>
+                                      SelectedItem="{Binding TeacherFilter, Mode=TwoWay}"/>
                             <Label Content="Csoport" HorizontalAlignment="Left" Height="28" Margin="3,91,0,0" VerticalAlignment="Top" Width="129"/>
                             <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,124,-45,0" VerticalAlignment="Top" Width="179"
                                       Name="SessionGroupCB"
@@ -89,9 +82,14 @@
                             <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,183,0,0" VerticalAlignment="Top" Width="179"
                                       Name="TeamCB"  
                                       ItemsSource="{Binding TeamList}"
-                                      DisplayMemberPath="TeamName"
                                       SelectedValuePath="ID"
-                                      SelectedItem="{Binding TeamFilter}"/>
+                                      SelectedItem="{Binding TeamFilter}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource TeamSessionGroupNameConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                             <Label Content="Csapat" HorizontalAlignment="Left" Height="27" Margin="3,151,0,0" VerticalAlignment="Top" Width="129"/>
                             <Label Content="Szűrők" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="122"/>
                             <Button Margin="189,124,10,114" Width="20" Height="20"
@@ -107,102 +105,177 @@
             </TabItem>
             <TabItem Header="Egyéb adatok">
                 <Grid>
-                    <Label Content="Félévek" HorizontalAlignment="Left" Margin="10,168,0,0" VerticalAlignment="Top" Width="56" Padding="0"/>
-                    <ListBox HorizontalContentAlignment="Stretch"  Height="123" Margin="10,189,15,0" VerticalAlignment="Top" ItemsSource="{Binding SemesterList}" Name="SemesterLB">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
-                                    <StackPanel.InputBindings>
-                                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SemesterEditCommand}"
-                                          CommandParameter="{Binding ElementName=SemesterLB}"/>
-                                    </StackPanel.InputBindings>
-                                    <!--<Label Content="{Binding SemesterName}" Padding="0"/>-->
-                                    <Label Content="{Binding Converter={StaticResource SemesterIsActiveConverter}}" Padding="0"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Width="20" Height="20" Command="{Binding SemesterEditCommand}" CommandParameter="{Binding ElementName=SemesterLB}" HorizontalAlignment="Left" Margin="468,0,0,452" VerticalAlignment="Bottom">
+                    <Label Content="Félévek" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="56" Padding="0"/>
+                    <DataGrid AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalContentAlignment="Stretch"  Height="120" Margin="10,33,275,0" VerticalAlignment="Top" ItemsSource="{Binding SemesterList}" Name="SemesterGrid" IsReadOnly="True" AutoGenerateColumns="False">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SemesterEditCommand}"
+                                          CommandParameter="{Binding ElementName=SemesterGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Név" Binding="{Binding SemesterName}" Width="3*"/>
+                            <DataGridCheckBoxColumn Header="Aktív" Binding="{Binding IsActive}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Width="20" Height="20" Command="{Binding SemesterEditCommand}" CommandParameter="{Binding ElementName=SemesterGrid}" HorizontalAlignment="Left" Margin="208,0,0,608" VerticalAlignment="Bottom">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterCreateCommand}" HorizontalAlignment="Left" Margin="443,164,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterCreateCommand}" HorizontalAlignment="Left" Margin="183,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Félév másolása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="418,164,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button Command="{Binding CopySemesterCommand}" CommandParameter="{Binding ElementName=SemesterGrid}"  ToolTip="Aktív félév másolása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="158,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource CopyIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterDeleteCommand}" CommandParameter="{Binding ElementName=SemesterLB}" Margin="493,164,15,452" Width="20" Height="20">
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterDeleteCommand}" CommandParameter="{Binding ElementName=SemesterGrid}" Margin="233,8,275,608" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <Label Content="Tanárok" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top" Width="185" Padding="0"/>
-                    <ListBox Margin="10,33,15,0" Height="120" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Name="TeacherLB" ItemsSource="{Binding TeacherList}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
-                                    <StackPanel.InputBindings>
-                                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.TeacherEditCommand}"
-                                          CommandParameter="{Binding ElementName=TeacherLB}"/>
-                                    </StackPanel.InputBindings>
-                                    <Label Content="{Binding Users.FullName}" Padding="0"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherEditCommand}" CommandParameter="{Binding ElementName=TeacherLB}" HorizontalAlignment="Left" Margin="468,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Label Content="Tanárok" HorizontalAlignment="Left" Margin="263,10,0,0" VerticalAlignment="Top" Width="185" Padding="0"/>
+                    <DataGrid AlternatingRowBackground="LightBlue" SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" Margin="263,33,15,0" Height="120" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Name="TeacherGrid" ItemsSource="{Binding TeacherList}">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.TeacherEditCommand}"
+                                          CommandParameter="{Binding ElementName=TeacherGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Név" Binding="{Binding Users.FullName}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherEditCommand}" CommandParameter="{Binding ElementName=TeacherGrid}" HorizontalAlignment="Left" Margin="468,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
                     <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherCreateCommand}" HorizontalAlignment="Left" Margin="443,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherDeleteCommand}" CommandParameter="{Binding ElementName=TeacherLB}" HorizontalAlignment="Left" Margin="493,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding TeacherDeleteCommand}" CommandParameter="{Binding ElementName=TeacherGrid}" HorizontalAlignment="Left" Margin="493,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <Label Content="Aktív félév csoportjai" HorizontalAlignment="Left" Margin="10,327,0,0" VerticalAlignment="Top" Width="185" Padding="0"/>
-                    <ListBox Height="278" Margin="10,348,275,0" VerticalAlignment="Top" Name="SessionGroupLB" HorizontalContentAlignment="Stretch" ItemsSource="{Binding SessionGroupList}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Stretch">
-                                    <StackPanel.InputBindings>
-                                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SessionGroupEditCommand}"
-                                          CommandParameter="{Binding ElementName=SessionGroupLB}"/>
-                                    </StackPanel.InputBindings>
-                                    <Label Content="{Binding Converter={StaticResource SessionGroupNameConverter},UpdateSourceTrigger=PropertyChanged}" Padding="0"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupEditCommand}" CommandParameter="{Binding ElementName=SessionGroupLB}" HorizontalAlignment="Left" Margin="208,323,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Label Content="Aktív félév csoportjai" HorizontalAlignment="Left" Margin="10,158,0,0" VerticalAlignment="Top" Width="185" Padding="0"/>
+                    <DataGrid AlternatingRowBackground="LightBlue" SelectionMode="Single" Height="115" Margin="10,183,15,0" VerticalAlignment="Top" Name="SessionGroupGrid" HorizontalContentAlignment="Stretch" ItemsSource="{Binding SessionGroupList}" IsReadOnly="True" AutoGenerateColumns="False">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SessionGroupEditCommand}"
+                                          CommandParameter="{Binding ElementName=SessionGroupGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Név" Binding="{Binding SessionGroupName}" Width="2*"/>
+                            <DataGridTextColumn Header="Tanár" Binding="{Binding Converter={StaticResource SessionGroupTeacherNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Félév" Binding="{Binding Converter={StaticResource SessionGroupSemesterNameConverter}}" Width="2*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupEditCommand}" CommandParameter="{Binding ElementName=SessionGroupGrid}" HorizontalAlignment="Left" Margin="468,158,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupCreateCommand}" HorizontalAlignment="Left" Margin="183,323,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupCreateCommand}" HorizontalAlignment="Left" Margin="443,158,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupDeleteCommand}" CommandParameter="{Binding ElementName=SessionGroupLB}"  HorizontalAlignment="Left" Margin="233,323,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SessionGroupDeleteCommand}" CommandParameter="{Binding ElementName=SessionGroupGrid}"  HorizontalAlignment="Left" Margin="493,158,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <Label Content="Aktív félév csapatai" HorizontalAlignment="Left" Margin="263,327,0,0" VerticalAlignment="Top" Width="108" Padding="0"/>
-                    <ListBox Height="278" Margin="263,348,15,0" VerticalAlignment="Top" Name="TeamLB" HorizontalContentAlignment="Stretch" ItemsSource="{Binding TeamList}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Stretch">
-                                    <StackPanel.InputBindings>
-                                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.TeamEditCommand}"
-                                          CommandParameter="{Binding ElementName=TeamLB}"/>
-                                    </StackPanel.InputBindings>
-                                    <Label Content="{Binding Converter={StaticResource TeamNameConverter}}" Padding="0"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding TeamEditCommand}" CommandParameter="{Binding ElementName=TeamLB}" HorizontalAlignment="Left" Margin="468,323,0,0" Width="20" Height="20" VerticalAlignment="Top">
+                    <Label Content="Aktív félév csapatai" HorizontalAlignment="Left" Margin="183,307,0,0" VerticalAlignment="Top" Width="108" Padding="0"/>
+                    <DataGrid Height="298" Margin="169,328,15,0" VerticalAlignment="Top" Name="TeamGrid" HorizontalContentAlignment="Stretch" ItemsSource="{Binding TeamList}" IsReadOnly="True" AutoGenerateColumns="False" AlternatingRowBackground="LightBlue" SelectionMode="Single">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.TeamEditCommand}"
+                                          CommandParameter="{Binding ElementName=TeamGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Név" Binding="{Binding TeamName}" Width="6*"/>
+                            <DataGridTextColumn Header="Csoport" Binding="{Binding Converter={StaticResource TeamNameConverter}}" Width="4*"/>
+                            <DataGridTextColumn Header="Csapatvezető" Binding="{Binding Converter={StaticResource TeamCaptainNameConverter}}" Width="4*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding TeamEditCommand}" CommandParameter="{Binding ElementName=TeamGrid}" HorizontalAlignment="Left" Margin="468,303,0,0" Width="20" Height="20" VerticalAlignment="Top">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding TeamCreateCommand}" HorizontalAlignment="Left" Margin="443,323,0,0" Width="20" Height="20" VerticalAlignment="Top">
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding TeamCreateCommand}" HorizontalAlignment="Left" Margin="443,303,0,0" Width="20" Height="20" VerticalAlignment="Top">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding TeamDeleteCommand}" CommandParameter="{Binding ElementName=TeamLB}"  HorizontalAlignment="Left" Margin="493,323,0,0" Width="20" Height="20" VerticalAlignment="Top">
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding TeamDeleteCommand}" CommandParameter="{Binding ElementName=TeamGrid}"  HorizontalAlignment="Left" Margin="493,303,0,0" Width="20" Height="20" VerticalAlignment="Top">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
+                    <ComboBox HorizontalAlignment="Left" Margin="10,359,0,0" VerticalAlignment="Top" Width="129" Height="22" 
+                                      Name="SessionGroupTeamFilterCB"
+                                      ItemsSource="{Binding SessionGroupList}"
+                                      DisplayMemberPath="SessionGroupName"
+                                      SelectedValuePath="ID"
+                                      SelectedItem="{Binding SessionGroupTeamFilter}"/>
+                    <Label Padding="0" Content="Csoport szűrő" HorizontalAlignment="Left" Margin="10,338,0,0" VerticalAlignment="Top" Width="93" RenderTransformOrigin="0.452,0.385"/>
+                    <Button 
+                        ToolTip="Szűrő törlése" ToolTipService.InitialShowDelay="0" Command="{Binding DeleteFilter}" CommandParameter="{Binding ElementName=SessionGroupTeamFilterCB}" HorizontalAlignment="Left" VerticalAlignment="Top"
+                       Margin="144,359,0,0" Width="20" Height="20">
+                        <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Adatszótárak">
+                <Grid>
+                    <Label Padding="0" Content="Szótár típusok" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top"/>
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding DictionaryTypeEditCommand}" CommandParameter="{Binding ElementName=DictionaryTypeGrid}" HorizontalAlignment="Left" Margin="136,16,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding DictionaryTypeCreateCommand}" HorizontalAlignment="Left" Margin="111,16,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding DictionaryTypeDeleteCommand}" CommandParameter="{Binding ElementName=DictionaryTypeGrid}" HorizontalAlignment="Left" Margin="161,16,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+                    </Button>
+                    <DataGrid Margin="186,41,10,10" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding DictionaryList}" AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalContentAlignment="Stretch" Name="DictionaryGrid">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DictionaryEditCommand}"
+                                          CommandParameter="{Binding ElementName=DictionaryGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Név" Binding="{Binding ItemName}" Width="6*"/>
+                            <DataGridTextColumn Header="Rövid név" Binding="{Binding ShortItemName}" Width="4*"/>
+                            <DataGridCheckBoxColumn Header="Védett" Binding="{Binding IsProtected}" Width="2*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Padding="0" Content="Szótár elemek" HorizontalAlignment="Left" Margin="186,20,0,0" VerticalAlignment="Top"/>
+                    <DataGrid SelectedItem="{Binding DictionaryTypeFilter}" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding DictionaryTypeList}" AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalContentAlignment="Stretch" Margin="10,41,347,10" Name="DictionaryTypeGrid">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DictionaryTypeEditCommand}"
+                                          CommandParameter="{Binding ElementName=DictionaryTypeGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Név" Binding="{Binding TypeName}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding DictionaryDeleteCommand}" CommandParameter="{Binding ElementName=DictionaryGrid}" HorizontalAlignment="Left" Margin="498,16,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" Command="{Binding DictionaryEditCommand}" CommandParameter="{Binding ElementName=DictionaryGrid}" HorizontalAlignment="Left" Margin="473,16,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding DictionaryCreateCommand}" HorizontalAlignment="Left" Margin="448,16,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
+                    </Button>
+
                 </Grid>
             </TabItem>
 

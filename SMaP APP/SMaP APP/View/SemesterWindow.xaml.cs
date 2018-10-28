@@ -26,11 +26,5 @@ namespace SMaP_APP.View
             InitializeComponent();
             this.DataContext = new SemesterWindowViewModel(this,semester);
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show(wtf.Text);
-            
-        }
     }
 }

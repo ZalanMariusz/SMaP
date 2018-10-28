@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SMaP_APP.ViewModel
 {
@@ -52,6 +53,22 @@ namespace SMaP_APP.ViewModel
         {
             this.CloseCommand = new RelayCommand(Close);
         }
+
+        public virtual bool CanExecute()
+        {
+            return IsValid(SourceWindow);
+        }
+
+        public virtual bool IsValid(DependencyObject obj)
+        {
+            // The dependency object is valid if it has no errors and all
+            // of its children (that are dependency objects) are error-free.
+            return !Validation.GetHasError(obj) &&
+            LogicalTreeHelper.GetChildren(obj)
+            .OfType<DependencyObject>()
+            .All(IsValid);
+        }
+
         internal void Close()
         {
             this.SourceWindow.Close();

@@ -9,56 +9,95 @@ namespace SMaP_APP.DAL
 {
     class TeacherDAL : GenericDAL<Teacher>
     {
-        public TeacherDAL(SMaPEntities applicationDbContext) : base(applicationDbContext)
+        public TeacherDAL()
         {
 
         }
 
         public List<SessionGroup> ActiveSessionGroupList()
         {
+            RefreshContext();
             return applicationDbContext.SessionGroup.Where(x => !x.Deleted && x.Semester.IsActive).ToList();
         }
         public List<Team> ActiveTeamList()
         {
+            RefreshContext();
             return applicationDbContext.Team.Where(x => !x.Deleted && x.SessionGroup.Semester.IsActive).ToList();
         }
         public List<Semester> SemesterList()
         {
             RefreshContext();
-            var a = applicationDbContext.Semester.Where(x => !x.Deleted).ToList();
             return applicationDbContext.Semester.Where(x => !x.Deleted).ToList();
         }
 
         public void DeleteSemester(Semester param)
         {
-            SemesterDAL sd = new SemesterDAL(this.applicationDbContext);
+            RefreshContext();
+            SemesterDAL sd = new SemesterDAL();
             sd.LogicalDelete(param);
         }
         public void DeleteTeacherUser(Teacher param)
         {
-            UsersDAL ud = new UsersDAL(this.applicationDbContext);
-            ud.LogicalDelete(param.Users);
+            RefreshContext();
+            UsersDAL ud = new UsersDAL();
+            ud.LogicalDelete(ud.FindAll(x=>x.ID==param.UserID).FirstOrDefault());
         }
         public void DeleteSessionGroup(SessionGroup param)
         {
-            SessionGroupDAL sgd = new SessionGroupDAL(this.applicationDbContext);
+            RefreshContext();
+            SessionGroupDAL sgd = new SessionGroupDAL();
             sgd.LogicalDelete(param);
         }
         public void DeleteTeam(Team param)
         {
-            TeamDAL td = new TeamDAL(this.applicationDbContext);
+            RefreshContext();
+            TeamDAL td = new TeamDAL();
             td.LogicalDelete(param);
         }
 
-        public List<Student> StudentList(int? sessionGroupID,int? teamID, int? TeacherID)
+        public List<Student> StudentList(int? sessionGroupID, int? teamID, int? TeacherID)
         {
+            RefreshContext();
             return applicationDbContext.uspGetActiveStudents(sessionGroupID, teamID, TeacherID).ToList();
         }
 
-        internal void DeleteStudent(Student param)
+        public void DeleteStudent(Student param)
         {
-            StudentDAL sd = new StudentDAL(this.applicationDbContext);
+            RefreshContext();
+            StudentDAL sd = new StudentDAL();
             sd.LogicalDelete(param);
+        }
+        public void DeleteStudentUser(Student param)
+        {
+            RefreshContext();
+            UsersDAL ud = new UsersDAL();
+            ud.LogicalDelete(ud.FindAll(x => x.ID == param.UserID).FirstOrDefault());
+        }
+
+        public List<Dictionary> DictionaryList()
+        {
+            RefreshContext();
+            return applicationDbContext.Dictionary.Where(x => !x.Deleted).ToList();
+        }
+
+        public List<DictionaryType> DictionaryTypeList()
+        {
+            RefreshContext();
+            return applicationDbContext.DictionaryType.Where(x => !x.Deleted).ToList();
+        }
+
+        public void DeleteDictionary(Dictionary param)
+        {
+            RefreshContext();
+            DictionaryDAL dd = new DictionaryDAL();
+            dd.LogicalDelete(param);
+        }
+
+        public void DeleteDictionaryType(DictionaryType param)
+        {
+            RefreshContext();
+            DictionaryTypeDAL dtd = new DictionaryTypeDAL();
+            dtd.LogicalDelete(param);
         }
     }
 }

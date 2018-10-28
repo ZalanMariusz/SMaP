@@ -15,28 +15,25 @@ namespace SMaP_APP.DAL
 {
     public abstract class GenericDAL<TEntity> where TEntity : class, IBaseModel
     {
-        internal readonly SMaPEntities applicationDbContext;
+        public SMaPEntities applicationDbContext { get { return GetContext.getContext(); } }
 
-        public GenericDAL(SMaPEntities applicationDbContext)
+        public GenericDAL()
         {
-            this.applicationDbContext = applicationDbContext;
         }
 
         public void RefreshContext()
         {
-            var context = ((IObjectContextAdapter)applicationDbContext).ObjectContext;
-            var refreshableObjects = applicationDbContext.ChangeTracker.Entries().Select(c => c.Entity).ToList();
-            context.Refresh(RefreshMode.StoreWins, refreshableObjects);
+            GetContext.RefreshContext();
         }
 
-        public List<TEntity> FindAll(Expression<Func<TEntity, bool>> filterExpression=null)
+        public List<TEntity> FindAll(Expression<Func<TEntity, bool>> filterExpression = null)
         {
             IQueryable<TEntity> entities = applicationDbContext.Set<TEntity>();
             if (filterExpression != null)
             {
                 entities = entities.Where(filterExpression);
             }
-            return entities.Where(x=>!x.Deleted).ToList();
+            return entities.Where(x => !x.Deleted).ToList();
         }
 
         public virtual TEntity FindById(int id)
@@ -50,9 +47,19 @@ namespace SMaP_APP.DAL
             {
                 throw new ArgumentNullException("entity");
             }
+            List<EntityState> asd = new List<EntityState>();
             applicationDbContext.Set<TEntity>().Attach(entity);
             applicationDbContext.Set<TEntity>().Add(entity);
-            return applicationDbContext.SaveChanges();
+            applicationDbContext.SaveChanges();
+            if (entity is Users)
+            {
+                foreach (var item in applicationDbContext.Set<Teacher>().Where(x => !x.Deleted))
+                {
+                    asd.Add(applicationDbContext.Entry(item).State);
+                }
+            }
+            
+            return 1;
         }
 
         public virtual int Update(TEntity entity)
@@ -61,7 +68,10 @@ namespace SMaP_APP.DAL
             {
                 throw new ArgumentNullException("entity");
             }
+
             applicationDbContext.Set<TEntity>().AddOrUpdate(entity);
+            
+            var t = applicationDbContext.Entry(entity).State;
             return applicationDbContext.SaveChanges();
         }
 

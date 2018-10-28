@@ -18,23 +18,28 @@ namespace SMaP_APP.ViewModel
         public SessionGroup SelectedSessionGroup
         {
             get { return selectedSessionGroup; }
-            set { selectedSessionGroup = value; NotifyPropertyChanged(); }
+            set { selectedSessionGroup = value; }
         }
         public RelayCommand SaveCommand { get; set; }
         public ObservableCollection<Teacher> TeacherList { get; set; }
         public ObservableCollection<Semester> SemesterList { get; set; }
+        public bool GenerateTeams { get; set; }
 
         public SessionGroupEditViewModel(SessionGroupEditWindow sessionGroupEditWindow, SessionGroup selectedSessionGroup)
         {
             this.SourceWindow = sessionGroupEditWindow;
-            this._contextDal = new SessionGroupDAL(DbContext);
+            this._contextDal = new SessionGroupDAL();
             this.SelectedSessionGroup = selectedSessionGroup;
-            this.SaveCommand = new RelayCommand(SaveSessionGroup, CanSaveSessionGroup);
+            this.SaveCommand = new RelayCommand(SaveSessionGroup, CanExecute);
             this.TeacherList = new ObservableCollection<Teacher>(((SessionGroupDAL)_contextDal).TeacherList);
             this.SemesterList = new ObservableCollection<Semester>(((SessionGroupDAL)_contextDal).SemesterList);
             if (SelectedSessionGroup.Semester == null)
             {
-                this.SelectedSessionGroup.SemesterID = SemesterList.Where(x => x.IsActive).FirstOrDefault().ID;
+                if (SemesterList.Where(x => x.IsActive).SingleOrDefault()!=null)
+                {
+                    this.SelectedSessionGroup.SemesterID = SemesterList.Where(x => x.IsActive).FirstOrDefault().ID;
+                    GenerateTeams = true;
+                }
             }
         }
 
@@ -54,14 +59,13 @@ namespace SMaP_APP.ViewModel
                 {
                     this._contextDal.Update(SelectedSessionGroup);
                 }
+                if (GenerateTeams)
+                {
+                    
+                    ((SessionGroupDAL)_contextDal).AddTeams(SelectedSessionGroup.ID);
+                }
                 this.SourceWindow.Close();
             }
-        }
-        private bool CanSaveSessionGroup()
-        {
-            return !string.IsNullOrEmpty(this.SelectedSessionGroup.SessionGroupName) 
-                && !(this.SelectedSessionGroup.TeacherID==null || this.SelectedSessionGroup.TeacherID == 0)
-                && !(this.SelectedSessionGroup.SemesterID==null || this.SelectedSessionGroup.SemesterID == 0);
         }
     }
 }
