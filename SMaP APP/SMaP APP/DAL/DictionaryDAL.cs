@@ -10,15 +10,20 @@ namespace SMaP_APP.DAL
 {
     class DictionaryDAL : GenericDAL<Dictionary>
     {
-        public DictionaryTypeDAL DictionaryTypeDal { get; set; }
+        private DictionaryTypeDAL DictionaryTypeDal { get; set; }
         public DictionaryDAL()
         {
             this.DictionaryTypeDal = new DictionaryTypeDAL();
         }
 
-        internal List<DictionaryType> DictionaryTypeList()
+        public List<DictionaryType> DictionaryTypeList()
         {
             return this.DictionaryTypeDal.FindAll().ToList();
+        }
+        public List<Dictionary> DictionaryListByType(string typeName)
+        {
+            int TypeID = DictionaryTypeDal.FindAll(x => x.TypeName == typeName).FirstOrDefault().ID;
+            return FindAll(x => x.DictionaryTypeID == TypeID);
         }
     }
 }

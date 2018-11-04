@@ -10,6 +10,7 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
         Background="LightBlue"
+        ResizeMode="NoResize"
         Title="Csoport szerkesztése" Height="221.608" Width="300">
     <Window.Resources>
         <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />

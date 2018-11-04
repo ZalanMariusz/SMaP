@@ -20,7 +20,6 @@ namespace SMaP_APP.Model
         public SMaPEntities()
             : base("name=SMaPEntities")
         {
-            Database.Connection.ConnectionString = Database.Connection.ConnectionString.Replace("*******", "Szakdoga2");
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -29,15 +28,20 @@ namespace SMaP_APP.Model
         }
     
         public virtual DbSet<Dictionary> Dictionary { get; set; }
+        public virtual DbSet<DictionaryType> DictionaryType { get; set; }
         public virtual DbSet<Semester> Semester { get; set; }
+        public virtual DbSet<ServiceRequest> ServiceRequest { get; set; }
+        public virtual DbSet<ServiceStoreParams> ServiceStoreParams { get; set; }
+        public virtual DbSet<ServiceTable> ServiceTable { get; set; }
+        public virtual DbSet<ServiceTableField> ServiceTableField { get; set; }
         public virtual DbSet<SessionGroup> SessionGroup { get; set; }
         public virtual DbSet<Student> Student { get; set; }
         public virtual DbSet<Teacher> Teacher { get; set; }
         public virtual DbSet<Team> Team { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<DictionaryType> DictionaryType { get; set; }
+        public virtual DbSet<ServiceStore> ServiceStore { get; set; }
     
-        public virtual int uspCopySemester(Nullable<int> sourceId, string newSemesterName, Nullable<int> newSemesterTypeID)
+        public virtual int uspCopySemester(Nullable<int> sourceId, string newSemesterName, Nullable<int> newSemesterTypeID, string sessionGroups, string teams, string students)
         {
             var sourceIdParameter = sourceId.HasValue ?
                 new ObjectParameter("sourceId", sourceId) :
@@ -51,7 +55,19 @@ namespace SMaP_APP.Model
                 new ObjectParameter("newSemesterTypeID", newSemesterTypeID) :
                 new ObjectParameter("newSemesterTypeID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspCopySemester", sourceIdParameter, newSemesterNameParameter, newSemesterTypeIDParameter);
+            var sessionGroupsParameter = sessionGroups != null ?
+                new ObjectParameter("SessionGroups", sessionGroups) :
+                new ObjectParameter("SessionGroups", typeof(string));
+    
+            var teamsParameter = teams != null ?
+                new ObjectParameter("Teams", teams) :
+                new ObjectParameter("Teams", typeof(string));
+    
+            var studentsParameter = students != null ?
+                new ObjectParameter("Students", students) :
+                new ObjectParameter("Students", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspCopySemester", sourceIdParameter, newSemesterNameParameter, newSemesterTypeIDParameter, sessionGroupsParameter, teamsParameter, studentsParameter);
         }
     
         public virtual ObjectResult<Student> uspGetActiveStudents(Nullable<int> sessionGroupID, Nullable<int> teamID, Nullable<int> teacherID)

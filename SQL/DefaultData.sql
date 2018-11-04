@@ -56,3 +56,23 @@ VALUES (N'Cikk és készlet',N'C&K',@id,1)
 	  ,(N'Pénzügy',N'PÜ',@id,1)
 	  ,(N'Számlázás',N'Szám',@id,1)
 
+INSERT INTO DictionaryType(
+	 TypeName)
+VALUES ('Adattípusok')
+set @id=SCOPE_IDENTITY()
+INSERT INTO Dictionary(
+	 ItemName
+	,ShortItemName 
+	,DictionaryTypeID
+	,IsProtected
+)
+VALUES (N'int',N'int',@id,1)
+	  ,(N'bool',N'bool',@id,1)
+	  ,(N'string',N'string',@id,1)
+	  ,(N'float',N'float',@id,1)
+	  ,(N'double',N'double',@id,1)
+	  ,(N'char',N'char',@id,1)
+	  ,(N'date',N'date',@id,1)
+	  ,(N'datetime',N'datetime',@id,1)
+	  ,(N'time',N'time',@id,1)
+	  

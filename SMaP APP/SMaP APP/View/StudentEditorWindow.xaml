@@ -10,6 +10,7 @@
         mc:Ignorable="d"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
         Background="LightBlue"
+        ResizeMode="NoResize"
         Title="Hallgató szerkesztése" Height="276.601" Width="402.785">
 
     <Window.Resources>
@@ -87,7 +88,6 @@
                     </Binding.ValidationRules>
                 </Binding>
             </ComboBox.SelectedValue>
-
         </ComboBox>
 
     </Grid>

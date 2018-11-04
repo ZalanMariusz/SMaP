@@ -38,18 +38,19 @@ namespace SMaP_APP.ViewModel
             }
             else
             {
-                var contextTeacher = DbContext.Teacher.Where(x => x.UserID == User.ID).FirstOrDefault();
+                var contextTeacher = _contextDal.applicationDbContext.Teacher.Where(x => x.UserID == User.ID && !x.Deleted).FirstOrDefault();
                 if (contextTeacher == null)
                 {
-                    var contextStudent= DbContext.Student.Where(x => x.UserID == User.ID).FirstOrDefault();
+                    var contextStudent= _contextDal.applicationDbContext.Student.Where(x => x.UserID == User.ID && !x.Deleted
+                        && _contextDal.applicationDbContext.Team.FirstOrDefault(y=>y.ID==x.TeamID).SessionGroup.Semester.IsActive
+                    ).FirstOrDefault();
                     if (contextStudent == null)
                     {
                         MessageBox.Show("Érvénytelen jogosultság!", "Érvénytelen jogosultság!", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
                     {
-                        //TODO - show StudenWindow
-                        MessageBox.Show("Diákok In Progress!");
+                        SwitchWindows(new ServiceStoreWindow(contextStudent));
                     }
                 }
                 else

@@ -71,7 +71,7 @@
                                       ItemsSource="{Binding TeacherList}"
                                       DisplayMemberPath="Users.FullName"
                                       SelectedValuePath="ID"
-                                      SelectedItem="{Binding TeacherFilter, Mode=TwoWay}"/>
+                                      SelectedItem="{Binding TeacherFilter}"/>
                             <Label Content="Csoport" HorizontalAlignment="Left" Height="28" Margin="3,91,0,0" VerticalAlignment="Top" Width="129"/>
                             <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,124,-45,0" VerticalAlignment="Top" Width="179"
                                       Name="SessionGroupCB"
@@ -81,7 +81,7 @@
                                       SelectedItem="{Binding SessionGroupFilter}"/>
                             <ComboBox HorizontalAlignment="Left" Height="22" Margin="3,183,0,0" VerticalAlignment="Top" Width="179"
                                       Name="TeamCB"  
-                                      ItemsSource="{Binding TeamList}"
+                                      ItemsSource="{Binding TeamFilterList}"
                                       SelectedValuePath="ID"
                                       SelectedItem="{Binding TeamFilter}">
                                 <ComboBox.ItemTemplate>
@@ -127,7 +127,7 @@
                     <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterCreateCommand}" HorizontalAlignment="Left" Margin="183,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
-                    <Button Command="{Binding CopySemesterCommand}" CommandParameter="{Binding ElementName=SemesterGrid}"  ToolTip="Aktív félév másolása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="158,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button Command="{Binding CopySemesterCommand}"  ToolTip="Aktív félév másolása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="158,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource CopyIco}" Stretch="Fill"/>
                     </Button>
                     <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding SemesterDeleteCommand}" CommandParameter="{Binding ElementName=SemesterGrid}" Margin="233,8,275,608" Width="20" Height="20">

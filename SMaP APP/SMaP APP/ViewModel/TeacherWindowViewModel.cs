@@ -16,6 +16,7 @@ namespace SMaP_APP.ViewModel
 {
     class TeacherWindowViewModel : BaseViewModel<Teacher>
     {
+        //private GenericDAL<Teacher> _teacherDal;
         #region Commands
         public RelayCommand SemesterEditCommand { get; set; }
         public RelayCommand SemesterCreateCommand { get; set; }
@@ -55,6 +56,7 @@ namespace SMaP_APP.ViewModel
         private ObservableCollection<Teacher> teacherList;
         private ObservableCollection<SessionGroup> sessionGroupList;
         private ObservableCollection<Team> teamList;
+        private ObservableCollection<Team> teamFilterList;
         private ObservableCollection<Student> studentList;
         private ObservableCollection<Dictionary> dictionaryList;
         private ObservableCollection<DictionaryType> dictionaryTypeList;
@@ -122,6 +124,11 @@ namespace SMaP_APP.ViewModel
             get { return sessionGroupList; }
             set { sessionGroupList = value; NotifyPropertyChanged(); NotifyPropertyChanged("TeamList"); }
         }
+        public ObservableCollection<Team> TeamFilterList
+        {
+            get { return teamFilterList; }
+            set { teamFilterList = value; NotifyPropertyChanged(); }
+        }
         public ObservableCollection<Team> TeamList
         {
             get { return teamList; }
@@ -145,6 +152,11 @@ namespace SMaP_APP.ViewModel
             {
                 return new ObservableCollection<Team>(((TeacherDAL)_contextDal).ActiveTeamList().Where(x => x.SessionGroupID == SessionGroupTeamFilter.ID));
             }
+            return new ObservableCollection<Team>(((TeacherDAL)_contextDal).ActiveTeamList());
+        }
+
+        private ObservableCollection<Team> ReloadTeamFilterList()
+        {
             return new ObservableCollection<Team>(((TeacherDAL)_contextDal).ActiveTeamList());
         }
 
@@ -209,7 +221,7 @@ namespace SMaP_APP.ViewModel
             this.DictionaryTypeEditCommand = new RelayCommand(EditDictionaryType, CanEditOrDeleteSelectedItem);
             this.DictionaryTypeDeleteCommand = new RelayCommand(DeleteDictionaryType, CanEditOrDeleteSelectedItem);
 
-            this.CopySemesterCommand = new RelayCommand(CopySelectedSemester, CanEditOrDeleteSelectedItem);
+            this.CopySemesterCommand = new RelayCommand(CopySelectedSemester, CanCopySemester);
             this.DeleteFilter = new RelayCommand(DeleteSelectedFilter);
             this._contextDal = new TeacherDAL();
 
@@ -220,6 +232,7 @@ namespace SMaP_APP.ViewModel
             this.StudentList = ReloadStudentList();
             this.DictionaryList = ReloadDictionaryList();
             this.DictionaryTypeList = ReloadDictionaryTypeList();
+            this.TeamFilterList = ReloadTeamFilterList();
 
             this.LogoutCommand = new RelayCommand(Logout);
             this.TeacherFilter = _contextDal.FindById(ContextTeacher.ID);
@@ -276,6 +289,7 @@ namespace SMaP_APP.ViewModel
             this.SemesterList = ReloadSemesterList();
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
+            this.TeamFilterList = ReloadTeamFilterList();
             this.StudentList = ReloadStudentList();
         }
         private void DeleteSemester(object param)
@@ -358,6 +372,7 @@ namespace SMaP_APP.ViewModel
             SwitchWindows(target, true);
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
+            this.TeamFilterList = ReloadTeamFilterList();
         }
         private void EditSessionGroup(object param)
         {
@@ -369,6 +384,7 @@ namespace SMaP_APP.ViewModel
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
             this.StudentList = ReloadStudentList();
+            this.TeamFilterList = ReloadTeamFilterList();
         }
         private void DeleteSessionGroup(object param)
         {
@@ -398,6 +414,7 @@ namespace SMaP_APP.ViewModel
             };
             SwitchWindows(target, true);
             this.TeamList = ReloadActiveTeamList();
+            this.TeamFilterList = ReloadTeamFilterList();
         }
         private void EditTeam(object param)
         {
@@ -408,6 +425,7 @@ namespace SMaP_APP.ViewModel
             SwitchWindows(target, true);
             this.TeamList = ReloadActiveTeamList();
             this.StudentList = ReloadStudentList();
+            this.TeamFilterList = ReloadTeamFilterList();
         }
         private void DeleteTeam(object param)
         {
@@ -424,7 +442,8 @@ namespace SMaP_APP.ViewModel
                     TeamList.Remove(selectedTeam);
                     ((TeacherDAL)_contextDal).DeleteTeam(selectedTeam);
                 }
-            }   
+            }
+            this.TeamFilterList = ReloadTeamFilterList();
         }
 
         private void CreateStudent()
@@ -446,6 +465,7 @@ namespace SMaP_APP.ViewModel
             SwitchWindows(target, true);
             this.StudentList = ReloadStudentList();
             this.TeamList = ReloadActiveTeamList();
+            this.TeamFilterList = ReloadTeamFilterList();
         }
         private void DeleteStudent(object param)
         {
@@ -535,10 +555,10 @@ namespace SMaP_APP.ViewModel
             }
         }
 
-        private void CopySelectedSemester(object param)
+        private void CopySelectedSemester()
         {
-            Semester selectedSemester = (Semester)((DataGrid)param).SelectedItem;
-            CopySemesterWindow target = new CopySemesterWindow(selectedSemester)
+            Semester activeSemester = SemesterList.Where(x => x.IsActive).FirstOrDefault();
+            CopySemesterWindow target = new CopySemesterWindow(activeSemester)
             {
                 Owner = this.SourceWindow
             };
@@ -546,6 +566,7 @@ namespace SMaP_APP.ViewModel
             this.SemesterList = ReloadSemesterList();
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
+            this.TeamFilterList = ReloadTeamFilterList();
             this.StudentList = ReloadStudentList();
         }
 
@@ -560,6 +581,11 @@ namespace SMaP_APP.ViewModel
         private bool CanEditOrDeleteSelectedItem(object param)
         {
             return ((DataGrid)param).SelectedItem != null;
+        }
+
+        private bool CanCopySemester()
+        {
+            return SemesterList.Where(x => x.IsActive).FirstOrDefault() != null;
         }
         #endregion CanExecutes
     }

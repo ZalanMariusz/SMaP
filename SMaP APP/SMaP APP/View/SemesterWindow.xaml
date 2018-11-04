@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SMaP_APP.View"
         mc:Ignorable="d"
         Background="LightBlue"
+        ResizeMode="NoResize"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         Title="Félév szerkesztése" Height="183.491" Width="364.495" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Window.Resources>

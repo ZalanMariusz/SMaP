@@ -9,6 +9,7 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
         Title="Tanár szerkesztése" Height="209" Width="412.863"
+        ResizeMode="NoResize"
         Background="LightBlue"
         >
     <Window.Resources>

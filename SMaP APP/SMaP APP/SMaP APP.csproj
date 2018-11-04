@@ -65,7 +65,10 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\BoolNegator.cs" />
+    <Compile Include="Converters\DictionaryNameConverter.cs" />
     <Compile Include="Converters\SemesterIsActiveConverter.cs" />
+    <Compile Include="Converters\ServiceStoreWindowHeaderConverter.cs" />
+    <Compile Include="Converters\ServiceTableTeamConverter.cs" />
     <Compile Include="Converters\SessionGroupCBVisibilityConverter.cs" />
     <Compile Include="Converters\SessionGroupSemesterNameConverter.cs" />
     <Compile Include="Converters\SessionGroupTeacherNameConverter.cs" />
@@ -81,6 +84,10 @@
     <Compile Include="DAL\GenericDAL.cs" />
     <Compile Include="DAL\GetContext.cs" />
     <Compile Include="DAL\SemesterDAL.cs" />
+    <Compile Include="DAL\ServiceRequestDAL.cs" />
+    <Compile Include="DAL\ServiceStoreDAL.cs" />
+    <Compile Include="DAL\ServiceTableDAL.cs" />
+    <Compile Include="DAL\ServiceTableFieldDAL.cs" />
     <Compile Include="DAL\SessionGroupDAL.cs" />
     <Compile Include="DAL\StudentDAL.cs" />
     <Compile Include="DAL\TeacherDAL.cs" />
@@ -94,6 +101,21 @@
     </Compile>
     <Compile Include="Model\IBaseModel.cs" />
     <Compile Include="Model\Semester.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ServiceRequest.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ServiceStore.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ServiceStoreParams.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ServiceTable.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ServiceTableField.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\SessionGroup.cs">
@@ -135,6 +157,9 @@
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\SemesterCopyViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
+    <Compile Include="ViewModel\ServiceStoreEditViewModel.cs" />
+    <Compile Include="ViewModel\ServiceStoreViewModel.cs" />
+    <Compile Include="ViewModel\ServiceTableViewModel.cs" />
     <Compile Include="ViewModel\SessionGroupEditViewModel.cs" />
     <Compile Include="ViewModel\StudentEditorWindowViewModel.cs" />
     <Compile Include="ViewModel\TeacherEditorWindowViewModel.cs" />
@@ -145,6 +170,7 @@
     <Compile Include="ViewModel\ValidationRules\NeptunLengthValidation.cs" />
     <Compile Include="ViewModel\ValidationRules\SemesterNameValidation.cs" />
     <Compile Include="ViewModel\ValidationRules\SemesterTypeValidation.cs" />
+    <Compile Include="ViewModel\ServiceTableFieldViewModel.cs" />
     <Compile Include="View\CopySemesterWindow.xaml.cs">
       <DependentUpon>CopySemesterWindow.xaml</DependentUpon>
     </Compile>
@@ -156,6 +182,18 @@
     </Compile>
     <Compile Include="View\SemesterWindow.xaml.cs">
       <DependentUpon>SemesterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceStoreEditWindow.xaml.cs">
+      <DependentUpon>ServiceStoreEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceStoreWindow.xaml.cs">
+      <DependentUpon>ServiceStoreWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceTableWindow.xaml.cs">
+      <DependentUpon>ServiceTableWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceTableFieldWindow.xaml.cs">
+      <DependentUpon>ServiceTableFieldWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SessionGroupEditWindow.xaml.cs">
       <DependentUpon>SessionGroupEditWindow.xaml</DependentUpon>
@@ -197,6 +235,22 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\SemesterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServiceStoreEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServiceStoreWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServiceTableWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServiceTableFieldWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -245,6 +299,7 @@
     </EntityDeploy>
     <None Include="Model\SMaP_Model.edmx.diagram">
       <DependentUpon>SMaP_Model.edmx</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

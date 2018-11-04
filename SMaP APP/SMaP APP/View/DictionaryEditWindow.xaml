@@ -9,6 +9,7 @@
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
         WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow"
+        ResizeMode="NoResize"
         Title="Szótár elem szerkesztése" Height="242.132" Width="365.482" >
     <Window.Resources>
         <conv:BoolNegator x:Key="BoolNegator"/>

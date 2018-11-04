@@ -9,6 +9,7 @@
         Background="LightBlue"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow"
         >
     <Grid>

@@ -16,10 +16,10 @@ namespace SMaP_APP.DAL
             int TypeID = applicationDbContext.Set<DictionaryType>().Where(x => !x.Deleted && x.TypeName == "Félév típusok").SingleOrDefault().ID;
             this.SemesterTypes = applicationDbContext.Set<Dictionary>().Where(x => !x.Deleted && x.DictionaryTypeID==TypeID).ToList();
         }
-        public void CopySemester(int sourceId,string newSemesterName, int newSemesterTypedId)
+        public void CopySemester(int sourceId,string newSemesterName, int newSemesterTypedId,string SessionGroups,string Teams,string Students)
         {
             RefreshContext();
-            applicationDbContext.uspCopySemester(sourceId, newSemesterName, newSemesterTypedId);
+            applicationDbContext.uspCopySemester(sourceId, newSemesterName, newSemesterTypedId,SessionGroups,Teams,Students);
         }
     }
 }

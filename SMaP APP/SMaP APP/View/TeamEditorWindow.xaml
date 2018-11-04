@@ -7,6 +7,7 @@
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         mc:Ignorable="d"
         Background="LightBlue"
+        ResizeMode="NoResize"
         Title="Csapat szerkesztése" Height="214.925" Width="300" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Window.Resources>
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">

@@ -22,7 +22,7 @@ namespace SMaP_APP.DAL
         }
         public static void RefreshContext()
         {
-            var context = ((IObjectContextAdapter)applicationDbContext).ObjectContext;
+            var context = ((IObjectContextAdapter)getContext()).ObjectContext;
             var refreshableObjects = applicationDbContext.ChangeTracker.Entries().Select(c => c.Entity).ToList();
             context.Refresh(RefreshMode.StoreWins, refreshableObjects);
         }

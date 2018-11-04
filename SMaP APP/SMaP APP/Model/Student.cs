@@ -18,6 +18,7 @@ namespace SMaP_APP.Model
         public Student()
         {
             this.Team = new HashSet<Team>();
+            this.ServiceStore = new HashSet<ServiceStore>();
         }
     
         public int ID { get; set; }
@@ -28,5 +29,7 @@ namespace SMaP_APP.Model
         public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Team> Team { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceStore> ServiceStore { get; set; }
     }
 }

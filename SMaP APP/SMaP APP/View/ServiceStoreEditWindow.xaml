@@ -1,0 +1,87 @@
+﻿<Window x:Class="SMaP_APP.View.ServiceStoreEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SMaP_APP.View"
+        xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
+        Background="LightBlue"
+        ResizeMode="NoResize"
+        Title="Szolgáltatás szerkesztése" Height="560.058" Width="459.774">
+    <Window.Resources>
+        <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="comboBoxError" TargetType="{x:Type ComboBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Button Command="{Binding SaveCommand}" IsDefault="True" Content="Mentés" HorizontalAlignment="Left" Margin="10,490,0,0" VerticalAlignment="Top" Width="200"/>
+        <Button Command="{Binding CloseCommand}" IsCancel="True" Content="Mégsem" HorizontalAlignment="Left" Margin="215,490,0,0" VerticalAlignment="Top" Width="209"/>
+        <Label Padding="0" Content="Szolgáltatás neve" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.986,-1.66" Height="22"/>
+        <Label Padding="0" Content="Nyújtó csapat" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+        <Label Padding="0" Content="Igénylő csapat" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+        <Label Padding="0" Content="Leírás" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
+        <Label Padding="0" Content="Bemenő paraméterek" HorizontalAlignment="Left" Margin="10,238,0,0" VerticalAlignment="Top"/>
+        <DataGrid HorizontalAlignment="Left" Height="100" Margin="10,259,0,0" VerticalAlignment="Top" Width="200"/>
+        <DataGrid HorizontalAlignment="Left" Height="100" Margin="215,259,0,0" VerticalAlignment="Top" Width="209"/>
+        <Label Padding="0" Content="Kimenő paraméterek" HorizontalAlignment="Left" Margin="215,238,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource textBoxError}" HorizontalAlignment="Left" Height="109" Margin="10,124,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="414">
+            <Binding Path="SelectedServiceStore.ServiceDescription" UpdateSourceTrigger="PropertyChanged">
+                <Binding.ValidationRules>
+                    <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
+                </Binding.ValidationRules>
+            </Binding>
+        </TextBox>
+        <TextBox Style="{StaticResource textBoxError}" HorizontalAlignment="Left" Height="23" Margin="134,9,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="290">
+            <Binding Path="SelectedServiceStore.ServiceName" UpdateSourceTrigger="PropertyChanged">
+                <Binding.ValidationRules>
+                    <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
+                </Binding.ValidationRules>
+            </Binding>
+        </TextBox>
+        <ComboBox IsEnabled="False" ItemsSource="{Binding TeamList}"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="290" Margin="134,37,0,0"
+                  SelectedValuePath="ID"
+                  DisplayMemberPath="TeamName">
+            <ComboBox.SelectedValue>
+                <Binding Path="SelectedServiceStore.ProviderTeamID" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <valid:EmptyIntValueValidation ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.SelectedValue>
+        </ComboBox>
+        <ComboBox Style="{StaticResource comboBoxError}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="290" Margin="134,66,0,0"
+            ItemsSource="{Binding TeamList}"
+            SelectedValuePath="ID"
+            DisplayMemberPath="TeamName"
+            ToolTipService.InitialShowDelay="0">
+            <ComboBox.SelectedValue>
+                <Binding Path="SelectedServiceStore.RequesterTeamID" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <valid:EmptyIntValueValidation ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.SelectedValue>
+        </ComboBox>
+        <Label Padding="0" Content="Igénybe vett szolgáltatások" HorizontalAlignment="Left" Margin="10,364,0,0" VerticalAlignment="Top"/>
+        <DataGrid HorizontalAlignment="Left" Height="100" Margin="10,385,0,0" VerticalAlignment="Top" Width="200"/>
+
+    </Grid>
+</Window>

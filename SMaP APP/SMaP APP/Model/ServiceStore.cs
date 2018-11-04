@@ -12,35 +12,29 @@ namespace SMaP_APP.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Team : IBaseModel
+    public partial class ServiceStore : IBaseModel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Team()
+        public ServiceStore()
         {
             this.ServiceRequest = new HashSet<ServiceRequest>();
-            this.ServiceRequest1 = new HashSet<ServiceRequest>();
-            this.ServiceTable = new HashSet<ServiceTable>();
-            this.ServiceStore = new HashSet<ServiceStore>();
-            this.ServiceStore1 = new HashSet<ServiceStore>();
+            this.ServiceStoreParams = new HashSet<ServiceStoreParams>();
         }
     
         public int ID { get; set; }
-        public int SessionGroupID { get; set; }
-        public string TeamName { get; set; }
-        public Nullable<int> TeamCaptain { get; set; }
+        public string ServiceName { get; set; }
+        public int CreatorID { get; set; }
+        public int ProviderTeamID { get; set; }
+        public int RequesterTeamID { get; set; }
+        public string ServiceDescription { get; set; }
         public bool Deleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceRequest> ServiceRequest { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ServiceRequest> ServiceRequest1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ServiceTable> ServiceTable { get; set; }
-        public virtual SessionGroup SessionGroup { get; set; }
         public virtual Student Student { get; set; }
+        public virtual Team Team { get; set; }
+        public virtual Team Team1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ServiceStore> ServiceStore { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ServiceStore> ServiceStore1 { get; set; }
+        public virtual ICollection<ServiceStoreParams> ServiceStoreParams { get; set; }
     }
 }

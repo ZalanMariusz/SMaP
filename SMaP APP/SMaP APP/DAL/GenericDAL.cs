@@ -15,7 +15,7 @@ namespace SMaP_APP.DAL
 {
     public abstract class GenericDAL<TEntity> where TEntity : class, IBaseModel
     {
-        public SMaPEntities applicationDbContext { get { return GetContext.getContext(); } }
+        internal SMaPEntities applicationDbContext { get { return GetContext.getContext(); } }
 
         public GenericDAL()
         {
@@ -28,6 +28,7 @@ namespace SMaP_APP.DAL
 
         public List<TEntity> FindAll(Expression<Func<TEntity, bool>> filterExpression = null)
         {
+            RefreshContext();
             IQueryable<TEntity> entities = applicationDbContext.Set<TEntity>();
             if (filterExpression != null)
             {

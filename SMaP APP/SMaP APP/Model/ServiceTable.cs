@@ -12,25 +12,20 @@ namespace SMaP_APP.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Dictionary : IBaseModel
+    public partial class ServiceTable : IBaseModel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Dictionary()
+        public ServiceTable()
         {
-            this.Semester = new HashSet<Semester>();
             this.ServiceTableField = new HashSet<ServiceTableField>();
         }
     
         public int ID { get; set; }
-        public string ItemName { get; set; }
-        public string ShortItemName { get; set; }
-        public int DictionaryTypeID { get; set; }
-        public bool IsProtected { get; set; }
+        public string TableName { get; set; }
+        public Nullable<int> TeamID { get; set; }
         public bool Deleted { get; set; }
     
-        public virtual DictionaryType DictionaryType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Semester> Semester { get; set; }
+        public virtual Team Team { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceTableField> ServiceTableField { get; set; }
     }
