@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP.View"
         mc:Ignorable="d"
-        Title="Adattábla szerkesztése" Height="125.62" Width="328.099"
+        Title="Adattábla szerkesztése" Height="116.235" Width="317.27"
         Background="LightBlue"
         ResizeMode="NoResize"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
@@ -31,7 +31,7 @@
             </Binding>
         </TextBox>
         <Button Content="Mentés" Command="{Binding SaveCommand}" IsDefault="True" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Width="96"/>
-        <Button Content="Button" Command="{Binding CloseCommand}" IsCancel="True" HorizontalAlignment="Left" Margin="188,54,0,0" VerticalAlignment="Top" Width="96"/>
+        <Button Content="Mégsem" Command="{Binding CloseCommand}" IsCancel="True" HorizontalAlignment="Left" Margin="188,54,0,0" VerticalAlignment="Top" Width="96"/>
 
     </Grid>
 </Window>

@@ -72,6 +72,7 @@
     <Compile Include="Converters\SessionGroupCBVisibilityConverter.cs" />
     <Compile Include="Converters\SessionGroupSemesterNameConverter.cs" />
     <Compile Include="Converters\SessionGroupTeacherNameConverter.cs" />
+    <Compile Include="Converters\StudentImportDataTableConverter.cs" />
     <Compile Include="Converters\StudentNameConverter.cs" />
     <Compile Include="Converters\StudentSessionGroupConverter.cs" />
     <Compile Include="Converters\StudentTeamConverter.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Converters\TeamCaptainNameConverter.cs" />
     <Compile Include="Converters\TeamNameConverter.cs" />
     <Compile Include="Converters\TeamSessionGroupNameConverter.cs" />
+    <Compile Include="Converters\UserValidationConverter.cs" />
     <Compile Include="DAL\DictionaryDAL.cs" />
     <Compile Include="DAL\DictionaryTypeDAL.cs" />
     <Compile Include="DAL\GenericDAL.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="ViewModel\ServiceTableViewModel.cs" />
     <Compile Include="ViewModel\SessionGroupEditViewModel.cs" />
     <Compile Include="ViewModel\StudentEditorWindowViewModel.cs" />
+    <Compile Include="ViewModel\StudentImportViewModel.cs" />
     <Compile Include="ViewModel\TeacherEditorWindowViewModel.cs" />
     <Compile Include="ViewModel\TeacherWindowViewModel.cs" />
     <Compile Include="ViewModel\TeamEditorWindowViewModel.cs" />
@@ -200,6 +203,9 @@
     </Compile>
     <Compile Include="View\StudentEditorWindow.xaml.cs">
       <DependentUpon>StudentEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StudentImportWindow.xaml.cs">
+      <DependentUpon>StudentImportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TeacherEditorWindow.xaml.cs">
       <DependentUpon>TeacherEditorWindow.xaml</DependentUpon>
@@ -262,6 +268,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\StudentImportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\TeacherEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -306,6 +316,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="tanulo_import_minta.xls" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

@@ -1,4 +1,5 @@
-﻿using SMaP_APP.Commands;
+﻿using Microsoft.Win32;
+using SMaP_APP.Commands;
 using SMaP_APP.DAL;
 using SMaP_APP.Model;
 using SMaP_APP.View;
@@ -6,11 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace SMaP_APP.ViewModel
 {
@@ -49,6 +54,8 @@ namespace SMaP_APP.ViewModel
         public RelayCommand CopySemesterCommand { get; set; }
         public RelayCommand DeleteFilter { get; set; }
         public RelayCommand LogoutCommand { get; set; }
+        public RelayCommand DownloadImportTemplate { get; set; }
+        public RelayCommand ImportStudents { get; set; }
         #endregion Commands
 
         #region Properties and Fields
@@ -177,7 +184,7 @@ namespace SMaP_APP.ViewModel
         {
             if (DictionaryTypeFilter != null)
             {
-                return new ObservableCollection<Dictionary>(((TeacherDAL)_contextDal).DictionaryList().Where(x=>x.DictionaryTypeID==dictionaryTypeFilter.ID));
+                return new ObservableCollection<Dictionary>(((TeacherDAL)_contextDal).DictionaryList().Where(x => x.DictionaryTypeID == dictionaryTypeFilter.ID));
             }
             return new ObservableCollection<Dictionary>(((TeacherDAL)_contextDal).DictionaryList());
         }
@@ -223,6 +230,8 @@ namespace SMaP_APP.ViewModel
 
             this.CopySemesterCommand = new RelayCommand(CopySelectedSemester, CanCopySemester);
             this.DeleteFilter = new RelayCommand(DeleteSelectedFilter);
+            this.DownloadImportTemplate = new RelayCommand(DownloadTemplate);
+            this.ImportStudents = new RelayCommand(ImportStudentsFromFile);
             this._contextDal = new TeacherDAL();
 
             this.SemesterList = ReloadSemesterList();
@@ -295,12 +304,12 @@ namespace SMaP_APP.ViewModel
         private void DeleteSemester(object param)
         {
             Semester selectedSemester = (Semester)((DataGrid)param).SelectedItem;
-            SessionGroupDAL sessionGroupDal=new SessionGroupDAL();
+            SessionGroupDAL sessionGroupDal = new SessionGroupDAL();
             if (selectedSemester.IsActive == true)
             {
                 MessageBox.Show("Aktív szemeszter nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-            else if (sessionGroupDal.FindAll(x=>x.SemesterID==selectedSemester.ID).FirstOrDefault()!=null)
+            else if (sessionGroupDal.FindAll(x => x.SemesterID == selectedSemester.ID).FirstOrDefault() != null)
             {
                 MessageBox.Show("A félévhez tartozik csoport, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -343,7 +352,7 @@ namespace SMaP_APP.ViewModel
             {
                 MessageBox.Show("Bejelentkezett felhasználó nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-            else if (this.SessionGroupList.Where(x=>x.TeacherID==selectedTeacher.ID).FirstOrDefault() != null)
+            else if (this.SessionGroupList.Where(x => x.TeacherID == selectedTeacher.ID).FirstOrDefault() != null)
             {
                 MessageBox.Show("Az otkatóhoz tartozik csoport, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -388,9 +397,9 @@ namespace SMaP_APP.ViewModel
         }
         private void DeleteSessionGroup(object param)
         {
-            
+
             SessionGroup selectedSessionGroup = (SessionGroup)((DataGrid)param).SelectedItem;
-            if (this.TeamList.FirstOrDefault(x => x.SessionGroupID==selectedSessionGroup.ID)!=null)
+            if (this.TeamList.FirstOrDefault(x => x.SessionGroupID == selectedSessionGroup.ID) != null)
             {
                 MessageBox.Show("A csoporthoz tartozik csapat, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -471,7 +480,7 @@ namespace SMaP_APP.ViewModel
         {
             Student selectedStudent = (Student)((DataGrid)param).SelectedItem;
             Team studentTeam = _contextDal.applicationDbContext.Team.FirstOrDefault(x => x.TeamCaptain == selectedStudent.ID);
-            if (studentTeam != null && selectedStudent.Team.First().TeamCaptain ==selectedStudent.ID)
+            if (studentTeam != null && selectedStudent.Team.First().TeamCaptain == selectedStudent.ID)
             {
                 MessageBox.Show("Csapatkapitány nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -540,7 +549,7 @@ namespace SMaP_APP.ViewModel
         private void DeleteDictionaryType(object param)
         {
             DictionaryType selectedDictionaryType = (DictionaryType)((DataGrid)param).SelectedItem;
-            if (this.DictionaryList.FirstOrDefault(x => x.DictionaryTypeID==selectedDictionaryType.ID)!=null)
+            if (this.DictionaryList.FirstOrDefault(x => x.DictionaryTypeID == selectedDictionaryType.ID) != null)
             {
                 MessageBox.Show("A szótár típushoz tartozik szótár elem, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -570,6 +579,136 @@ namespace SMaP_APP.ViewModel
             this.StudentList = ReloadStudentList();
         }
 
+        private void DownloadTemplate()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "import_minta";
+            saveFileDialog.Filter = "Excel fileok (*.xls)|*.xls";
+            saveFileDialog.ShowDialog();
+
+            if (!string.IsNullOrEmpty(saveFileDialog.FileName))
+            {
+                //string fileName="ich_will.mp3";
+                //string path=Path.Combine(Environment.CurrentDirectory, @"Data\", fileName);
+                //File.Copy(fileName,);
+                StreamWriter sw = new StreamWriter(saveFileDialog.FileName);
+                sw.AutoFlush = true;
+                sw.Write(
+                    @"<?xml version=""1.0""?>
+                <?mso-application progid=""Excel.Sheet""?>
+                <Workbook xmlns=""urn:schemas-microsoft-com:office:spreadsheet""
+xmlns:o=""urn:schemas-microsoft-com:office:office""
+xmlns:x=""urn:schemas-microsoft-com:office:excel""
+xmlns:ss=""urn:schemas-microsoft-com:office:spreadsheet""
+xmlns:html=""http://www.w3.org/TR/REC-html40"">
+                 <DocumentProperties xmlns=""urn:schemas-microsoft-com:office:office"">
+                  <Version>16.00</Version>
+                 </DocumentProperties>
+                 <OfficeDocumentSettings xmlns=""urn:schemas-microsoft-com:office:office"">
+                  <AllowPNG/>
+                 </OfficeDocumentSettings>
+                 <ExcelWorkbook xmlns=""urn:schemas-microsoft-com:office:excel"">
+                  <WindowHeight>7770</WindowHeight>
+                  <WindowWidth>20490</WindowWidth>
+                  <WindowTopX>0</WindowTopX>
+                  <WindowTopY>0</WindowTopY>
+                  <ProtectStructure>False</ProtectStructure>
+                  <ProtectWindows>False</ProtectWindows>
+                 </ExcelWorkbook>
+                 <Styles>
+                  <Style ss:ID=""Default"" ss:Name=""Normal"">
+                   <Alignment ss:Vertical=""Bottom""/>
+                   <Borders/>
+                   <Font ss:FontName=""Calibri"" x:CharSet=""238"" x:Family=""Swiss"" ss:Size=""11"" ss:Color=""#000000""/>
+                   <Interior/>
+                   <NumberFormat/>
+                   <Protection/>
+                  </Style>
+                  <Style ss:ID=""s62"">
+                   <Font ss:FontName=""Calibri"" x:CharSet=""238"" x:Family=""Swiss"" ss:Size=""11""
+                    ss:Color=""#000000"" ss:Bold=""1""/>
+                  </Style>
+                 </Styles>
+                 <Worksheet ss:Name=""Diákok"">
+                  <Table ss:ExpandedColumnCount=""6"" ss:ExpandedRowCount=""2"" x:FullColumns=""1""
+                   x:FullRows=""1"" ss:DefaultRowHeight=""15"">
+                   <Column ss:Width=""60.75""/>
+                   <Column ss:Width=""57""/>
+                   <Column ss:Width=""40.5""/>
+                   <Column ss:Width=""90.75""/>
+                   <Column ss:Width=""46.5""/>
+                   <Column ss:Width=""73.5""/>
+                   <Row>
+                    <Cell ss:StyleID=""s62""><Data ss:Type=""String"">Vezetéknév</Data></Cell>
+                    <Cell ss:StyleID=""s62""><Data ss:Type=""String"">Keresztnév</Data></Cell>
+                    <Cell ss:StyleID=""s62""><Data ss:Type=""String"">Neptun</Data></Cell>
+                    <Cell ss:StyleID=""s62""><Data ss:Type=""String"">E-mail</Data></Cell>
+                    <Cell ss:StyleID=""s62""><Data ss:Type=""String"">Csoport</Data></Cell>
+                    <Cell ss:StyleID=""s62""><Data ss:Type=""String"">Csapat</Data></Cell>
+                   </Row>
+                   <Row>
+                    <Cell><Data ss:Type=""String"">Minta</Data></Cell>
+                    <Cell><Data ss:Type=""String"">Menyhárt</Data></Cell>
+                    <Cell><Data ss:Type=""String"">ABC123</Data></Cell>
+                    <Cell><Data ss:Type=""String"">email@gmail.com</Data></Cell>
+                    <Cell><Data ss:Type=""String"">Csoport I</Data></Cell>
+                    <Cell><Data ss:Type=""String"">Cikk és készlet </Data></Cell>
+                   </Row>
+                  </Table>
+                 </Worksheet>
+                </Workbook>");
+                sw.Close();
+            }
+
+        }
+        private void ImportStudentsFromFile()
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Excel fileok (*.xls)|*.xls";
+            fileDialog.ShowDialog();
+            if (!String.IsNullOrEmpty(fileDialog.FileName))
+            {
+                try
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(fileDialog.FileName);
+                    var nsmgr = new XmlNamespaceManager(doc.NameTable);
+                    nsmgr.AddNamespace("o", "urn:schemas-microsoft-com:office:office");
+                    nsmgr.AddNamespace("x", "urn:schemas-microsoft-com:office:excel");
+                    nsmgr.AddNamespace("ss", "urn:schemas-microsoft-com:office:spreadsheet");
+                    XmlNodeList nodes = doc.DocumentElement.SelectNodes("//ss:Worksheet/ss:Table/ss:Row", nsmgr);
+                    List<Users> importedUsers = new List<Users>();
+                    DataTable dt = new DataTable();
+                    dt.Columns.Add("User", typeof(Users));
+                    dt.Columns.Add("SessionGroup", typeof(string));
+                    dt.Columns.Add("Team", typeof(string));
+                    for (int i = 1; i < nodes.Count; i++)
+                    {
+                        XmlNodeList dataNodes = nodes[i].SelectNodes("ss:Cell/ss:Data", nsmgr);
+                        Users u = new Users();
+                        u.LastName = dataNodes[0].InnerText;
+                        u.FirstName = dataNodes[1].InnerText;
+                        u.NEPTUN = dataNodes[2].InnerText;
+                        u.Email = dataNodes[3].InnerText;
+                        u.FullName = u.LastName + " " + u.FirstName;
+                        u.UserName = u.Email;
+                        u.UserPassword = UsersDAL.ComputeSha256Hash(u.Email);
+                        string sessionGroupName = dataNodes[4].InnerText.Trim();
+                        string teamName = dataNodes[5].InnerText.Trim();
+                        dt.Rows.Add(new object[] { u, sessionGroupName, teamName });
+                    }
+                    StudentImportWindow target = new StudentImportWindow(dt)
+                    {
+                        Owner = this.SourceWindow
+                    };
+                    SwitchWindows(target, true);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Hiba a fájl betöltése közben! Csak minta alapján készült fájl importálása engedélyezett!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+            }
+        }
         #endregion CommandMethods
         #region CanExecutes
         private bool CanDeleteDictionary(object param)

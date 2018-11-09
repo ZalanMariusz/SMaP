@@ -41,9 +41,7 @@ namespace SMaP_APP.ViewModel
                 var contextTeacher = _contextDal.applicationDbContext.Teacher.Where(x => x.UserID == User.ID && !x.Deleted).FirstOrDefault();
                 if (contextTeacher == null)
                 {
-                    var contextStudent= _contextDal.applicationDbContext.Student.Where(x => x.UserID == User.ID && !x.Deleted
-                        && _contextDal.applicationDbContext.Team.FirstOrDefault(y=>y.ID==x.TeamID).SessionGroup.Semester.IsActive
-                    ).FirstOrDefault();
+                    var contextStudent = _contextDal.applicationDbContext.Student.Where(x => x.UserID == User.ID && !x.Deleted).FirstOrDefault();
                     if (contextStudent == null)
                     {
                         MessageBox.Show("Érvénytelen jogosultság!", "Érvénytelen jogosultság!", MessageBoxButton.OK, MessageBoxImage.Error);

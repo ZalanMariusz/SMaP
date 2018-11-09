@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SMaP_APP.View"
         ResizeMode="NoResize"
         mc:Ignorable="d"
-        Title="Adattábla mező szerkesztése" Height="181.819" Width="321.488"
+        Title="Adattábla mező szerkesztése" Height="181.819" Width="307.904"
         Background="LightBlue"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
