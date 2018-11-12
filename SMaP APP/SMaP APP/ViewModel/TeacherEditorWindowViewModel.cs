@@ -13,7 +13,12 @@ namespace SMaP_APP.ViewModel
 {
     class TeacherEditorWindowViewModel : BaseViewModel<Teacher>
     {
-        public Teacher SelectedTeacher { get; set; }
+        private Teacher selectedTeacher;
+        public Teacher SelectedTeacher
+        {
+            get { return selectedTeacher; }
+            set { selectedTeacher=value; NotifyPropertyChanged(); }
+        }
         public RelayCommand SaveCommand { get; set; }
         private UsersDAL UsersDal { get; set; }
         public TeacherEditorWindowViewModel(TeacherEditorWindow teacherEditorWindow, Teacher teacher)

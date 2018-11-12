@@ -28,7 +28,7 @@ namespace SMaP_APP.DAL
 
         public List<TEntity> FindAll(Expression<Func<TEntity, bool>> filterExpression = null)
         {
-            RefreshContext();
+            //RefreshContext();
             IQueryable<TEntity> entities = applicationDbContext.Set<TEntity>();
             if (filterExpression != null)
             {

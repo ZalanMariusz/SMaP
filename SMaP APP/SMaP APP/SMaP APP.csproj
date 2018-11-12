@@ -73,6 +73,7 @@
     <Compile Include="Converters\SessionGroupSemesterNameConverter.cs" />
     <Compile Include="Converters\SessionGroupTeacherNameConverter.cs" />
     <Compile Include="Converters\StudentImportDataTableConverter.cs" />
+    <Compile Include="Converters\StudentImportTeamValidationConverter.cs" />
     <Compile Include="Converters\StudentNameConverter.cs" />
     <Compile Include="Converters\StudentSessionGroupConverter.cs" />
     <Compile Include="Converters\StudentTeamConverter.cs" />
@@ -95,6 +96,11 @@
     <Compile Include="DAL\TeacherDAL.cs" />
     <Compile Include="DAL\TeamDAL.cs" />
     <Compile Include="DAL\UsersDAL.cs" />
+    <Compile Include="MailResources.Designer.cs">
+      <DependentUpon>MailResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="Model\Dictionary.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
@@ -157,6 +163,7 @@
     <Compile Include="ViewModel\DictionaryTypeViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\MailSender.cs" />
     <Compile Include="ViewModel\SemesterCopyViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreEditViewModel.cs" />
@@ -299,6 +306,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="MailResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MailResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -7,35 +7,64 @@
         mc:Ignorable="d"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
+        WindowStartupLocation="CenterOwner"
         Background="LightBlue"
         ResizeMode="NoResize"
-        Title="Hallgatók importálása" Height="300" Width="554">
+        Title="Hallgatók importálása" Height="310" Width="563">
     <Window.Resources>
         <conv:UserValidationConverter x:Key="UserValidationConverter"/>
         <conv:StudentImportDataTableConverter x:Key="StudentImportDataTableConverter"/>
+        <conv:StudentImportTeamValidationConverter x:Key="StudentImportTeamValidationConverter"/>
     </Window.Resources>
     <Grid>
         <DataGrid AlternatingRowBackground="LightBlue" SelectionMode="Single" Name="StudentGrid"  AutoGenerateColumns="False" IsReadOnly="True"
-            HorizontalAlignment="Left" Height="205" Margin="10,10,0,0" VerticalAlignment="Top" Width="528" ItemsSource="{Binding Table}">
+            HorizontalAlignment="Left" Height="214" Margin="10,10,0,0" VerticalAlignment="Top" Width="528" ItemsSource="{Binding Table}">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <Setter Property="BorderThickness" Value="0"/>
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Név" Binding="{Binding User, Converter={StaticResource StudentImportDataTableConverter}}" Width="1*">
+                <DataGridTextColumn Header="Név" Binding="{Binding User, Converter={StaticResource StudentImportDataTableConverter}, ConverterParameter=Name}" Width="1*"/>
+                <DataGridTextColumn Header="Neptun" Binding="{Binding User, Converter={StaticResource StudentImportDataTableConverter}, ConverterParameter=Neptun}" Width="1*">
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="DataGridCell">
-                            <Setter Property="Foreground" Value="Red"/>
-                            <!--Value="{Binding User, Converter=UserValidationConverter}"-->
+                            <Setter Property="Foreground" Value="{Binding Path=User, Converter={StaticResource UserValidationConverter}, ConverterParameter=Neptun}"/>
                         </Style>
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Csoport" Binding="{Binding SessionGroup}" Width="1*"/>
-                <DataGridTextColumn Header="Csapat" Binding="{Binding Team}" Width="1*"/>
+                <DataGridTextColumn Header="E-mail" Binding="{Binding User, Converter={StaticResource StudentImportDataTableConverter}, ConverterParameter=Email}" Width="1*">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Foreground" Value="{Binding Path=User, Converter={StaticResource UserValidationConverter}, ConverterParameter=Email}"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Csoport" Binding="{Binding SessionGroup}" Width="1*">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Foreground" Value="{Binding Path=SessionGroup, Converter={StaticResource UserValidationConverter}, ConverterParameter=SessionGroup}"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Csapat" Binding="{Binding Team}" Width="1*">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Foreground" >
+                                <Setter.Value>
+                                    <!--Value="{Binding Path=Team, Converter={StaticResource UserValidationConverter}, ConverterParameter=SessionGroup|Team}"/-->
+                                    <MultiBinding Converter="{StaticResource StudentImportTeamValidationConverter}">
+                                        <Binding Path="SessionGroup"/>
+                                        <Binding Path="Team"/>
+                                    </MultiBinding>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Importálás" Command="{Binding SaveCommand}" IsDefault="True" HorizontalAlignment="Left" Margin="10,241,0,0" VerticalAlignment="Top" Width="179" Grid.ColumnSpan="2"/>
-        <Button Content="Mégsem" Command="{Binding CloseCommand}" IsCancel="True" HorizontalAlignment="Left" Margin="359,241,0,0" VerticalAlignment="Top" Width="179"/>
+        <Button Content="Importálás" Command="{Binding SaveCommand}" IsDefault="True" HorizontalAlignment="Left" Margin="10,241,0,10" Width="179"/>
+        <Button Content="Mégsem" Command="{Binding CloseCommand}" IsCancel="True" HorizontalAlignment="Left" Margin="359,241,0,10" Width="179"/>
     </Grid>
 </Window>

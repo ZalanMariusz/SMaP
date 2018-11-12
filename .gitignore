@@ -262,3 +262,6 @@ __pycache__/
 
 # App.config
 App.config
+SMaP APP/SMaP APP/ViewModel/MailSender.cs
+SMaP APP/SMaP APP/MailResources.resx
+SMaP APP/SMaP APP/MailResources.Designer.cs

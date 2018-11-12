@@ -702,10 +702,11 @@ xmlns:html=""http://www.w3.org/TR/REC-html40"">
                         Owner = this.SourceWindow
                     };
                     SwitchWindows(target, true);
+                    this.StudentList = ReloadStudentList();
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Hiba a fájl betöltése közben! Csak minta alapján készült fájl importálása engedélyezett!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    MessageBox.Show("Hiba a fájl betöltése közben!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }
         }

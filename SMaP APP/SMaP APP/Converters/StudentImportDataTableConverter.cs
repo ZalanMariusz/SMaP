@@ -14,8 +14,19 @@ namespace SMaP_APP.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Users u =(Users)value;
-            return u.FullName;
+            Users u = (Users)value;
+            switch (parameter)
+            {
+                case "Name":
+                    return u.FullName;
+                case "Neptun":
+                    return u.NEPTUN;
+                case "Email":
+                    return u.Email;
+            }
+            return "";
+            
+            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

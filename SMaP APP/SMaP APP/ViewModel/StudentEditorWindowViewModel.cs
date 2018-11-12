@@ -53,6 +53,7 @@ namespace SMaP_APP.ViewModel
                     SelectedStudent.UserID = u.ID;
                     u.Student.Add(SelectedStudent);
                     this.UsersDal.Update(u);
+                    MailSender.SendMail(u.Email);
                 }
                 else
                 {

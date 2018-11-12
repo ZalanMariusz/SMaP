@@ -18,7 +18,7 @@ namespace SMaP_APP.ViewModel
         public SessionGroup SelectedSessionGroup
         {
             get { return selectedSessionGroup; }
-            set { selectedSessionGroup = value; }
+            set { selectedSessionGroup = value; NotifyPropertyChanged(); }
         }
         public RelayCommand SaveCommand { get; set; }
         public ObservableCollection<Teacher> TeacherList { get; set; }
@@ -35,7 +35,7 @@ namespace SMaP_APP.ViewModel
             this.SemesterList = new ObservableCollection<Semester>(((SessionGroupDAL)_contextDal).SemesterList);
             if (SelectedSessionGroup.Semester == null)
             {
-                if (SemesterList.Where(x => x.IsActive).SingleOrDefault()!=null)
+                if (SemesterList.Where(x => x.IsActive).SingleOrDefault() != null)
                 {
                     this.SelectedSessionGroup.SemesterID = SemesterList.Where(x => x.IsActive).FirstOrDefault().ID;
                     GenerateTeams = true;
@@ -61,7 +61,6 @@ namespace SMaP_APP.ViewModel
                 }
                 if (GenerateTeams)
                 {
-                    
                     ((SessionGroupDAL)_contextDal).AddTeams(SelectedSessionGroup.ID);
                 }
                 this.SourceWindow.Close();
