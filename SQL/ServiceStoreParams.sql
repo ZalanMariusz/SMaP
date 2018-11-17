@@ -9,3 +9,5 @@ CREATE TABLE ServiceStoreParams(
 	,Deleted bit default 0 NOT NULL
 )
 
+CREATE INDEX IX_ServiceStoreParam_ServiceID ON ServiceStoreParams(ServiceID)
+CREATE INDEX IX_ServiceStoreParam_ServiceTableFieldID ON ServiceStoreParams(ServiceTableFieldID)

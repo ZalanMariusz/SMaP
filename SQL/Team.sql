@@ -9,3 +9,7 @@ CREATE TABLE Team(
 	,TeamCaptain int NULL
 	,Deleted bit default 0 NOT NULL
 )
+
+CREATE INDEX IX_Team_SessionGroupID ON Team(SessionGroupID)
+CREATE INDEX IX_Team_TeamCaptain ON Team(TeamCaptain)
+CREATE INDEX IX_Team_TeamName ON Team(TeamName)

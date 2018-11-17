@@ -4,6 +4,7 @@ GO
 CREATE TABLE ServiceStore(
 	 ID INT IDENTITY(1,1) PRIMARY KEY
 	,ServiceName nvarchar(200) NOT NULL
+	,ServiceNumber int NOT NULL
 	,CreatorID int NOT NULL
 	,ProviderTeamID int NOT NULL
 	,RequesterTeamID int NOT NULL
@@ -11,3 +12,5 @@ CREATE TABLE ServiceStore(
 	,Deleted bit default 0 NOT NULL
 )
 
+CREATE INDEX IX_ServiceStore_ProviderTeamID ON ServiceStore(ProviderTeamID)
+CREATE INDEX IX_ServiceStore_RequesterTeamID ON ServiceStore(RequesterTeamID)

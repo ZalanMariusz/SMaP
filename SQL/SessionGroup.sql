@@ -9,3 +9,6 @@ CREATE TABLE SessionGroup(
 	,TeacherID int
 	,Deleted bit DEFAULT 0 NOT NULL
 )
+
+CREATE INDEX IX_SessionGroup_SemesterID ON SessionGroup(SemesterID)
+CREATE INDEX IX_SessionGroup_TeacherID ON SessionGroup(TeacherID)

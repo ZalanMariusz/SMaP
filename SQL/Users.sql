@@ -12,7 +12,6 @@ CREATE TABLE Users(
 	,UserName nvarchar(120) COLLATE HUNGARIAN_CS_AI NOT NULL
 	,UserPassword nvarchar(200) NOT NULL
 	,Deleted bit DEFAULT 0 NOT NULL
-
-	INDEX NCX_FullName(FullName)
 )
 
+CREATE INDEX IX_Users_UserName ON Users(UserName) INCLUDE (UserPassword)

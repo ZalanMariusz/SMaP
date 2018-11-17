@@ -10,3 +10,5 @@ CREATE TABLE Dictionary(
 	,IsProtected BIT DEFAULT 0 NOT NULL
 	,Deleted bit default 0 NOT NULL
 )
+
+CREATE INDEX IX_Dictionary_DictionaryTypeID ON Dictionary(DictionaryTypeID)

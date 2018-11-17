@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP.View"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
+        xmlns:conv="clr-namespace:SMaP_APP.Converters"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
@@ -12,6 +13,14 @@
         ResizeMode="NoResize"
         Title="Szolgáltatás szerkesztése" Height="560.058" Width="459.774">
     <Window.Resources>
+        <conv:ServiceParamFieldConverter x:Key="ServiceParamFieldConverter"/>
+        <conv:ServiceParamTableConverter x:Key="ServiceParamTableConverter"/>
+        <conv:ServiceParamTypeConverter x:Key="ServiceParamTypeConverter"/>
+
+        <BitmapImage x:Key="EditIco" UriSource="/SMaP APP;component/Images/edit-16.ico" />
+        <BitmapImage x:Key="AddIco" UriSource="/SMaP APP;component/Images/plus-16.ico" />
+        <BitmapImage x:Key="DeleteIco" UriSource="/SMaP APP;component/Images/x-mark-16.ico" />
+
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
@@ -38,11 +47,52 @@
         <Label Padding="0" Content="Nyújtó csapat" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
         <Label Padding="0" Content="Igénylő csapat" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
         <Label Padding="0" Content="Leírás" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
-        <Label Padding="0" Content="Bemenő paraméterek" HorizontalAlignment="Left" Margin="10,238,0,0" VerticalAlignment="Top"/>
-        <DataGrid HorizontalAlignment="Left" Height="100" Margin="10,259,0,0" VerticalAlignment="Top" Width="200"/>
-        <DataGrid HorizontalAlignment="Left" Height="100" Margin="215,259,0,0" VerticalAlignment="Top" Width="209"/>
-        <Label Padding="0" Content="Kimenő paraméterek" HorizontalAlignment="Left" Margin="215,238,0,0" VerticalAlignment="Top"/>
-        <TextBox Style="{StaticResource textBoxError}" HorizontalAlignment="Left" Height="109" Margin="10,124,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="414">
+        <Label Padding="0" Content="Bemenő paraméterek" HorizontalAlignment="Left" Margin="10,243,0,0" VerticalAlignment="Top"/>
+        <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding InputFieldCreateCommand}" HorizontalAlignment="Left" Margin="165,239,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
+        </Button>
+        <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding InputFieldDeleteCommand}" CommandParameter="{Binding ElementName=InputFieldListGrid}" HorizontalAlignment="Left" Margin="190,239,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+        </Button>
+        <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="379,364,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
+        </Button>
+        <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" CommandParameter="{Binding ElementName=UsedServicesGrid}" HorizontalAlignment="Left" Margin="404,364,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+        </Button>
+        <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding OutputFieldCreateCommand}" HorizontalAlignment="Left" Margin="379,239,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
+        </Button>
+        <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding OutputFieldDeleteCommand}" CommandParameter="{Binding ElementName=OutputFieldListGrid}" HorizontalAlignment="Left" Margin="404,239,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+        </Button>
+        <DataGrid  HorizontalAlignment="Left" Height="100" Margin="10,259,0,0" VerticalAlignment="Top" Width="200" Name="InputFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding InputFieldList}">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Tábla" Binding="{Binding Converter={StaticResource ServiceParamTableConverter}}" Width="2*"/>
+                <DataGridTextColumn Header="Mező" Binding="{Binding Converter={StaticResource ServiceParamFieldConverter}}" Width="2*"/>
+                <DataGridTextColumn Header="Típus" Binding="{Binding Converter={StaticResource ServiceParamTypeConverter}}" Width="1*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid HorizontalAlignment="Left" Height="100" Margin="215,259,0,0" VerticalAlignment="Top" Width="209"
+                  Name="OutputFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding OutputFieldList}">
+            <DataGrid.CellStyle>
+            <Style TargetType="DataGridCell">
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Tábla" Binding="{Binding Converter={StaticResource ServiceParamTableConverter}}" Width="2*"/>
+                <DataGridTextColumn Header="Mező" Binding="{Binding Converter={StaticResource ServiceParamFieldConverter}}" Width="2*"/>
+                <DataGridTextColumn Header="Típus" Binding="{Binding Converter={StaticResource ServiceParamTypeConverter}}" Width="1*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Padding="0" Content="Kimenő paraméterek" HorizontalAlignment="Left" Margin="215,243,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource textBoxError}" HorizontalAlignment="Left" Height="109" Margin="10,129,0,0" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" VerticalAlignment="Top" Width="414">
             <Binding Path="SelectedServiceStore.ServiceDescription" UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
                     <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
@@ -80,8 +130,8 @@
                 </Binding>
             </ComboBox.SelectedValue>
         </ComboBox>
-        <Label Padding="0" Content="Igénybe vett szolgáltatások" HorizontalAlignment="Left" Margin="10,364,0,0" VerticalAlignment="Top"/>
-        <DataGrid HorizontalAlignment="Left" Height="100" Margin="10,385,0,0" VerticalAlignment="Top" Width="200"/>
+        <Label Padding="0" Content="Igénybe vett szolgáltatások" HorizontalAlignment="Left" Margin="10,369,0,0" VerticalAlignment="Top"/>
+        <DataGrid Name="UsedServicesGrid" HorizontalAlignment="Left" Height="100" Margin="10,385,0,0" VerticalAlignment="Top" Width="414"/>
 
     </Grid>
 </Window>

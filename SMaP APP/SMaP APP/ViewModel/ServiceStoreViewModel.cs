@@ -103,6 +103,7 @@ namespace SMaP_APP.ViewModel
             this.ServiceRequestList = ReloadServiceRequestList();
 
             this.ServiceStoreCreate = new RelayCommand(CreateServiceStore);
+            this.ServiceStoreEdit = new RelayCommand(EditServiceStore, CanEditOrDeleteSelectedItem);
 
             this.ServiceTableCreate = new RelayCommand(CreateServiceTable);
             this.ServiceTableEdit = new RelayCommand(EditServiceTable, CanEditOrDeleteSelectedItem);
@@ -133,7 +134,6 @@ namespace SMaP_APP.ViewModel
             }
             this.ServiceTableFieldList = ReloadServiceTableFieldList();
         }
-
         private void EditServiceTableField(object param)
         {
             ServiceTableFieldWindow target = new ServiceTableFieldWindow((ServiceTableField)((DataGrid)param).SelectedItem)
@@ -143,7 +143,6 @@ namespace SMaP_APP.ViewModel
             SwitchWindows(target, true);
             this.ServiceTableFieldList = ReloadServiceTableFieldList();
         }
-
         private void CreateServiceTableField()
         {
             ServiceTableField serviceTableField = new ServiceTableField()
@@ -176,7 +175,6 @@ namespace SMaP_APP.ViewModel
             SwitchWindows(target, true);
             this.ServiceTableList = ReloadServiceTableList();
         }
-
         public void EditServiceTable(object param)
         {
             ServiceTableWindow target = new ServiceTableWindow((ServiceTable)((DataGrid)param).SelectedItem)
@@ -186,7 +184,6 @@ namespace SMaP_APP.ViewModel
             SwitchWindows(target, true);
             this.ServiceTableList = ReloadServiceTableList();
         }
-
         public void DeleteServiceTable(object param)
         {
             ServiceTable selectedServiceTable = (ServiceTable)((DataGrid)param).SelectedItem;
@@ -203,11 +200,10 @@ namespace SMaP_APP.ViewModel
         {
             if (SelectedServiceTable == null)
             {
-                return new ObservableCollection<ServiceTableField>(ServiceTableFieldDal.FindAll());
+                return new ObservableCollection<ServiceTableField>();
             }
             return new ObservableCollection<ServiceTableField>(ServiceTableFieldDal.FindAll(x => x.TableID == SelectedServiceTable.ID));
         }
-
         private ObservableCollection<ServiceTable> ReloadServiceTableList()
         {
             if (TeamIDFilterForTables == null)
@@ -216,12 +212,10 @@ namespace SMaP_APP.ViewModel
             }
             return new ObservableCollection<ServiceTable>(ServiceTableDal.FindAll(x => x.Team.SessionGroupID == contextSessionGroupID && x.TeamID == TeamIDFilterForTables.ID));
         }
-
         private ObservableCollection<ServiceStore> ReloadServiceStoreList()
         {
             return new ObservableCollection<ServiceStore>(((ServiceStoreDAL)_contextDal).ProvidedServices(ContextStudent.TeamID));
         }
-
         private ObservableCollection<ServiceRequest> ReloadServiceRequestList()
         {
             return new ObservableCollection<ServiceRequest>(ServiceRequestDal.FindAll());
@@ -246,7 +240,15 @@ namespace SMaP_APP.ViewModel
             SwitchWindows(target, true);
             this.ServiceStoreList = ReloadServiceStoreList();
         }
-
+        private void EditServiceStore(object param)
+        {
+            ServiceStoreEditWindow target = new ServiceStoreEditWindow((ServiceStore)((DataGrid)param).SelectedItem)
+            {
+                Owner = this.SourceWindow
+            };
+            SwitchWindows(target, true);
+            this.ServiceStoreList = ReloadServiceStoreList();
+        }
         private void DeleteSelectedFilter(object param)
         {
             ComboBox cb = (ComboBox)param;

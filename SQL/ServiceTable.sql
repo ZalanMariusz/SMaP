@@ -8,3 +8,5 @@ CREATE TABLE ServiceTable(
 	,Deleted bit not null default 0
 )
 
+CREATE INDEX IX_ServiceTable_Deleted ON ServiceTable(Deleted)
+

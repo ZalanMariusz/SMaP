@@ -9,3 +9,8 @@ CREATE TABLE ServiceRequest(
 	,ServiceID int null
 	,Deleted bit default 0 NOT NULL
 )
+
+
+CREATE INDEX IX_ServiceRequest_RequesterTeamID ON ServiceRequest(RequesterTeamID)
+CREATE INDEX IX_ServiceRequest_ProviderTeamID ON ServiceRequest(ProviderTeamID)
+CREATE INDEX IX_ServiceRequest_ServiceID ON ServiceRequest(ServiceID)

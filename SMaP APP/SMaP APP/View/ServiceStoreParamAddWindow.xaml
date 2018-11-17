@@ -1,0 +1,60 @@
+﻿<Window x:Class="SMaP_APP.View.ServiceStoreParamAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SMaP_APP.View"
+        xmlns:conv="clr-namespace:SMaP_APP.Converters"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
+        Background="LightBlue"
+        ResizeMode="NoResize"
+        Title="Paraméter szerkesztése"
+        Height="330" Width="543">
+    <Window.Resources>
+        <conv:DictionaryNameConverter x:Key="DictionaryNameConverter"/>
+        <conv:TeamIdToNameConverter x:Key="TeamIdToNameConverter"/>
+        
+    </Window.Resources>
+    <Grid>
+        <DataGrid SelectedItem="{Binding SelectedTable}" HorizontalAlignment="Left" Height="190" Margin="10,72,0,0" VerticalAlignment="Top" Width="324" Name="TableListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding TableList}">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Csapat neve" Binding="{Binding TeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="2*"/>
+                <DataGridTextColumn Header="Tábla neve" Binding="{Binding TableName}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid HorizontalAlignment="Left" Height="190" Margin="339,72,0,0" VerticalAlignment="Top" Width="181" Name="TableFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding TableFieldList}">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mező neve" Binding="{Binding FieldName}" Width="2*"/>
+                <DataGridTextColumn Header="Mező típusa" Binding="{Binding FieldTypeID, Converter={StaticResource DictionaryNameConverter}}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Label Content="Táblák" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+        <Label Content="Mezők" HorizontalAlignment="Left" Margin="339,41,0,0" VerticalAlignment="Top"/>
+
+        <ComboBox HorizontalAlignment="Left" Margin="89,45,0,0" VerticalAlignment="Top" Width="120"
+                  ItemsSource="{Binding SessionGroupTeamList}"
+                  SelectedItem="{Binding TeamFilter}"
+                  DisplayMemberPath="TeamName"
+                  SelectedValuePath="ID" RenderTransformOrigin="0.324,0.333"
+                  />
+        <Label Content="Csapatszűrő:" HorizontalAlignment="Left" Margin="89,14,0,0" VerticalAlignment="Top"/>
+        <Label Content="Tábla neve:" HorizontalAlignment="Left" Margin="214,13,0,0" VerticalAlignment="Top"/>
+        <TextBox  HorizontalAlignment="Left" Height="23" Margin="214,44,0,0" TextWrapping="Wrap" Text="{Binding TableNameFilter, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Hozzáadás" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=TableFieldListGrid}" IsDefault="True" HorizontalAlignment="Left" Margin="10,267,0,0" VerticalAlignment="Top" Width="181"/>
+        <Button Content="Mégsem" Command="{Binding CloseCommand}" IsCancel="True" HorizontalAlignment="Left" Margin="339,267,0,0" VerticalAlignment="Top" Width="181"/>
+
+    </Grid>
+</Window>

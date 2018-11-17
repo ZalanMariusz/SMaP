@@ -9,3 +9,6 @@ CREATE TABLE Student(
 	,Deleted bit DEFAULT 0 NOT NULL
 )
 
+
+CREATE INDEX IX_Student_UserID ON Student(UserID)
+CREATE INDEX IX_Student_TeamID ON Student(TeamID)

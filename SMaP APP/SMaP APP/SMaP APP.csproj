@@ -67,6 +67,9 @@
     <Compile Include="Converters\BoolNegator.cs" />
     <Compile Include="Converters\DictionaryNameConverter.cs" />
     <Compile Include="Converters\SemesterIsActiveConverter.cs" />
+    <Compile Include="Converters\ServiceParamFieldConverter.cs" />
+    <Compile Include="Converters\ServiceParamTableConverter.cs" />
+    <Compile Include="Converters\ServiceParamTypeConverter.cs" />
     <Compile Include="Converters\ServiceStoreWindowHeaderConverter.cs" />
     <Compile Include="Converters\ServiceTableTeamConverter.cs" />
     <Compile Include="Converters\SessionGroupCBVisibilityConverter.cs" />
@@ -76,7 +79,7 @@
     <Compile Include="Converters\StudentImportTeamValidationConverter.cs" />
     <Compile Include="Converters\StudentNameConverter.cs" />
     <Compile Include="Converters\StudentSessionGroupConverter.cs" />
-    <Compile Include="Converters\StudentTeamConverter.cs" />
+    <Compile Include="Converters\TeamIdToNameConverter.cs" />
     <Compile Include="Converters\TeacherWindowHeaderConverter.cs" />
     <Compile Include="Converters\TeamCaptainNameConverter.cs" />
     <Compile Include="Converters\TeamNameConverter.cs" />
@@ -89,6 +92,7 @@
     <Compile Include="DAL\SemesterDAL.cs" />
     <Compile Include="DAL\ServiceRequestDAL.cs" />
     <Compile Include="DAL\ServiceStoreDAL.cs" />
+    <Compile Include="DAL\ServiceStoreParamsDAL.cs" />
     <Compile Include="DAL\ServiceTableDAL.cs" />
     <Compile Include="DAL\ServiceTableFieldDAL.cs" />
     <Compile Include="DAL\SessionGroupDAL.cs" />
@@ -167,6 +171,7 @@
     <Compile Include="ViewModel\SemesterCopyViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreEditViewModel.cs" />
+    <Compile Include="ViewModel\ServiceStoreParamAddViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreViewModel.cs" />
     <Compile Include="ViewModel\ServiceTableViewModel.cs" />
     <Compile Include="ViewModel\SessionGroupEditViewModel.cs" />
@@ -195,6 +200,9 @@
     </Compile>
     <Compile Include="View\ServiceStoreEditWindow.xaml.cs">
       <DependentUpon>ServiceStoreEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceStoreParamAddWindow.xaml.cs">
+      <DependentUpon>ServiceStoreParamAddWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ServiceStoreWindow.xaml.cs">
       <DependentUpon>ServiceStoreWindow.xaml</DependentUpon>
@@ -252,6 +260,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ServiceStoreEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServiceStoreParamAddWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

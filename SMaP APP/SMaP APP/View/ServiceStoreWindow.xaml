@@ -15,7 +15,7 @@
         <conv:ServiceStoreWindowHeaderConverter x:Key="ServiceStoreWindowHeaderConverter"/>
         <conv:ServiceTableTeamConverter x:Key="ServiceTableTeamConverter"/>
         <conv:DictionaryNameConverter x:Key="DictionaryNameConverter"/>
-        
+        <conv:TeamIdToNameConverter x:Key="TeamIdToNameConverter"/>
         <BitmapImage x:Key="EditIco" UriSource="/SMaP APP;component/Images/edit-16.ico" />
         <BitmapImage x:Key="AddIco" UriSource="/SMaP APP;component/Images/plus-16.ico" />
         <BitmapImage x:Key="DeleteIco" UriSource="/SMaP APP;component/Images/x-mark-16.ico" />
@@ -48,7 +48,7 @@
         <TabControl HorizontalAlignment="Left" Height="574" Margin="10,26,0,0" VerticalAlignment="Top" Width="583" Background="LightBlue">
             <TabItem Header="Nyújtott szolgáltatások">
                 <Grid Background="LightBlue">
-                    <Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="532,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button Command="{Binding ServiceStoreEdit}" CommandParameter="{Binding ElementName=ServiceStoreGrid}" ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="532,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
                     <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding ServiceStoreCreate}" HorizontalAlignment="Left" Margin="507,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
@@ -57,7 +57,22 @@
                     <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0"  HorizontalAlignment="Left" Margin="557,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <DataGrid ItemsSource="{Binding ServiceStoreList}" HorizontalAlignment="Left" Height="511" Margin="0,35,0,0" VerticalAlignment="Top" Width="577"/>
+                    <DataGrid Name="ServiceStoreGrid"  AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" ItemsSource="{Binding ServiceStoreList}" HorizontalAlignment="Left" Height="511" Margin="0,35,0,0" VerticalAlignment="Top" Width="577">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ServiceStoreEdit}"
+                                          CommandParameter="{Binding ElementName=ServiceStoreGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Nyújtó csapat" Binding="{Binding ProviderTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="1*"/>
+                            <DataGridTextColumn Header="Igénylő csapat" Binding="{Binding RequesterTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="1*"/>
+                            <DataGridTextColumn Header="Szolg. neve" Binding="{Binding ServiceName}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem Header="Adattáblák">
@@ -82,7 +97,7 @@
                     </Button>
 
                     <DataGrid SelectedItem="{Binding SelectedServiceTable}" Name="ServiceTableGrid" HorizontalAlignment="Left" Height="476" Margin="0,70,0,0" VerticalAlignment="Top" Width="270"
-                    AlternatingRowBackground="LightBlue" SelectionMode="Single" ItemsSource="{Binding ServiceTableList}" AutoGenerateColumns="False" IsReadOnly="True">
+                    AlternatingRowBackground="LightBlue" SelectionMode="Single"  ItemsSource="{Binding ServiceTableList}" AutoGenerateColumns="False" IsReadOnly="True" >
                         <DataGrid.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ServiceTableEdit}"
                                           CommandParameter="{Binding ElementName=ServiceTableGrid}"/>

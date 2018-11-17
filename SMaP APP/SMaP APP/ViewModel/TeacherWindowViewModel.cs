@@ -704,7 +704,7 @@ xmlns:html=""http://www.w3.org/TR/REC-html40"">
                     SwitchWindows(target, true);
                     this.StudentList = ReloadStudentList();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     MessageBox.Show("Hiba a fájl betöltése közben!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }

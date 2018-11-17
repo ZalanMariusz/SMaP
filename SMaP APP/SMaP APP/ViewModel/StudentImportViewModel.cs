@@ -28,8 +28,6 @@ namespace SMaP_APP.ViewModel
             bool duplicateError = false;
             bool sessionGroupMissing = false;
             bool teamMissing = false;
-            bool existingNeptun = false;
-            bool existingEmail = false;
             List<Users> userList = new List<Users>();
             foreach (DataRow item in Table.Rows)
             {

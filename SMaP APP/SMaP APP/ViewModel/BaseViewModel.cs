@@ -61,7 +61,7 @@ namespace SMaP_APP.ViewModel
             .All(IsValid);
         }
 
-        internal void Close()
+        public virtual void Close()
         {
             this.SourceWindow.Close();
         }

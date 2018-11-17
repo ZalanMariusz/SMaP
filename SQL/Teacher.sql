@@ -8,3 +8,4 @@ CREATE TABLE Teacher(
 	,Deleted bit default 0 NOT NULL
 )
 
+CREATE INDEX IX_Teacher_UserID ON Teacher (UserID)

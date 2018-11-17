@@ -16,7 +16,7 @@
         <conv:SessionGroupSemesterNameConverter x:Key="SessionGroupSemesterNameConverter"/>
         <conv:SessionGroupTeacherNameConverter x:Key="SessionGroupTeacherNameConverter"/>
         <conv:TeamNameConverter x:Key="TeamNameConverter"/>
-        <conv:StudentTeamConverter x:Key="StudentTeamConverter"/>
+        <conv:TeamIdToNameConverter x:Key="StudentTeamConverter"/>
         <conv:StudentSessionGroupConverter x:Key="StudentSessionGroupConverter"/>
         <conv:TeamSessionGroupNameConverter x:Key="TeamSessionGroupNameConverter"/>
         <conv:TeamCaptainNameConverter x:Key="TeamCaptainNameConverter"/>
@@ -43,7 +43,7 @@
                     <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding StudentDeleteCommand}" CommandParameter="{Binding ElementName=StudentGrid}" HorizontalAlignment="Left" Margin="508,8,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
                     </Button>
-                    <DataGrid AlternatingRowBackground="LightBlue" SelectionMode="Single" Name="StudentGrid" ItemsSource="{Binding StudentList}" Margin="225,33,0,20" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid AlternatingRowBackground="LightBlue" SelectionMode="Single" Name="StudentGrid" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding StudentList}" Margin="225,33,0,20">
                         <DataGrid.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.StudentEditCommand}"
                                           CommandParameter="{Binding ElementName=StudentGrid}"/>

@@ -9,3 +9,5 @@ CREATE TABLE Semester(
 	,IsActive bit default 0 NOT NULL
 	,Deleted bit default 0 NOT NULL
 )
+
+CREATE INDEX IX_Semester_SemesterType ON Semester(SemesterType)
