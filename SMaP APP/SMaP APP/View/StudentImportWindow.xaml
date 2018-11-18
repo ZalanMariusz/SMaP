@@ -10,6 +10,7 @@
         WindowStartupLocation="CenterOwner"
         Background="LightBlue"
         ResizeMode="NoResize"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
         Title="Hallgatók importálása" Height="310" Width="563">
     <Window.Resources>
         <conv:UserValidationConverter x:Key="UserValidationConverter"/>

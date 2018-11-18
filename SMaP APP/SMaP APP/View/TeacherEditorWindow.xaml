@@ -10,6 +10,7 @@
         WindowStyle="ToolWindow"
         Title="Tanár szerkesztése" Height="209" Width="412.863"
         ResizeMode="NoResize"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
         Background="LightBlue"
         >
     <Window.Resources>

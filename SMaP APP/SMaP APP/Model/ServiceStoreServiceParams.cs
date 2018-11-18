@@ -12,20 +12,14 @@ namespace SMaP_APP.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class DictionaryType : IBaseModel
+    public partial class ServiceStoreServiceParams : IBaseModel
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DictionaryType()
-        {
-            this.Dictionary = new HashSet<Dictionary>();
-        }
-    
         public int ID { get; set; }
-        public string TypeName { get; set; }
+        public int ParentServiceStoreID { get; set; }
+        public int ParamServiceStoreID { get; set; }
         public bool Deleted { get; set; }
-        public Nullable<bool> IsSessionGroup { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Dictionary> Dictionary { get; set; }
+        public virtual ServiceStore ServiceStore { get; set; }
+        public virtual ServiceStore ServiceStore1 { get; set; }
     }
 }

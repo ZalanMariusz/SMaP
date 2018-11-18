@@ -29,7 +29,7 @@ namespace SMaP_APP.ViewModel
             this.DictionaryDal = new DictionaryDAL();
             this.ServiceTableDal = new ServiceTableDAL();
             this.TableFieldList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType("Adattípusok"));
-            ServiceTable st = ServiceTableDal.FindById(selectedServiceTableField.TableID);
+            ServiceTable st = ServiceTableDal.FindById((int)selectedServiceTableField.TableID);
             int contextSessionGroupID= st.Team.SessionGroupID;
 
             this.TableList = new ObservableCollection<ServiceTable>(ServiceTableDal.FindAll(x => x.Team.SessionGroupID == contextSessionGroupID));

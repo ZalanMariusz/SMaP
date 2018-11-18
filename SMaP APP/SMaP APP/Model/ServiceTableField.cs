@@ -21,7 +21,7 @@ namespace SMaP_APP.Model
         }
     
         public int ID { get; set; }
-        public int TableID { get; set; }
+        public Nullable<int> TableID { get; set; }
         public string FieldName { get; set; }
         public int FieldTypeID { get; set; }
         public bool Deleted { get; set; }

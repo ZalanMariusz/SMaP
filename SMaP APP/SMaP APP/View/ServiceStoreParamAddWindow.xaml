@@ -11,6 +11,7 @@
         Background="LightBlue"
         ResizeMode="NoResize"
         Title="Paraméter szerkesztése"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
         Height="330" Width="543">
     <Window.Resources>
         <conv:DictionaryNameConverter x:Key="DictionaryNameConverter"/>

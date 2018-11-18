@@ -19,13 +19,16 @@ namespace SMaP_APP.Model
         {
             this.ServiceRequest = new HashSet<ServiceRequest>();
             this.ServiceStoreParams = new HashSet<ServiceStoreParams>();
+            this.ServiceStoreServiceParams = new HashSet<ServiceStoreServiceParams>();
+            this.ServiceStoreServiceParams1 = new HashSet<ServiceStoreServiceParams>();
+            this.ServiceStoreUserTeams = new HashSet<ServiceStoreUserTeams>();
         }
     
         public int ID { get; set; }
         public string ServiceName { get; set; }
+        public int ServiceNumber { get; set; }
         public int CreatorID { get; set; }
         public int ProviderTeamID { get; set; }
-        public int RequesterTeamID { get; set; }
         public string ServiceDescription { get; set; }
         public bool Deleted { get; set; }
     
@@ -33,8 +36,13 @@ namespace SMaP_APP.Model
         public virtual ICollection<ServiceRequest> ServiceRequest { get; set; }
         public virtual Student Student { get; set; }
         public virtual Team Team { get; set; }
-        public virtual Team Team1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceStoreParams> ServiceStoreParams { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceStoreServiceParams> ServiceStoreServiceParams { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceStoreServiceParams> ServiceStoreServiceParams1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceStoreUserTeams> ServiceStoreUserTeams { get; set; }
     }
 }

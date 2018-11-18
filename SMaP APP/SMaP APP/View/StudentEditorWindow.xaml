@@ -11,6 +11,7 @@
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         Background="LightBlue"
         ResizeMode="NoResize"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
         Title="Hallgató szerkesztése" Height="276.601" Width="402.785">
 
     <Window.Resources>

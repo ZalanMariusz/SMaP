@@ -63,6 +63,15 @@ namespace SMaP_APP.DAL
             return 1;
         }
 
+        public void CleanUp()
+        {
+            var itemsToDelete = applicationDbContext.ChangeTracker.Entries().Where(x => x.State == EntityState.Added);
+            foreach (var item in itemsToDelete)
+            {
+                item.State = EntityState.Detached;
+            }
+        }
+
         public virtual int Update(TEntity entity)
         {
             if (entity == null)

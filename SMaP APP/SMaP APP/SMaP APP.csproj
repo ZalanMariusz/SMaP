@@ -66,10 +66,15 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\BoolNegator.cs" />
     <Compile Include="Converters\DictionaryNameConverter.cs" />
+    <Compile Include="Converters\RequesterTeamsNameConverter.cs" />
     <Compile Include="Converters\SemesterIsActiveConverter.cs" />
     <Compile Include="Converters\ServiceParamFieldConverter.cs" />
     <Compile Include="Converters\ServiceParamTableConverter.cs" />
     <Compile Include="Converters\ServiceParamTypeConverter.cs" />
+    <Compile Include="Converters\ServiceStoreIDProviderTeamNameConverter.cs" />
+    <Compile Include="Converters\ServiceStoreIDServiceNameConverter.cs" />
+    <Compile Include="Converters\ServiceStoreParamConverter.cs" />
+    <Compile Include="Converters\ServiceStoreServiceIDToNameConverter.cs" />
     <Compile Include="Converters\ServiceStoreWindowHeaderConverter.cs" />
     <Compile Include="Converters\ServiceTableTeamConverter.cs" />
     <Compile Include="Converters\SessionGroupCBVisibilityConverter.cs" />
@@ -93,6 +98,8 @@
     <Compile Include="DAL\ServiceRequestDAL.cs" />
     <Compile Include="DAL\ServiceStoreDAL.cs" />
     <Compile Include="DAL\ServiceStoreParamsDAL.cs" />
+    <Compile Include="DAL\ServiceStoreServiceParamsDAL.cs" />
+    <Compile Include="DAL\ServiceStoreUserTeamsDAL.cs" />
     <Compile Include="DAL\ServiceTableDAL.cs" />
     <Compile Include="DAL\ServiceTableFieldDAL.cs" />
     <Compile Include="DAL\SessionGroupDAL.cs" />
@@ -122,6 +129,12 @@
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\ServiceStoreParams.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ServiceStoreServiceParams.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ServiceStoreUserTeams.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\ServiceTable.cs">
@@ -172,6 +185,7 @@
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreEditViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreParamAddViewModel.cs" />
+    <Compile Include="ViewModel\ServiceStoreServiceParamEditViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreViewModel.cs" />
     <Compile Include="ViewModel\ServiceTableViewModel.cs" />
     <Compile Include="ViewModel\SessionGroupEditViewModel.cs" />
@@ -203,6 +217,9 @@
     </Compile>
     <Compile Include="View\ServiceStoreParamAddWindow.xaml.cs">
       <DependentUpon>ServiceStoreParamAddWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceStoreServiceParamEditWindow.xaml.cs">
+      <DependentUpon>ServiceStoreServiceParamEditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ServiceStoreWindow.xaml.cs">
       <DependentUpon>ServiceStoreWindow.xaml</DependentUpon>
@@ -264,6 +281,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ServiceStoreParamAddWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServiceStoreServiceParamEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -347,6 +368,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\SMaP_16x16.png" />
     <Content Include="Model\SMaP_Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>SMaP_Model.edmx</DependentUpon>

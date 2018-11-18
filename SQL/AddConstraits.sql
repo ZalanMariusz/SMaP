@@ -8,7 +8,6 @@ ALTER TABLE Team ADD CONSTRAINT FK_Team_SessionGroupID_SessionGroup FOREIGN KEY 
 ALTER TABLE SessionGroup ADD CONSTRAINT FK_SessionGroup_TeacherID_Teacher FOREIGN KEY (TeacherID) References Teacher(ID)
 ALTER TABLE Dictionary ADD CONSTRAINT FK_Dictionary_DictionaryTypeID_DictionaryType FOREIGN KEY (DictionaryTypeID) References DictionaryType(ID)
 ALTER TABLE ServiceStore ADD CONSTRAINT FK_ServiceStore_CreatorID_User FOREIGN KEY (CreatorID) References Student(ID)
-ALTER TABLE ServiceStore ADD CONSTRAINT FK_ServiceStore_RequesterTeamID_Team FOREIGN KEY (RequesterTeamID) References Team(ID)
 ALTER TABLE ServiceStore ADD CONSTRAINT FK_ServiceStore_ProviderTeamID_Team FOREIGN KEY (ProviderTeamID) References Team(ID)
 ALTER TABLE ServiceRequest ADD CONSTRAINT FK_ServiceRequest_RequesterTeamID_Team FOREIGN KEY (RequesterTeamID) References Team(ID)
 ALTER TABLE ServiceRequest ADD CONSTRAINT FK_ServiceRequest_ProviderTeamID_Team FOREIGN KEY (ProviderTeamID) References Team(ID)
@@ -18,4 +17,7 @@ ALTER TABLE ServiceTableField ADD CONSTRAINT FK_ServiceTableField_TableID_Servic
 ALTER TABLE ServiceTableField ADD CONSTRAINT FK_ServiceTableField_FieldTypeID_Dictionary FOREIGN KEY (FieldTypeID) References Dictionary(ID)
 ALTER TABLE ServiceStoreParams ADD CONSTRAINT FK_ServiceStoreParams_ServiceTableFieldID_ServiceTableField FOREIGN KEY (ServiceTableFieldID) References ServiceTableField(ID)
 ALTER TABLE ServiceStoreParams ADD CONSTRAINT FK_ServiceStoreParams_ServiceID_ServiceStore FOREIGN KEY (ServiceID) References ServiceStore(ID)
-
+ALTER TABLE ServiceStoreUserTeams ADD CONSTRAINT FK_ServiceStoreUserTeams_ServiceID_ServiceStore FOREIGN KEY (ServiceID) References ServiceStore(ID)
+ALTER TABLE ServiceStoreUserTeams ADD CONSTRAINT FK_ServiceStoreUserTeams_RequesterTeamID_Team FOREIGN KEY (RequesterTeamID) References Team(ID)
+ALTER TABLE ServiceStoreServiceParams ADD CONSTRAINT FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore FOREIGN KEY (ParentServiceStoreID) References ServiceStore(ID)
+ALTER TABLE ServiceStoreServiceParams ADD CONSTRAINT FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore FOREIGN KEY (ParamServiceStoreID) References ServiceStore(ID)

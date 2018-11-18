@@ -11,6 +11,7 @@
         WindowStyle="ToolWindow"
         Background="LightBlue"
         ResizeMode="NoResize"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
         Title="Csoport szerkesztése" Height="221.608" Width="300">
     <Window.Resources>
         <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />

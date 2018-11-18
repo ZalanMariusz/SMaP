@@ -8,6 +8,7 @@
         Background="LightBlue"
         ResizeMode="NoResize"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
         Title="Félév szerkesztése" Height="183.491" Width="364.495" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Window.Resources>
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">

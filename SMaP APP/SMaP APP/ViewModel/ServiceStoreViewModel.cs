@@ -16,14 +16,15 @@ namespace SMaP_APP.ViewModel
     class ServiceStoreViewModel : BaseViewModel<ServiceStore>
     {
         public Student ContextStudent { get; set; }
-        private ServiceRequestDAL ServiceRequestDal { get; set; }
+        //private ServiceRequestDAL ServiceRequestDal { get; set; }
         private ServiceTableDAL ServiceTableDal { get; set; }
         private ServiceTableFieldDAL ServiceTableFieldDal { get; set; }
         private TeamDAL TeamDal { get; set; }
+        private ServiceStoreParamsDAL ServiceStoreParamsDal { get; set; }
 
         public RelayCommand LogoutCommand { get; set; }
         public RelayCommand DeleteFilter { get; set; }
-
+        
 
         public RelayCommand ServiceStoreCreate { get; set; }
         public RelayCommand ServiceStoreEdit { get; set; }
@@ -42,7 +43,7 @@ namespace SMaP_APP.ViewModel
         public RelayCommand ServiceTableFieldDelete { get; set; }
 
         private ObservableCollection<ServiceStore> serviceStoreList;
-        private ObservableCollection<ServiceRequest> serviceRequestList;
+        private ObservableCollection<ServiceStore> serviceRequestList;
         private ObservableCollection<ServiceTable> serviceTableList;
         private ObservableCollection<ServiceTableField> serviceTableFieldList;
         private ObservableCollection<Team> teamList;
@@ -52,7 +53,7 @@ namespace SMaP_APP.ViewModel
             get { return serviceStoreList; }
             set { serviceStoreList = value; NotifyPropertyChanged(); }
         }
-        public ObservableCollection<ServiceRequest> ServiceRequestList
+        public ObservableCollection<ServiceStore> ServiceRequestList
         {
             get { return serviceRequestList; }
             set { serviceRequestList = value; NotifyPropertyChanged(); }
@@ -80,7 +81,7 @@ namespace SMaP_APP.ViewModel
             set { teamIDFilterForTables = value; NotifyPropertyChanged(); ServiceTableList= ReloadServiceTableList(); }
         }
 
-        private int contextSessionGroupID { get; set; }
+        private int ContextSessionGroupID { get; set; }
         public ServiceTable selectedServiceTable;
         public ServiceTable SelectedServiceTable
         {
@@ -94,16 +95,18 @@ namespace SMaP_APP.ViewModel
             this.SourceWindow = SourceWindow;
 
             this._contextDal = new ServiceStoreDAL();
-            this.ServiceRequestDal = new ServiceRequestDAL();
+            //this.ServiceRequestDal = new ServiceRequestDAL();
             this.ServiceTableDal = new ServiceTableDAL();
             this.ServiceTableFieldDal = new ServiceTableFieldDAL();
             this.TeamDal = new TeamDAL();
+            this.ServiceStoreParamsDal = new ServiceStoreParamsDAL();
 
             this.ServiceStoreList = ReloadServiceStoreList();
             this.ServiceRequestList = ReloadServiceRequestList();
 
             this.ServiceStoreCreate = new RelayCommand(CreateServiceStore);
             this.ServiceStoreEdit = new RelayCommand(EditServiceStore, CanEditOrDeleteSelectedItem);
+            this.ServiceStoreDelete = new RelayCommand(DeleteServiceStore, CanEditOrDeleteSelectedItem);
 
             this.ServiceTableCreate = new RelayCommand(CreateServiceTable);
             this.ServiceTableEdit = new RelayCommand(EditServiceTable, CanEditOrDeleteSelectedItem);
@@ -115,24 +118,42 @@ namespace SMaP_APP.ViewModel
 
             this.LogoutCommand = new RelayCommand(Logout);
             this.DeleteFilter = new RelayCommand(DeleteSelectedFilter);
-            contextSessionGroupID = TeamDal.FindById(ContextStudent.TeamID).SessionGroupID;
+            ContextSessionGroupID = TeamDal.FindById(ContextStudent.TeamID).SessionGroupID;
 
-            this.TeamList = new ObservableCollection<Team>(TeamDal.FindAll(x => x.SessionGroupID == contextSessionGroupID));
+            this.TeamList = new ObservableCollection<Team>(TeamDal.FindAll(x => x.SessionGroupID == ContextSessionGroupID));
             this.ServiceTableList = ReloadServiceTableList();
             this.ServiceTableFieldList = ReloadServiceTableFieldList();
 
         }
 
-        private void DeleteServiceTableField(object param)
+        private void DeleteServiceStore(object param)
         {
-            ServiceTableField selectedServiceTable = (ServiceTableField)((DataGrid)param).SelectedItem;
+            ServiceStore selectedServiceStore = (ServiceStore)((DataGrid)param).SelectedItem;
             MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                ServiceTableFieldList.Remove(selectedServiceTable);
-                ServiceTableFieldDal.LogicalDelete(selectedServiceTable);
+                ((ServiceStoreDAL)_contextDal).LogicalDelete(selectedServiceStore);
             }
-            this.ServiceTableFieldList = ReloadServiceTableFieldList();
+            this.ServiceStoreList = ReloadServiceStoreList();
+        }
+
+        private void DeleteServiceTableField(object param)
+        {
+            ServiceTableField selectedServiceTableField = (ServiceTableField)((DataGrid)param).SelectedItem;
+            if (ServiceStoreParamsDal.FindAll().Exists(x => x.ServiceTableFieldID == selectedServiceTableField.ID && !x.ServiceStore.Deleted))
+            {
+                MessageBox.Show("A mezőre hivatkozik szolgáltatás!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    ServiceTableFieldList.Remove(selectedServiceTableField);
+                    ServiceTableFieldDal.LogicalDelete(selectedServiceTableField);
+                }
+                this.ServiceTableFieldList = ReloadServiceTableFieldList();
+            }
         }
         private void EditServiceTableField(object param)
         {
@@ -142,6 +163,7 @@ namespace SMaP_APP.ViewModel
             };
             SwitchWindows(target, true);
             this.ServiceTableFieldList = ReloadServiceTableFieldList();
+            this.ServiceStoreList = ReloadServiceStoreList();
         }
         private void CreateServiceTableField()
         {
@@ -183,17 +205,26 @@ namespace SMaP_APP.ViewModel
             };
             SwitchWindows(target, true);
             this.ServiceTableList = ReloadServiceTableList();
+            this.ServiceStoreList = ReloadServiceStoreList();
         }
         public void DeleteServiceTable(object param)
         {
+            
             ServiceTable selectedServiceTable = (ServiceTable)((DataGrid)param).SelectedItem;
-            MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (messageBoxResult == MessageBoxResult.Yes)
+            if (ServiceTableFieldDal.FindAll().Exists(x => x.TableID ==selectedServiceTable.ID))
             {
-                ServiceTableList.Remove(selectedServiceTable);
-                ServiceTableDal.LogicalDelete(selectedServiceTable);
+                MessageBox.Show("A táblához tartozik mező, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-            ServiceTableList = ReloadServiceTableList();
+            else
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    ServiceTableList.Remove(selectedServiceTable);
+                    ServiceTableDal.LogicalDelete(selectedServiceTable);
+                }
+                ServiceTableList = ReloadServiceTableList();
+            }
         }
 
         private ObservableCollection<ServiceTableField> ReloadServiceTableFieldList()
@@ -208,17 +239,17 @@ namespace SMaP_APP.ViewModel
         {
             if (TeamIDFilterForTables == null)
             {
-                return new ObservableCollection<ServiceTable>(ServiceTableDal.FindAll(x => x.Team.SessionGroupID == contextSessionGroupID));
+                return new ObservableCollection<ServiceTable>(ServiceTableDal.FindAll(x => x.Team.SessionGroupID == ContextSessionGroupID));
             }
-            return new ObservableCollection<ServiceTable>(ServiceTableDal.FindAll(x => x.Team.SessionGroupID == contextSessionGroupID && x.TeamID == TeamIDFilterForTables.ID));
+            return new ObservableCollection<ServiceTable>(ServiceTableDal.FindAll(x => x.Team.SessionGroupID == ContextSessionGroupID && x.TeamID == TeamIDFilterForTables.ID));
         }
         private ObservableCollection<ServiceStore> ReloadServiceStoreList()
         {
             return new ObservableCollection<ServiceStore>(((ServiceStoreDAL)_contextDal).ProvidedServices(ContextStudent.TeamID));
         }
-        private ObservableCollection<ServiceRequest> ReloadServiceRequestList()
+        private ObservableCollection<ServiceStore> ReloadServiceRequestList()
         {
-            return new ObservableCollection<ServiceRequest>(ServiceRequestDal.FindAll());
+            return new ObservableCollection<ServiceStore>();
         }
 
         private void Logout()
@@ -265,32 +296,5 @@ namespace SMaP_APP.ViewModel
         {
             return ((DataGrid)param).SelectedItem != null;
         }
-        //private void EditDictionaryType(object param)
-        //{
-        //    DictionaryTypeEditWindow target = new DictionaryTypeEditWindow((DictionaryType)((DataGrid)param).SelectedItem)
-        //    {
-        //        Owner = this.SourceWindow
-        //    };
-        //    SwitchWindows(target, true);
-        //    this.DictionaryList = ReloadDictionaryList();
-        //}
-        //private void DeleteDictionaryType(object param)
-        //{
-        //    DictionaryType selectedDictionaryType = (DictionaryType)((DataGrid)param).SelectedItem;
-        //    if (this.DictionaryList.FirstOrDefault(x => x.DictionaryTypeID == selectedDictionaryType.ID) != null)
-        //    {
-        //        MessageBox.Show("A szótár típushoz tartozik szótár elem, ezért nem törölhető!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-        //    }
-        //    else
-        //    {
-        //        MessageBoxResult messageBoxResult = MessageBox.Show("Valóban törli?", "Törlés megerősítése", MessageBoxButton.YesNo, MessageBoxImage.Question);
-        //        if (messageBoxResult == MessageBoxResult.Yes)
-        //        {
-        //            DictionaryTypeList.Remove(selectedDictionaryType);
-        //            ((TeacherDAL)_contextDal).DeleteDictionaryType(selectedDictionaryType);
-        //        }
-        //    }
-        //}
-
     }
 }

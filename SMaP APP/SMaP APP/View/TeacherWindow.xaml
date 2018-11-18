@@ -8,6 +8,7 @@
         ResizeMode="NoResize"
         WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded"
         BorderThickness="0"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
         Background="LightBlue"
         >

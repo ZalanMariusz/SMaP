@@ -30,15 +30,27 @@ namespace SMaP_APP.ViewModel
         }
 
         private string tableNameFilter = "";
-        public string TableNameFilter { get { return tableNameFilter; } set { tableNameFilter = value; NotifyPropertyChanged(); TableList = ReloadServiceTableList(); } }
+        public string TableNameFilter
+        {
+            get { return tableNameFilter; }
+            set { tableNameFilter = value; NotifyPropertyChanged(); TableList = ReloadServiceTableList(); }
+        }
 
         public ObservableCollection<Team> SessionGroupTeamList { get; set; }
         public ObservableCollection<ServiceTable> tableList;
-        public ObservableCollection<ServiceTable> TableList { get { return tableList; } set { tableList = value; NotifyPropertyChanged(); } }
+        public ObservableCollection<ServiceTable> TableList
+        {
+            get { return tableList; }
+            set { tableList = value; NotifyPropertyChanged(); }
+        }
         public ObservableCollection<ServiceTableField> tableFieldList;
         public ObservableCollection<ServiceTableField> TableFieldList { get { return tableFieldList; } set { tableFieldList = value; NotifyPropertyChanged(); } }
         public ServiceTable selectedTable;
-        public ServiceTable SelectedTable { get { return selectedTable; } set { selectedTable = value; NotifyPropertyChanged(); this.TableFieldList = ReloadServiceTableFieldList(); } }
+        public ServiceTable SelectedTable
+        {
+            get { return selectedTable; }
+            set { selectedTable = value; NotifyPropertyChanged(); this.TableFieldList = ReloadServiceTableFieldList(); }
+        }
         private int SessionGroupID { get; set; }
 
         private ServiceStoreParams SelectedServiceStoreParam { get; set; }
@@ -72,7 +84,6 @@ namespace SMaP_APP.ViewModel
         private void SaveParameter(object param)
         {
             SelectedServiceStoreParam.ServiceTableFieldID = ((ServiceTableField)((DataGrid)param).SelectedItem).ID;
-           //ServiceStoreDal.Update(SelectedServiceStore);
             this.SourceWindow.Close();
         }
 

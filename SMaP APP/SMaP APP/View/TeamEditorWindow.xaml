@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Background="LightBlue"
         ResizeMode="NoResize"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
         Title="Csapat szerkesztése" Height="214.925" Width="300" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Window.Resources>
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">

@@ -22,6 +22,7 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TypeName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsSessionGroup" Type="bit" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Semester">
@@ -51,9 +52,9 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ServiceName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="ServiceNumber" Type="int" Nullable="false" />
           <Property Name="CreatorID" Type="int" Nullable="false" />
           <Property Name="ProviderTeamID" Type="int" Nullable="false" />
-          <Property Name="RequesterTeamID" Type="int" Nullable="false" />
           <Property Name="ServiceDescription" Type="nvarchar" MaxLength="1000" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
@@ -65,6 +66,24 @@
           <Property Name="ServiceID" Type="int" Nullable="false" />
           <Property Name="InOut" Type="bit" Nullable="false" />
           <Property Name="ServiceTableFieldID" Type="int" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServiceStoreServiceParams">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentServiceStoreID" Type="int" Nullable="false" />
+          <Property Name="ParamServiceStoreID" Type="int" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServiceStoreUserTeams">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RequesterTeamID" Type="int" Nullable="false" />
+          <Property Name="ServiceID" Type="int" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ServiceTable">
@@ -81,7 +100,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TableID" Type="int" Nullable="false" />
+          <Property Name="TableID" Type="int" />
           <Property Name="FieldName" Type="nvarchar" MaxLength="200" />
           <Property Name="FieldTypeID" Type="int" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
@@ -221,18 +240,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ServiceStore_RequesterTeamID_Team">
-          <End Role="Team" Type="Self.Team" Multiplicity="1" />
-          <End Role="ServiceStore" Type="Self.ServiceStore" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Team">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ServiceStore">
-              <PropertyRef Name="RequesterTeamID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ServiceStoreParams_ServiceID_ServiceStore">
           <End Role="ServiceStore" Type="Self.ServiceStore" Multiplicity="1" />
           <End Role="ServiceStoreParams" Type="Self.ServiceStoreParams" Multiplicity="*" />
@@ -254,6 +261,54 @@
             </Principal>
             <Dependent Role="ServiceStoreParams">
               <PropertyRef Name="ServiceTableFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore">
+          <End Role="ServiceStore" Type="Self.ServiceStore" Multiplicity="1" />
+          <End Role="ServiceStoreServiceParams" Type="Self.ServiceStoreServiceParams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceStoreServiceParams">
+              <PropertyRef Name="ParamServiceStoreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore">
+          <End Role="ServiceStore" Type="Self.ServiceStore" Multiplicity="1" />
+          <End Role="ServiceStoreServiceParams" Type="Self.ServiceStoreServiceParams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceStoreServiceParams">
+              <PropertyRef Name="ParentServiceStoreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceStoreUserTeams_RequesterTeamID_Team">
+          <End Role="Team" Type="Self.Team" Multiplicity="1" />
+          <End Role="ServiceStoreUserTeams" Type="Self.ServiceStoreUserTeams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceStoreUserTeams">
+              <PropertyRef Name="RequesterTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceStoreUserTeams_ServiceID_ServiceStore">
+          <End Role="ServiceStore" Type="Self.ServiceStore" Multiplicity="1" />
+          <End Role="ServiceStoreUserTeams" Type="Self.ServiceStoreUserTeams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceStoreUserTeams">
+              <PropertyRef Name="ServiceID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -282,7 +337,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ServiceTableField_TableID_ServiceTable">
-          <End Role="ServiceTable" Type="Self.ServiceTable" Multiplicity="1" />
+          <End Role="ServiceTable" Type="Self.ServiceTable" Multiplicity="0..1" />
           <End Role="ServiceTableField" Type="Self.ServiceTableField" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ServiceTable">
@@ -385,6 +440,8 @@
           <EntitySet Name="ServiceRequest" EntityType="Self.ServiceRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceStore" EntityType="Self.ServiceStore" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceStoreParams" EntityType="Self.ServiceStoreParams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceStoreServiceParams" EntityType="Self.ServiceStoreServiceParams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceStoreUserTeams" EntityType="Self.ServiceStoreUserTeams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceTable" EntityType="Self.ServiceTable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceTableField" EntityType="Self.ServiceTableField" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SessionGroup" EntityType="Self.SessionGroup" Schema="dbo" store:Type="Tables" />
@@ -420,10 +477,6 @@
             <End Role="Team" EntitySet="Team" />
             <End Role="ServiceStore" EntitySet="ServiceStore" />
           </AssociationSet>
-          <AssociationSet Name="FK_ServiceStore_RequesterTeamID_Team" Association="Self.FK_ServiceStore_RequesterTeamID_Team">
-            <End Role="Team" EntitySet="Team" />
-            <End Role="ServiceStore" EntitySet="ServiceStore" />
-          </AssociationSet>
           <AssociationSet Name="FK_ServiceStoreParams_ServiceID_ServiceStore" Association="Self.FK_ServiceStoreParams_ServiceID_ServiceStore">
             <End Role="ServiceStore" EntitySet="ServiceStore" />
             <End Role="ServiceStoreParams" EntitySet="ServiceStoreParams" />
@@ -431,6 +484,22 @@
           <AssociationSet Name="FK_ServiceStoreParams_ServiceTableFieldID_ServiceTableField" Association="Self.FK_ServiceStoreParams_ServiceTableFieldID_ServiceTableField">
             <End Role="ServiceTableField" EntitySet="ServiceTableField" />
             <End Role="ServiceStoreParams" EntitySet="ServiceStoreParams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore" Association="Self.FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore">
+            <End Role="ServiceStore" EntitySet="ServiceStore" />
+            <End Role="ServiceStoreServiceParams" EntitySet="ServiceStoreServiceParams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore" Association="Self.FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore">
+            <End Role="ServiceStore" EntitySet="ServiceStore" />
+            <End Role="ServiceStoreServiceParams" EntitySet="ServiceStoreServiceParams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceStoreUserTeams_RequesterTeamID_Team" Association="Self.FK_ServiceStoreUserTeams_RequesterTeamID_Team">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="ServiceStoreUserTeams" EntitySet="ServiceStoreUserTeams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceStoreUserTeams_ServiceID_ServiceStore" Association="Self.FK_ServiceStoreUserTeams_ServiceID_ServiceStore">
+            <End Role="ServiceStore" EntitySet="ServiceStore" />
+            <End Role="ServiceStoreUserTeams" EntitySet="ServiceStoreUserTeams" />
           </AssociationSet>
           <AssociationSet Name="FK_ServiceTable_TeamID_Team" Association="Self.FK_ServiceTable_TeamID_Team">
             <End Role="Team" EntitySet="Team" />
@@ -492,7 +561,6 @@
           <EntitySet Name="Semester" EntityType="SMaPModel.Semester" />
           <EntitySet Name="ServiceRequest" EntityType="SMaPModel.ServiceRequest" />
           <EntitySet Name="ServiceStoreParams" EntityType="SMaPModel.ServiceStoreParams" />
-          <EntitySet Name="ServiceTable" EntityType="SMaPModel.ServiceTable" />
           <EntitySet Name="ServiceTableField" EntityType="SMaPModel.ServiceTableField" />
           <EntitySet Name="SessionGroup" EntityType="SMaPModel.SessionGroup" />
           <EntitySet Name="Student" EntityType="SMaPModel.Student" />
@@ -527,14 +595,6 @@
             <End Role="ServiceTableField" EntitySet="ServiceTableField" />
             <End Role="ServiceStoreParams" EntitySet="ServiceStoreParams" />
           </AssociationSet>
-          <AssociationSet Name="FK_ServiceTable_TeamID_Team" Association="SMaPModel.FK_ServiceTable_TeamID_Team">
-            <End Role="Team" EntitySet="Team" />
-            <End Role="ServiceTable" EntitySet="ServiceTable" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ServiceTableField_TableID_ServiceTable" Association="SMaPModel.FK_ServiceTableField_TableID_ServiceTable">
-            <End Role="ServiceTable" EntitySet="ServiceTable" />
-            <End Role="ServiceTableField" EntitySet="ServiceTableField" />
-          </AssociationSet>
           <AssociationSet Name="FK_SessionGroup_TeacherID_Teacher" Association="SMaPModel.FK_SessionGroup_TeacherID_Teacher">
             <End Role="Teacher" EntitySet="Teacher" />
             <End Role="SessionGroup" EntitySet="SessionGroup" />
@@ -555,6 +615,7 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Teacher" EntitySet="Teacher" />
           </AssociationSet>
+          <EntitySet Name="ServiceStoreServiceParams" EntityType="SMaPModel.ServiceStoreServiceParams" />
           <EntitySet Name="ServiceStore" EntityType="SMaPModel.ServiceStore" />
           <AssociationSet Name="FK_ServiceRequest_ServiceID_Service" Association="SMaPModel.FK_ServiceRequest_ServiceID_Service">
             <End Role="ServiceStore" EntitySet="ServiceStore" />
@@ -568,13 +629,35 @@
             <End Role="Team" EntitySet="Team" />
             <End Role="ServiceStore" EntitySet="ServiceStore" />
           </AssociationSet>
-          <AssociationSet Name="FK_ServiceStore_RequesterTeamID_Team" Association="SMaPModel.FK_ServiceStore_RequesterTeamID_Team">
-            <End Role="Team" EntitySet="Team" />
-            <End Role="ServiceStore" EntitySet="ServiceStore" />
-          </AssociationSet>
           <AssociationSet Name="FK_ServiceStoreParams_ServiceID_ServiceStore" Association="SMaPModel.FK_ServiceStoreParams_ServiceID_ServiceStore">
             <End Role="ServiceStore" EntitySet="ServiceStore" />
             <End Role="ServiceStoreParams" EntitySet="ServiceStoreParams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore" Association="SMaPModel.FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore">
+            <End Role="ServiceStore" EntitySet="ServiceStore" />
+            <End Role="ServiceStoreServiceParams" EntitySet="ServiceStoreServiceParams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore" Association="SMaPModel.FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore">
+            <End Role="ServiceStore" EntitySet="ServiceStore" />
+            <End Role="ServiceStoreServiceParams" EntitySet="ServiceStoreServiceParams" />
+          </AssociationSet>
+          <EntitySet Name="ServiceTable" EntityType="SMaPModel.ServiceTable" />
+          <AssociationSet Name="FK_ServiceTable_TeamID_Team" Association="SMaPModel.FK_ServiceTable_TeamID_Team">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="ServiceTable" EntitySet="ServiceTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceTableField_TableID_ServiceTable" Association="SMaPModel.FK_ServiceTableField_TableID_ServiceTable">
+            <End Role="ServiceTable" EntitySet="ServiceTable" />
+            <End Role="ServiceTableField" EntitySet="ServiceTableField" />
+          </AssociationSet>
+          <EntitySet Name="ServiceStoreUserTeams" EntityType="SMaPModel.ServiceStoreUserTeams" />
+          <AssociationSet Name="FK_ServiceStoreUserTeams_ServiceID_ServiceStore" Association="SMaPModel.FK_ServiceStoreUserTeams_ServiceID_ServiceStore">
+            <End Role="ServiceStore" EntitySet="ServiceStore" />
+            <End Role="ServiceStoreUserTeams" EntitySet="ServiceStoreUserTeams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceStoreUserTeams_RequesterTeamID_Team" Association="SMaPModel.FK_ServiceStoreUserTeams_RequesterTeamID_Team">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="ServiceStoreUserTeams" EntitySet="ServiceStoreUserTeams" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="uspGetActiveStudents_Result">
@@ -605,6 +688,7 @@
           <Property Name="TypeName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Dictionary" Relationship="SMaPModel.FK_Dictionary_DictionaryTypeID_DictionaryType" FromRole="DictionaryType" ToRole="Dictionary" />
+          <Property Name="IsSessionGroup" Type="Boolean" />
         </EntityType>
         <EntityType Name="Semester">
           <Key>
@@ -644,23 +728,12 @@
           <NavigationProperty Name="ServiceTableField" Relationship="SMaPModel.FK_ServiceStoreParams_ServiceTableFieldID_ServiceTableField" FromRole="ServiceStoreParams" ToRole="ServiceTableField" />
           <NavigationProperty Name="ServiceStore" Relationship="SMaPModel.FK_ServiceStoreParams_ServiceID_ServiceStore" FromRole="ServiceStoreParams" ToRole="ServiceStore" />
         </EntityType>
-        <EntityType Name="ServiceTable">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TableName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="TeamID" Type="Int32" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Team" Relationship="SMaPModel.FK_ServiceTable_TeamID_Team" FromRole="ServiceTable" ToRole="Team" />
-          <NavigationProperty Name="ServiceTableField" Relationship="SMaPModel.FK_ServiceTableField_TableID_ServiceTable" FromRole="ServiceTable" ToRole="ServiceTableField" />
-        </EntityType>
         <EntityType Name="ServiceTableField">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TableID" Type="Int32" Nullable="false" />
+          <Property Name="TableID" Type="Int32" />
           <Property Name="FieldName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="FieldTypeID" Type="Int32" Nullable="false" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
@@ -714,11 +787,11 @@
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="ServiceRequest" Relationship="SMaPModel.FK_ServiceRequest_ProviderTeamID_Team" FromRole="Team" ToRole="ServiceRequest" />
           <NavigationProperty Name="ServiceRequest1" Relationship="SMaPModel.FK_ServiceRequest_RequesterTeamID_Team" FromRole="Team" ToRole="ServiceRequest" />
-          <NavigationProperty Name="ServiceTable" Relationship="SMaPModel.FK_ServiceTable_TeamID_Team" FromRole="Team" ToRole="ServiceTable" />
           <NavigationProperty Name="SessionGroup" Relationship="SMaPModel.FK_Team_SessionGroupID_SessionGroup" FromRole="Team" ToRole="SessionGroup" />
           <NavigationProperty Name="Student" Relationship="SMaPModel.FK_Team_TeamCaption_Student" FromRole="Team" ToRole="Student" />
           <NavigationProperty Name="ServiceStore" Relationship="SMaPModel.FK_ServiceStore_ProviderTeamID_Team" FromRole="Team" ToRole="ServiceStore" />
-          <NavigationProperty Name="ServiceStore1" Relationship="SMaPModel.FK_ServiceStore_RequesterTeamID_Team" FromRole="Team" ToRole="ServiceStore" />
+          <NavigationProperty Name="ServiceTable" Relationship="SMaPModel.FK_ServiceTable_TeamID_Team" FromRole="Team" ToRole="ServiceTable" />
+          <NavigationProperty Name="ServiceStoreUserTeams" Relationship="SMaPModel.FK_ServiceStoreUserTeams_RequesterTeamID_Team" FromRole="Team" ToRole="ServiceStoreUserTeams" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -820,30 +893,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ServiceTable_TeamID_Team">
-          <End Type="SMaPModel.Team" Role="Team" Multiplicity="0..1" />
-          <End Type="SMaPModel.ServiceTable" Role="ServiceTable" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Team">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ServiceTable">
-              <PropertyRef Name="TeamID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ServiceTableField_TableID_ServiceTable">
-          <End Type="SMaPModel.ServiceTable" Role="ServiceTable" Multiplicity="1" />
-          <End Type="SMaPModel.ServiceTableField" Role="ServiceTableField" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ServiceTable">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ServiceTableField">
-              <PropertyRef Name="TableID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SessionGroup_TeacherID_Teacher">
           <End Type="SMaPModel.Teacher" Role="Teacher" Multiplicity="0..1" />
           <End Type="SMaPModel.SessionGroup" Role="SessionGroup" Multiplicity="*" />
@@ -904,22 +953,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ServiceStoreServiceParams">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentServiceStoreID" Type="Int32" Nullable="false" />
+          <Property Name="ParamServiceStoreID" Type="Int32" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ServiceStore" Relationship="SMaPModel.FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore" FromRole="ServiceStoreServiceParams" ToRole="ServiceStore" />
+          <NavigationProperty Name="ServiceStore1" Relationship="SMaPModel.FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore" FromRole="ServiceStoreServiceParams" ToRole="ServiceStore" />
+        </EntityType>
         <EntityType Name="ServiceStore">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ServiceName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceNumber" Type="Int32" Nullable="false" />
           <Property Name="CreatorID" Type="Int32" Nullable="false" />
           <Property Name="ProviderTeamID" Type="Int32" Nullable="false" />
-          <Property Name="RequesterTeamID" Type="Int32" Nullable="false" />
           <Property Name="ServiceDescription" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="ServiceRequest" Relationship="SMaPModel.FK_ServiceRequest_ServiceID_Service" FromRole="ServiceStore" ToRole="ServiceRequest" />
           <NavigationProperty Name="Student" Relationship="SMaPModel.FK_ServiceStore_CreatorID_User" FromRole="ServiceStore" ToRole="Student" />
           <NavigationProperty Name="Team" Relationship="SMaPModel.FK_ServiceStore_ProviderTeamID_Team" FromRole="ServiceStore" ToRole="Team" />
-          <NavigationProperty Name="Team1" Relationship="SMaPModel.FK_ServiceStore_RequesterTeamID_Team" FromRole="ServiceStore" ToRole="Team" />
           <NavigationProperty Name="ServiceStoreParams" Relationship="SMaPModel.FK_ServiceStoreParams_ServiceID_ServiceStore" FromRole="ServiceStore" ToRole="ServiceStoreParams" />
+          <NavigationProperty Name="ServiceStoreServiceParams" Relationship="SMaPModel.FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore" FromRole="ServiceStore" ToRole="ServiceStoreServiceParams" />
+          <NavigationProperty Name="ServiceStoreServiceParams1" Relationship="SMaPModel.FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore" FromRole="ServiceStore" ToRole="ServiceStoreServiceParams" />
+          <NavigationProperty Name="ServiceStoreUserTeams" Relationship="SMaPModel.FK_ServiceStoreUserTeams_ServiceID_ServiceStore" FromRole="ServiceStore" ToRole="ServiceStoreUserTeams" />
         </EntityType>
         <Association Name="FK_ServiceRequest_ServiceID_Service">
           <End Type="SMaPModel.ServiceStore" Role="ServiceStore" Multiplicity="0..1" />
@@ -957,18 +1019,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ServiceStore_RequesterTeamID_Team">
-          <End Type="SMaPModel.Team" Role="Team" Multiplicity="1" />
-          <End Type="SMaPModel.ServiceStore" Role="ServiceStore" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Team">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ServiceStore">
-              <PropertyRef Name="RequesterTeamID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ServiceStoreParams_ServiceID_ServiceStore">
           <End Type="SMaPModel.ServiceStore" Role="ServiceStore" Multiplicity="1" />
           <End Type="SMaPModel.ServiceStoreParams" Role="ServiceStoreParams" Multiplicity="*" />
@@ -978,6 +1028,100 @@
             </Principal>
             <Dependent Role="ServiceStoreParams">
               <PropertyRef Name="ServiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore">
+          <End Type="SMaPModel.ServiceStore" Role="ServiceStore" Multiplicity="1" />
+          <End Type="SMaPModel.ServiceStoreServiceParams" Role="ServiceStoreServiceParams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceStoreServiceParams">
+              <PropertyRef Name="ParamServiceStoreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore">
+          <End Type="SMaPModel.ServiceStore" Role="ServiceStore" Multiplicity="1" />
+          <End Type="SMaPModel.ServiceStoreServiceParams" Role="ServiceStoreServiceParams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceStoreServiceParams">
+              <PropertyRef Name="ParentServiceStoreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ServiceTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TableName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="TeamID" Type="Int32" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Team" Relationship="SMaPModel.FK_ServiceTable_TeamID_Team" FromRole="ServiceTable" ToRole="Team" />
+          <NavigationProperty Name="ServiceTableField" Relationship="SMaPModel.FK_ServiceTableField_TableID_ServiceTable" FromRole="ServiceTable" ToRole="ServiceTableField" />
+        </EntityType>
+        <Association Name="FK_ServiceTable_TeamID_Team">
+          <End Type="SMaPModel.Team" Role="Team" Multiplicity="0..1" />
+          <End Type="SMaPModel.ServiceTable" Role="ServiceTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceTable">
+              <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceTableField_TableID_ServiceTable">
+          <End Type="SMaPModel.ServiceTable" Role="ServiceTable" Multiplicity="0..1" />
+          <End Type="SMaPModel.ServiceTableField" Role="ServiceTableField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceTable">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceTableField">
+              <PropertyRef Name="TableID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ServiceStoreUserTeams">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RequesterTeamID" Type="Int32" Nullable="false" />
+          <Property Name="ServiceID" Type="Int32" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ServiceStore" Relationship="SMaPModel.FK_ServiceStoreUserTeams_ServiceID_ServiceStore" FromRole="ServiceStoreUserTeams" ToRole="ServiceStore" />
+          <NavigationProperty Name="Team" Relationship="SMaPModel.FK_ServiceStoreUserTeams_RequesterTeamID_Team" FromRole="ServiceStoreUserTeams" ToRole="Team" />
+        </EntityType>
+        <Association Name="FK_ServiceStoreUserTeams_ServiceID_ServiceStore">
+          <End Type="SMaPModel.ServiceStore" Role="ServiceStore" Multiplicity="1" />
+          <End Type="SMaPModel.ServiceStoreUserTeams" Role="ServiceStoreUserTeams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceStoreUserTeams">
+              <PropertyRef Name="ServiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceStoreUserTeams_RequesterTeamID_Team">
+          <End Type="SMaPModel.Team" Role="Team" Multiplicity="1" />
+          <End Type="SMaPModel.ServiceStoreUserTeams" Role="ServiceStoreUserTeams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceStoreUserTeams">
+              <PropertyRef Name="RequesterTeamID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1005,6 +1149,7 @@
           <EntitySetMapping Name="DictionaryType">
             <EntityTypeMapping TypeName="SMaPModel.DictionaryType">
               <MappingFragment StoreEntitySet="DictionaryType">
+                <ScalarProperty Name="IsSessionGroup" ColumnName="IsSessionGroup" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="TypeName" ColumnName="TypeName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -1041,16 +1186,6 @@
                 <ScalarProperty Name="ServiceTableFieldID" ColumnName="ServiceTableFieldID" />
                 <ScalarProperty Name="InOut" ColumnName="InOut" />
                 <ScalarProperty Name="ServiceID" ColumnName="ServiceID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ServiceTable">
-            <EntityTypeMapping TypeName="SMaPModel.ServiceTable">
-              <MappingFragment StoreEntitySet="ServiceTable">
-                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="TableName" ColumnName="TableName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1122,15 +1257,45 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ServiceStoreServiceParams">
+            <EntityTypeMapping TypeName="SMaPModel.ServiceStoreServiceParams">
+              <MappingFragment StoreEntitySet="ServiceStoreServiceParams">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="ParamServiceStoreID" ColumnName="ParamServiceStoreID" />
+                <ScalarProperty Name="ParentServiceStoreID" ColumnName="ParentServiceStoreID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="ServiceStore">
             <EntityTypeMapping TypeName="SMaPModel.ServiceStore">
               <MappingFragment StoreEntitySet="ServiceStore">
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="ServiceDescription" ColumnName="ServiceDescription" />
-                <ScalarProperty Name="RequesterTeamID" ColumnName="RequesterTeamID" />
                 <ScalarProperty Name="ProviderTeamID" ColumnName="ProviderTeamID" />
                 <ScalarProperty Name="CreatorID" ColumnName="CreatorID" />
+                <ScalarProperty Name="ServiceNumber" ColumnName="ServiceNumber" />
                 <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceTable">
+            <EntityTypeMapping TypeName="SMaPModel.ServiceTable">
+              <MappingFragment StoreEntitySet="ServiceTable">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="TableName" ColumnName="TableName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceStoreUserTeams">
+            <EntityTypeMapping TypeName="SMaPModel.ServiceStoreUserTeams">
+              <MappingFragment StoreEntitySet="ServiceStoreUserTeams">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="ServiceID" ColumnName="ServiceID" />
+                <ScalarProperty Name="RequesterTeamID" ColumnName="RequesterTeamID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

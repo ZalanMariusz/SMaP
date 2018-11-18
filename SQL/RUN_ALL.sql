@@ -1,39 +1,43 @@
 USE [SMaP]
-:r d:\NIK\Szakdolgozat\SMaP\SQL\DropConstraints.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\DropConstraints.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\DictionaryType.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\DictionaryType.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\Dictionary.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\Dictionary.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\Semester.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\Semester.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\SessionGroup.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\SessionGroup.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\Student.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\Student.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\Teacher.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\Teacher.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\Users.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\Users.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\Team.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\Team.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceRequest.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceRequest.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceStore.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStore.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceTable.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceTable.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceTableField.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceTableField.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceStoreParams.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStoreParams.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\TR_SemesterActivate.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStoreUserTeams.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\uspGetActiveStudents.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStoreServiceParams.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\uspCopySemester.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\TR_SemesterActivate.sql
 GO
-:r d:\NIK\Szakdolgozat\SMaP\SQL\AddConstraits.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\uspGetActiveStudents.sql
 GO
---:r d:\NIK\Szakdolgozat\SMaP\SQL\DefaultData.sql
+:r e:\M\Szakdolgozat\SMaP\SQL\uspCopySemester.sql
+GO
+:r e:\M\Szakdolgozat\SMaP\SQL\AddConstraits.sql
+GO
+--:r e:\M\Szakdolgozat\SMaP\SQL\DefaultData.sql
 --GO

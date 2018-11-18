@@ -10,15 +10,14 @@ using System.Windows.Data;
 
 namespace SMaP_APP.Converters
 {
-    class ServiceParamTableConverter : IValueConverter
+    class ServiceStoreIDProviderTeamNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            ServiceStoreParams param = (ServiceStoreParams)value;
-            ServiceTableFieldDAL ServiceTableFieldDal = new ServiceTableFieldDAL();
-            ServiceTableDAL ServiceTableDal = new ServiceTableDAL();
-            ServiceTableField sf = ServiceTableFieldDal.FindById(param.ServiceTableFieldID);
-            return ServiceTableDal.FindAll(x => x.ID == sf.TableID).FirstOrDefault().TableName;
+            ServiceStoreDAL serviceStoreDal = new ServiceStoreDAL();
+            ServiceStore providedServiceStore = serviceStoreDal.FindById((int)value);
+            TeamDAL teamDal = new TeamDAL();
+            return teamDal.FindById(providedServiceStore.ProviderTeamID).TeamName;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
