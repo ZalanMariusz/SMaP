@@ -63,7 +63,10 @@ namespace SMaP_APP.ViewModel
 
         public virtual void Close()
         {
-            _contextDal.CleanUp();
+            if (_contextDal!=null)
+            {
+                _contextDal.CleanUp();
+            }
             this.SourceWindow.Close();
         }
     }
