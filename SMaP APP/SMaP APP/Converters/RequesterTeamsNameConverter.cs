@@ -22,7 +22,11 @@ namespace SMaP_APP.Converters
                     retval += item.Team.TeamName + ", ";
                 }    
             }
-            return retval.Substring(0, retval.Length - 2);
+            if (!string.IsNullOrEmpty(retval))
+            {
+                return retval.Substring(0, retval.Length - 2);
+            }
+            return "";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

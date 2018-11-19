@@ -72,6 +72,7 @@ namespace SMaP_APP.ViewModel
             this.TableList = ReloadServiceTableList();
             this.TableFieldList = ReloadServiceTableFieldList();
             this.SelectedServiceStoreParam = serviceStoreParam;
+            SelectedServiceStoreParam.ServiceStore = SelectedServiceStore;
 
             this.SaveCommand = new RelayCommand(SaveParameter, CanSaveParameter);
         }

@@ -42,7 +42,6 @@ namespace SMaP_APP.ViewModel
         public RelayCommand SaveCommand { get; set; }
         public ServiceStoreServiceParamEditViewModel(ServiceStoreServiceParamEditWindow window, ServiceStore selectedServiceStore, ServiceStoreServiceParams selectedParam)
         {
-
             this._contextDal = new ServiceStoreServiceParamsDAL();
             this.SourceWindow = window;
             this.SelectedServiceStore = selectedServiceStore;
@@ -54,7 +53,6 @@ namespace SMaP_APP.ViewModel
             this.TeamList = new ObservableCollection<Team>(TeamDal.FindAll(x => x.SessionGroupID == SessionGroupID));
             this.ServiceStoreList = ReloadServiceStoreList();
             this.SaveCommand = new RelayCommand(SaveParameter);
-
         }
 
         private ObservableCollection<ServiceStore> ReloadServiceStoreList()

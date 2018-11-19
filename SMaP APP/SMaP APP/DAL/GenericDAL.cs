@@ -10,6 +10,7 @@ using System.Data.Entity.Migrations;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Objects;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace SMaP_APP.DAL
 {
@@ -23,89 +24,129 @@ namespace SMaP_APP.DAL
 
         public void RefreshContext()
         {
-            GetContext.RefreshContext();
+            try
+            {
+                GetContext.RefreshContext();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Ismeretlen hiba", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+
         }
 
         public List<TEntity> FindAll(Expression<Func<TEntity, bool>> filterExpression = null)
         {
-            //RefreshContext();
-            IQueryable<TEntity> entities = applicationDbContext.Set<TEntity>();
-            if (filterExpression != null)
+            try
             {
-                entities = entities.Where(filterExpression);
+                IQueryable<TEntity> entities = applicationDbContext.Set<TEntity>();
+                if (filterExpression != null)
+                {
+                    entities = entities.Where(filterExpression);
+                }
+                return entities.Where(x => !x.Deleted).ToList();
             }
-            return entities.Where(x => !x.Deleted).ToList();
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Ismeretlen hiba", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+            return new List<TEntity>();
         }
 
         public virtual TEntity FindById(int id)
         {
-            return applicationDbContext.Set<TEntity>().FirstOrDefault(d => d.ID == id && !d.Deleted);
+            try
+            {
+                return applicationDbContext.Set<TEntity>().FirstOrDefault(d => d.ID == id && !d.Deleted);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Ismeretlen hiba", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+            return null;
         }
 
         public virtual int Create(TEntity entity)
         {
-            if (entity == null)
+            try
             {
-                throw new ArgumentNullException("entity");
-            }
-            List<EntityState> asd = new List<EntityState>();
-            applicationDbContext.Set<TEntity>().Attach(entity);
-            applicationDbContext.Set<TEntity>().Add(entity);
-            applicationDbContext.SaveChanges();
-            if (entity is Users)
-            {
-                foreach (var item in applicationDbContext.Set<Teacher>().Where(x => !x.Deleted))
+                List<EntityState> asd = new List<EntityState>();
+                applicationDbContext.Set<TEntity>().Attach(entity);
+                applicationDbContext.Set<TEntity>().Add(entity);
+                applicationDbContext.SaveChanges();
+                if (entity is Users)
                 {
-                    asd.Add(applicationDbContext.Entry(item).State);
+                    foreach (var item in applicationDbContext.Set<Teacher>().Where(x => !x.Deleted))
+                    {
+                        asd.Add(applicationDbContext.Entry(item).State);
+                    }
                 }
             }
-            
-            return 1;
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Ismeretlen hiba", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+            return 0;
         }
 
         public void CleanUp()
         {
-            var itemsToDelete = applicationDbContext.ChangeTracker.Entries().Where(x => x.State == EntityState.Added);
-            foreach (var item in itemsToDelete)
+            try
             {
-                item.State = EntityState.Detached;
+                var itemsToDelete = applicationDbContext.ChangeTracker.Entries().Where(x => x.State == EntityState.Added);
+                foreach (var item in itemsToDelete)
+                {
+                    item.State = EntityState.Detached;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Ismeretlen hiba", MessageBoxButton.OK, MessageBoxImage.Stop);
             }
         }
 
         public virtual int Update(TEntity entity)
         {
-            if (entity == null)
+            try
             {
-                throw new ArgumentNullException("entity");
+                applicationDbContext.Set<TEntity>().AddOrUpdate(entity);
+                var t = applicationDbContext.Entry(entity).State;
+                return applicationDbContext.SaveChanges();
             }
-
-            applicationDbContext.Set<TEntity>().AddOrUpdate(entity);
-            
-            var t = applicationDbContext.Entry(entity).State;
-            return applicationDbContext.SaveChanges();
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Ismeretlen hiba", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+            return 0;
         }
 
         public virtual int PhysicalDelete(TEntity entity)
         {
-            if (entity == null)
+            try
             {
-                throw new ArgumentNullException("entity");
+                applicationDbContext.Set<TEntity>().Attach(entity);
+                applicationDbContext.Entry(entity).State = EntityState.Deleted;
+                return applicationDbContext.SaveChanges();
             }
-
-            applicationDbContext.Set<TEntity>().Attach(entity);
-            applicationDbContext.Entry(entity).State = EntityState.Deleted;
-            return applicationDbContext.SaveChanges();
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Ismeretlen hiba", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+            return 0;
         }
 
         public virtual int LogicalDelete(TEntity entity)
         {
-            if (entity == null)
+            try
             {
-                throw new ArgumentNullException("entity");
+                entity.Deleted = true;
+                return Update(entity);
             }
-
-            entity.Deleted = true;
-            return Update(entity);
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Ismeretlen hiba", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+            return 0;
         }
     }
 }

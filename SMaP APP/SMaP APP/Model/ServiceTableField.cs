@@ -13,7 +13,7 @@ namespace SMaP_APP.Model
     using System.Collections.Generic;
     
     public partial class ServiceTableField : IBaseModel
-    {
+    { 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ServiceTableField()
         {
