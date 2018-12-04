@@ -21,10 +21,10 @@ namespace SMaP_APP.View
     /// </summary>
     public partial class ServiceStoreEditWindow : Window
     {
-        public ServiceStoreEditWindow(ServiceStore serviceStore)
+        public ServiceStoreEditWindow(ServiceStore serviceStore,Student contextStudent)
         {
             InitializeComponent();
-            this.DataContext = new ServiceStoreEditViewModel(this, serviceStore);
+            this.DataContext = new ServiceStoreEditViewModel(this, serviceStore, contextStudent);
         }
     }
 }

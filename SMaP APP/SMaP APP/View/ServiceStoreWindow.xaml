@@ -34,7 +34,8 @@
             <TabItem Header="Igényelt szolgáltatások">
                 <Grid Background="LightBlue">
                     <DataGrid AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalAlignment="Left" VerticalAlignment="Top" Width="577" Height="511" Margin="0,35,0,0" ItemsSource="{Binding ServiceRequestList}">
-                        --><!--<Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0"  HorizontalAlignment="Left" Margin="532,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        -->
+        <!--<Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0"  HorizontalAlignment="Left" Margin="532,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
                     <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="507,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
@@ -42,7 +43,8 @@
                     </Button>
                     <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0"  HorizontalAlignment="Left" Margin="557,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
-                    </Button>--><!--
+                    </Button>-->
+        <!--
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="BorderThickness" Value="0"/>
@@ -161,10 +163,15 @@
             </TabItem>
             <TabItem Header="Igényelt szolgáltatások">
                 <Grid Background="LightBlue">
-                    <DataGrid AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalAlignment="Left" VerticalAlignment="Top" Width="577" Height="511" Margin="0,35,0,0" ItemsSource="{Binding ServiceRequestList}">
-                        <!--<Button ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0"  HorizontalAlignment="Left" Margin="532,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                    <Button Command="{Binding ServiceStoreEdit}" CommandParameter="{Binding ElementName=RequestedServicesGrid}" ToolTip="Megtekintés" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="1138,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
+                    <DataGrid Name="RequestedServicesGrid" AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1158" Height="511" Margin="0,35,0,0" ItemsSource="{Binding ServiceRequestList}">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ServiceStoreEdit}"
+                                          CommandParameter="{Binding ElementName=RequestedServicesGrid}"/>
+                        </DataGrid.InputBindings>
+                        <!--
                     <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="507,10,0,0" VerticalAlignment="Top" Width="20" Height="20">
                         <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
                     </Button>
@@ -179,6 +186,9 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Nyújtó csapat" Binding="{Binding ProviderTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="1*"/>
                             <DataGridTextColumn Header="Szolg. neve" Binding="{Binding ServiceName}" Width="1*"/>
+                            <DataGridTextColumn Header="Bejövő paraméterek" Binding="{Binding Converter={StaticResource ServiceStoreParamConverter}, ConverterParameter=IN}" Width="1*"/>
+                            <DataGridTextColumn Header="Kimenő paraméterek" Binding="{Binding Converter={StaticResource ServiceStoreParamConverter}, ConverterParameter=OUT}" Width="1*"/>
+                            <DataGridTextColumn Header="Használt szolgáltatások" Binding="{Binding ID,Converter={StaticResource ServiceStoreServiceIDToNameConverter}, ConverterParameter=OUT}" Width="1*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

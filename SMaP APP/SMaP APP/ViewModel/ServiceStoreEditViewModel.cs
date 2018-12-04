@@ -40,8 +40,12 @@ namespace SMaP_APP.ViewModel
         public RelayCommand ServiceStoreServiceAddCommand { get; set; }
         public RelayCommand ServiceStoreServiceDeleteCommand { get; set; }
 
-        public ServiceStoreEditViewModel(ServiceStoreEditWindow serviceStoreEditWindow, ServiceStore selectedServiceStore)
+        public Student ContextStudent { get; set; }
+
+        public ServiceStoreEditViewModel(ServiceStoreEditWindow serviceStoreEditWindow, ServiceStore selectedServiceStore,Student contextStudent)
         {
+
+            this.ContextStudent = contextStudent;
             this.SelectedServiceStore = selectedServiceStore;
             this.SourceWindow = serviceStoreEditWindow;
 
@@ -63,8 +67,7 @@ namespace SMaP_APP.ViewModel
             this.ServiceStoreUserTeamsDal = new ServiceStoreUserTeamsDAL();
             this.ServiceStoreServiceParamsDal = new ServiceStoreServiceParamsDAL();
 
-            int TeamID = StudentDal.FindAll().FirstOrDefault(x => x.ID == SelectedServiceStore.CreatorID).TeamID;
-            int SessionGroupID = TeamDal.FindAll().FirstOrDefault(x => x.ID == TeamID).SessionGroupID;
+            int SessionGroupID = TeamDal.FindAll().FirstOrDefault(x => x.ID == SelectedServiceStore.ProviderTeamID).SessionGroupID;
 
             this.RequesterTeamList = LoadTeamList();
             this.TeamList= new ObservableCollection<Team>(TeamDal.FindAll(x => x.SessionGroupID == SessionGroupID));
@@ -87,8 +90,8 @@ namespace SMaP_APP.ViewModel
 
         private ObservableCollection<TeamIsSelected> LoadTeamList()
         {
-            int TeamID = StudentDal.FindAll().FirstOrDefault(x => x.ID == SelectedServiceStore.CreatorID).TeamID;
-            int SessionGroupID = TeamDal.FindAll().FirstOrDefault(x => x.ID == TeamID).SessionGroupID;
+            int SessionGroupID = TeamDal.FindAll().FirstOrDefault(x => x.ID == SelectedServiceStore.ProviderTeamID).SessionGroupID;
+            //int SessionGroupID = TeamDal.FindAll().FirstOrDefault(x => x.ID == TeamID).SessionGroupID;
             List<Team> Teams = TeamDal.FindAll(x => x.SessionGroupID == SessionGroupID);
             ObservableCollection<TeamIsSelected> retval = new ObservableCollection<TeamIsSelected>();
             foreach (var item in Teams)

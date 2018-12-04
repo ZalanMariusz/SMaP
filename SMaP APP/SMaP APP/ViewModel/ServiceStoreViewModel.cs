@@ -249,7 +249,7 @@ namespace SMaP_APP.ViewModel
         }
         private ObservableCollection<ServiceStore> ReloadServiceRequestList()
         {
-            return new ObservableCollection<ServiceStore>();
+            return new ObservableCollection<ServiceStore>(((ServiceStoreDAL)_contextDal).RequestedServices(ContextStudent.TeamID));
         }
 
         private void Logout()
@@ -264,7 +264,7 @@ namespace SMaP_APP.ViewModel
                 ProviderTeamID = ContextStudent.TeamID,
                 CreatorID = ContextStudent.ID
             };
-            ServiceStoreEditWindow target = new ServiceStoreEditWindow(serviceStore)
+            ServiceStoreEditWindow target = new ServiceStoreEditWindow(serviceStore,ContextStudent)
             {
                 Owner = this.SourceWindow
             };
@@ -273,7 +273,7 @@ namespace SMaP_APP.ViewModel
         }
         private void EditServiceStore(object param)
         {
-            ServiceStoreEditWindow target = new ServiceStoreEditWindow((ServiceStore)((DataGrid)param).SelectedItem)
+            ServiceStoreEditWindow target = new ServiceStoreEditWindow((ServiceStore)((DataGrid)param).SelectedItem, ContextStudent)
             {
                 Owner = this.SourceWindow
             };

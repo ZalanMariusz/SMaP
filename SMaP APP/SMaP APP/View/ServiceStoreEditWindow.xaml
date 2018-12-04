@@ -19,6 +19,7 @@
         <conv:ServiceParamTypeConverter x:Key="ServiceParamTypeConverter"/>
         <conv:ServiceStoreIDProviderTeamNameConverter x:Key="ServiceStoreIDProviderTeamNameConverter"/>
         <conv:ServiceStoreIDServiceNameConverter x:Key="ServiceStoreIDServiceNameConverter"/>
+        <conv:IsProviderToControlEnabledConverter x:Key="IsProviderToControlEnabledConverter"/>
         <BitmapImage x:Key="EditIco" UriSource="/SMaP APP;component/Images/edit-16.ico" />
         <BitmapImage x:Key="AddIco" UriSource="/SMaP APP;component/Images/plus-16.ico" />
         <BitmapImage x:Key="DeleteIco" UriSource="/SMaP APP;component/Images/x-mark-16.ico" />
@@ -43,29 +44,80 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Button Command="{Binding SaveCommand}" IsDefault="True" Content="Mentés" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="200" Height="20"/>
-        <Button Command="{Binding CloseCommand}" IsCancel="True" Content="Mégsem" HorizontalAlignment="Left" Margin="224,0,0,10" VerticalAlignment="Bottom" Width="200" Height="20" RenderTransformOrigin="0.59,0.6"/>
+        <Button Command="{Binding SaveCommand}" IsDefault="True" Content="Mentés" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="200" Height="20">
+            <Button.Visibility>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}" ConverterParameter="V">
+                    <Binding Path="SelectedServiceStore" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding Path="ContextStudent" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding>
+            </Button.Visibility>
+        </Button>
+        <Button Command="{Binding CloseCommand}" IsCancel="True" Content="Mégsem" HorizontalAlignment="Left" Margin="224,0,0,10" VerticalAlignment="Bottom" Width="200" Height="20" RenderTransformOrigin="0.59,0.6">
+            <!--<Button.Visibility>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}" ConverterParameter="V">
+                    <Binding Path="SelectedServiceStore" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding Path="ContextStudent" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding>
+            </Button.Visibility>-->
+        </Button>
         <Label Padding="0" Content="Szolgáltatás neve" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="22"/>
         <Label Padding="0" Content="Nyújtó csapat" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
         <Label Padding="0" Content="Igénylő csapatok" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
         <Label Padding="0" Content="Leírás" HorizontalAlignment="Left" Margin="10,156,0,0" VerticalAlignment="Top"/>
         <Label Padding="0" Content="Bemenő paraméterek" HorizontalAlignment="Left" Margin="10,280,0,0" VerticalAlignment="Top"/>
         <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding InputFieldCreateCommand}" HorizontalAlignment="Left" Margin="379,276,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Button.Visibility>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}" ConverterParameter="V">
+                    <Binding Path="SelectedServiceStore" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding Path="ContextStudent" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding>
+            </Button.Visibility>
+
             <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
         </Button>
         <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding InputFieldDeleteCommand}" CommandParameter="{Binding ElementName=InputFieldListGrid}" HorizontalAlignment="Left" Margin="404,276,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Button.Visibility>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}" ConverterParameter="V">
+                    <Binding Path="SelectedServiceStore" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding Path="ContextStudent" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding>
+            </Button.Visibility>
             <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
         </Button>
         <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding ServiceStoreServiceAddCommand}" HorizontalAlignment="Left" Margin="379,532,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Button.Visibility>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}" ConverterParameter="V">
+                    <Binding Path="SelectedServiceStore"/>
+                    <Binding Path="ContextStudent" />
+                </MultiBinding>
+            </Button.Visibility>
             <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
         </Button>
         <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding ServiceStoreServiceDeleteCommand}" CommandParameter="{Binding ElementName=UsedServicesGrid}" HorizontalAlignment="Left" Margin="404,532,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Button.Visibility>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}" ConverterParameter="V">
+                    <Binding Path="SelectedServiceStore"/>
+                    <Binding Path="ContextStudent"/>
+                </MultiBinding>
+            </Button.Visibility>
             <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
         </Button>
         <Button ToolTip="Hozzáadás" ToolTipService.InitialShowDelay="0" Command="{Binding OutputFieldCreateCommand}" HorizontalAlignment="Left" Margin="379,402,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Button.Visibility>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}" ConverterParameter="V">
+                    <Binding Path="SelectedServiceStore"/>
+                    <Binding Path="ContextStudent" />
+                </MultiBinding>
+            </Button.Visibility>
             <Image Source="{StaticResource AddIco}" Stretch="Fill"/>
         </Button>
         <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding OutputFieldDeleteCommand}" CommandParameter="{Binding ElementName=OutputFieldListGrid}" HorizontalAlignment="Left" Margin="404,402,0,0" VerticalAlignment="Top" Width="20" Height="20">
+            <Button.Visibility>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}" ConverterParameter="V">
+                    <Binding Path="SelectedServiceStore"/>
+                    <Binding Path="ContextStudent"/>
+                </MultiBinding>
+            </Button.Visibility>
             <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
         </Button>
         <DataGrid  HorizontalAlignment="Left" Height="96" Margin="10,301,0,0" VerticalAlignment="Top" Width="414" Name="InputFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding InputFieldList}">
@@ -83,9 +135,9 @@
         <DataGrid HorizontalAlignment="Left" Height="100" Margin="10,427,0,0" VerticalAlignment="Top" Width="414"
                   Name="OutputFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding OutputFieldList}" >
             <DataGrid.CellStyle>
-            <Style TargetType="DataGridCell">
-                <Setter Property="BorderThickness" Value="0"/>
-            </Style>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tábla" Binding="{Binding Converter={StaticResource ServiceParamTableConverter}}" Width="2*"/>
@@ -95,6 +147,12 @@
         </DataGrid>
         <Label Padding="0" Content="Kimenő paraméterek" HorizontalAlignment="Left" Margin="14,406,0,0" VerticalAlignment="Top"/>
         <TextBox HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource textBoxError}" HorizontalAlignment="Left" Height="94" Margin="10,177,0,0" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" VerticalAlignment="Top" Width="414">
+            <TextBox.IsEnabled>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}">
+                    <Binding Path="SelectedServiceStore" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding Path="ContextStudent" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding>
+            </TextBox.IsEnabled>
             <Binding Path="SelectedServiceStore.ServiceDescription" UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
                     <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
@@ -102,6 +160,12 @@
             </Binding>
         </TextBox>
         <TextBox Style="{StaticResource textBoxError}" HorizontalAlignment="Left" Height="23" Margin="134,9,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="290">
+            <TextBox.IsEnabled>
+                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}">
+                    <Binding Path="SelectedServiceStore" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding Path="ContextStudent" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding>
+            </TextBox.IsEnabled>
             <Binding Path="SelectedServiceStore.ServiceName" UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
                     <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
@@ -135,7 +199,14 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox Padding="0" IsChecked="{Binding IsSelected}"></CheckBox>
+                        <CheckBox Padding="0" IsChecked="{Binding IsSelected}">
+                            <CheckBox.IsEnabled>
+                                <MultiBinding Converter="{StaticResource IsProviderToControlEnabledConverter}">
+                                    <Binding RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type Window}}" Path="DataContext.SelectedServiceStore"/>
+                                    <Binding RelativeSource="{RelativeSource FindAncestor,AncestorType={x:Type Window}}" Path="DataContext.ContextStudent"/>
+                                </MultiBinding>
+                            </CheckBox.IsEnabled>
+                        </CheckBox>
                         <Label Padding="0" Content="{Binding SelectedTeam.TeamName}"></Label>
                     </StackPanel>
                 </DataTemplate>

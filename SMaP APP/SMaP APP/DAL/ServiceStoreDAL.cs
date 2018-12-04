@@ -13,10 +13,20 @@ namespace SMaP_APP.DAL
         public List<ServiceStore> ProvidedServices(int TeamID)
         {
             RefreshContext();
-            return FindAll(x=>x.ProviderTeamID==TeamID);
+            return FindAll(x => x.ProviderTeamID == TeamID);
         }
 
-       
+        public List<ServiceStore> RequestedServices(int TeamID)
+        {
+            RefreshContext();
+            ServiceStoreUserTeamsDAL serviceStoreUserTeamsDal = new ServiceStoreUserTeamsDAL();
+            return FindAll(x=>x.ProviderTeamID!=TeamID).Join(serviceStoreUserTeamsDal.FindAll(x => x.RequesterTeamID == TeamID),
+                    ServiceStore => ServiceStore.ID, 
+                    Request => Request.ServiceID, 
+                    (ServiceStore, Request) => ServiceStore).ToList();
+        }
+
+
 
         //public List<ServiceStore> RequestedServices(int TeamID)
         //{
