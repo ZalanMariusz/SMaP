@@ -42,6 +42,8 @@
         <EntityTypeShape EntityType="SMaPModel.ServiceStoreUserTeams" Width="1.5" PointX="16" PointY="10.375" />
         <AssociationConnector Association="SMaPModel.FK_ServiceStoreUserTeams_ServiceID_ServiceStore" />
         <AssociationConnector Association="SMaPModel.FK_ServiceStoreUserTeams_RequesterTeamID_Team" />
+        <AssociationConnector Association="SMaPModel.FK_ServiceRequest_RequestState_Dictionary" />
+        <AssociationConnector Association="SMaPModel.FK_ServiceRequest_RequestType_Dictionary" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

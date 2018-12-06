@@ -7,6 +7,10 @@ CREATE TABLE ServiceRequest(
 	,RequesterTeamID int NOT NULL
 	,ProviderTeamID int NOT NULL
 	,ServiceID int null
+	,IsApproved bit NOT NULL DEFAULT 0
+	,RequestType int NOT NULL
+	,RequestState int NOT NULL
+	,RequestDescription nvarchar(600)
 	,Deleted bit default 0 NOT NULL
 )
 

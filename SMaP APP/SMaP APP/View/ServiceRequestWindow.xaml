@@ -1,0 +1,125 @@
+﻿<Window x:Class="SMaP_APP.View.ServiceRequestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SMaP_APP.View"
+        mc:Ignorable="d"
+        Background="LightBlue"
+        ResizeMode="NoResize"
+        xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
+        xmlns:conv="clr-namespace:SMaP_APP.Converters"
+        Icon="/SMaP APP;component/Images/SMaP_16x16.png"
+        WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow"
+        Title="Igény szerkesztése" Height="326.891" Width="733.612">
+    <Window.Resources>
+        <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey }" Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+            </Style.Resources>
+        </Style>
+        <Style x:Key="comboBoxError" TargetType="{x:Type ComboBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <conv:EntityIsNewToEnabledConverter x:Key="EntityIsNewToEnabledConverter"/>
+        <conv:IsRequestProviderToEnabledConverter x:Key="IsRequestProviderToEnabledConverter"/>
+        <conv:IsNewAndModRequestConverter x:Key="IsNewAndModRequestConverter"/>
+
+    </Window.Resources>
+    <Grid Height="300.563">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Button Content="Mentés" Margin="10,250,0,10" IsDefault="True" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=ServiceStoreGrid}" HorizontalAlignment="Left"  Height="20" Width="134"/>
+        <Button Content="Mégsem" IsCancel="True" Margin="0,250,10,10" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Height="20" Width="134" Grid.Column="1"/>
+        <Label Content="Igény típusa" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Igény állapota" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+        <Label Content="Kiszolgáló csapat" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Width="115"/>
+        <Label Content="Igény leírása" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,103,0,0"/>
+        <TextBox  Style="{StaticResource textBoxError}" Height="103" Margin="10,134,5.79,0" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" AcceptsTab="True" IsEnabled="{Binding SelectedServiceRequest.ProviderTeamID, Converter={StaticResource EntityIsNewToEnabledConverter}}">
+            <Binding Path="SelectedServiceRequest.RequestDescription" UpdateSourceTrigger="PropertyChanged">
+                <Binding.ValidationRules>
+                    <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
+                </Binding.ValidationRules>
+            </Binding>
+        </TextBox>
+        <ComboBox Style="{StaticResource comboBoxError}" Margin="166,14,5.79,0" Height="22" VerticalAlignment="Top" ItemsSource="{Binding RequestTypeList}"  IsEnabled="{Binding SelectedServiceRequest.ID, Converter={StaticResource EntityIsNewToEnabledConverter}}"
+                  SelectedValuePath="ID"
+                  DisplayMemberPath="ItemName">
+            <ComboBox.SelectedValue>
+                <Binding Path="SelectedServiceRequestTypeID" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <valid:EmptyIntValueValidation ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.SelectedValue>
+        </ComboBox>
+        <ComboBox Style="{StaticResource comboBoxError}" Margin="166,45,5.79,0" VerticalAlignment="Top" ItemsSource="{Binding RequestStateList}"
+                  SelectedValuePath="ID"
+                  DisplayMemberPath="ItemName">
+            <ComboBox.IsEnabled>
+                <MultiBinding Converter="{StaticResource IsRequestProviderToEnabledConverter}" ConverterParameter="NewNotEditable">
+                    <Binding Path="SelectedServiceRequest"/>
+                    <Binding Path="ContextStudent.TeamID"/>
+                    <Binding Path="SemiReadOnly"/>
+                </MultiBinding>
+            </ComboBox.IsEnabled>
+            <ComboBox.SelectedValue>
+                <Binding Path="SelectedServiceRequest.RequestState" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <valid:EmptyIntValueValidation ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.SelectedValue>
+        </ComboBox>
+        <ComboBox Style="{StaticResource comboBoxError}" Margin="166,76,5.79,0" VerticalAlignment="Top" ItemsSource="{Binding ProviderTeamList}" IsEnabled="{Binding SelectedServiceRequest.ProviderTeamID, Converter={StaticResource EntityIsNewToEnabledConverter}}"
+                  SelectedValuePath="ID"
+                  DisplayMemberPath="TeamName">
+             <ComboBox.SelectedValue>
+                <Binding Path="SelectedProviderTeamID" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <valid:EmptyIntValueValidation ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.SelectedValue>
+        </ComboBox>
+        <DataGrid Name="ServiceStoreGrid" AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" Grid.Column="1" HorizontalAlignment="Left" Height="134" Margin="9,103,0,0" VerticalAlignment="Top" Width="344" ItemsSource="{Binding Path=AvailableServiceStoreList}" SelectedItem="{Binding SelectedServiceStore}">
+            <DataGrid.IsEnabled>
+                <!--IsEnabled="{Binding SelectedServiceRequest, Converter={StaticResource IsNewAndModRequestConverter}}"-->
+                <MultiBinding Converter="{StaticResource IsNewAndModRequestConverter}" ConverterParameter="NewNotEditable">
+                    <Binding Path="SelectedServiceRequestTypeID"/>
+                    <Binding Path="SelectedServiceRequest"/>
+                    <Binding Path="ContextStudent"/>
+                </MultiBinding>
+            </DataGrid.IsEnabled>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nr" Binding="{Binding ServiceNumber}" Width="1*"/>
+                <DataGridTextColumn Header="Szolgáltatás neve" Binding="{Binding ServiceName}" Width="7*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Content="Kiszolgáló csapat szolgáltatása" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Label Content="Kiválasztott szolgáltatás" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="1" Width="143"/>
+        <TextBox IsEnabled="False" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="9,41,0,0" TextWrapping="Wrap" Text="{Binding SelectedServiceStore.ServiceName}" VerticalAlignment="Top" Width="345"/>
+    </Grid>
+</Window>

@@ -14,7 +14,6 @@ namespace SMaP_APP.Model
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
     using System.Linq;
-    using System.Configuration;
     
     public partial class SMaPEntities : DbContext
     {

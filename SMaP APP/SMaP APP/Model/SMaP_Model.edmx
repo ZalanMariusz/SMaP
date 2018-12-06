@@ -40,11 +40,13 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ServiceName" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="RequesterTeamID" Type="int" Nullable="false" />
           <Property Name="ProviderTeamID" Type="int" Nullable="false" />
           <Property Name="ServiceID" Type="int" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="RequestType" Type="int" Nullable="false" />
+          <Property Name="RequestDescription" Type="nvarchar" MaxLength="600" />
+          <Property Name="RequestState" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ServiceStore">
           <Key>
@@ -201,6 +203,30 @@
             </Principal>
             <Dependent Role="ServiceRequest">
               <PropertyRef Name="RequesterTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceRequest_RequestState_Dictionary">
+          <End Role="Dictionary" Type="Self.Dictionary" Multiplicity="1" />
+          <End Role="ServiceRequest" Type="Self.ServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dictionary">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceRequest">
+              <PropertyRef Name="RequestState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceRequest_RequestType_Dictionary">
+          <End Role="Dictionary" Type="Self.Dictionary" Multiplicity="1" />
+          <End Role="ServiceRequest" Type="Self.ServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dictionary">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceRequest">
+              <PropertyRef Name="RequestType" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -465,6 +491,14 @@
             <End Role="Team" EntitySet="Team" />
             <End Role="ServiceRequest" EntitySet="ServiceRequest" />
           </AssociationSet>
+          <AssociationSet Name="FK_ServiceRequest_RequestState_Dictionary" Association="Self.FK_ServiceRequest_RequestState_Dictionary">
+            <End Role="Dictionary" EntitySet="Dictionary" />
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceRequest_RequestType_Dictionary" Association="Self.FK_ServiceRequest_RequestType_Dictionary">
+            <End Role="Dictionary" EntitySet="Dictionary" />
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+          </AssociationSet>
           <AssociationSet Name="FK_ServiceRequest_ServiceID_Service" Association="Self.FK_ServiceRequest_ServiceID_Service">
             <End Role="ServiceStore" EntitySet="ServiceStore" />
             <End Role="ServiceRequest" EntitySet="ServiceRequest" />
@@ -659,6 +693,14 @@
             <End Role="Team" EntitySet="Team" />
             <End Role="ServiceStoreUserTeams" EntitySet="ServiceStoreUserTeams" />
           </AssociationSet>
+          <AssociationSet Name="FK_ServiceRequest_RequestState_Dictionary" Association="SMaPModel.FK_ServiceRequest_RequestState_Dictionary">
+            <End Role="Dictionary" EntitySet="Dictionary" />
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceRequest_RequestType_Dictionary" Association="SMaPModel.FK_ServiceRequest_RequestType_Dictionary">
+            <End Role="Dictionary" EntitySet="Dictionary" />
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="uspGetActiveStudents_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -679,6 +721,8 @@
           <NavigationProperty Name="DictionaryType" Relationship="SMaPModel.FK_Dictionary_DictionaryTypeID_DictionaryType" FromRole="Dictionary" ToRole="DictionaryType" />
           <NavigationProperty Name="Semester" Relationship="SMaPModel.FK_Semester_SemesterType_Dictionary" FromRole="Dictionary" ToRole="Semester" />
           <NavigationProperty Name="ServiceTableField" Relationship="SMaPModel.FK_ServiceTableField_FieldTypeID_Dictionary" FromRole="Dictionary" ToRole="ServiceTableField" />
+          <NavigationProperty Name="ServiceRequest" Relationship="SMaPModel.FK_ServiceRequest_RequestState_Dictionary" FromRole="Dictionary" ToRole="ServiceRequest" />
+          <NavigationProperty Name="ServiceRequest1" Relationship="SMaPModel.FK_ServiceRequest_RequestType_Dictionary" FromRole="Dictionary" ToRole="ServiceRequest" />
         </EntityType>
         <EntityType Name="DictionaryType">
           <Key>
@@ -707,7 +751,6 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ServiceName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="RequesterTeamID" Type="Int32" Nullable="false" />
           <Property Name="ProviderTeamID" Type="Int32" Nullable="false" />
           <Property Name="ServiceID" Type="Int32" />
@@ -715,6 +758,11 @@
           <NavigationProperty Name="Team" Relationship="SMaPModel.FK_ServiceRequest_ProviderTeamID_Team" FromRole="ServiceRequest" ToRole="Team" />
           <NavigationProperty Name="Team1" Relationship="SMaPModel.FK_ServiceRequest_RequesterTeamID_Team" FromRole="ServiceRequest" ToRole="Team" />
           <NavigationProperty Name="ServiceStore" Relationship="SMaPModel.FK_ServiceRequest_ServiceID_Service" FromRole="ServiceRequest" ToRole="ServiceStore" />
+          <Property Name="RequestType" Type="Int32" Nullable="false" />
+          <Property Name="RequestDescription" Type="String" MaxLength="600" FixedLength="false" Unicode="true" />
+          <Property Name="RequestState" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Dictionary" Relationship="SMaPModel.FK_ServiceRequest_RequestState_Dictionary" FromRole="ServiceRequest" ToRole="Dictionary" />
+          <NavigationProperty Name="Dictionary1" Relationship="SMaPModel.FK_ServiceRequest_RequestType_Dictionary" FromRole="ServiceRequest" ToRole="Dictionary" />
         </EntityType>
         <EntityType Name="ServiceStoreParams">
           <Key>
@@ -1125,6 +1173,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ServiceRequest_RequestState_Dictionary">
+          <End Type="SMaPModel.Dictionary" Role="Dictionary" Multiplicity="1" />
+          <End Type="SMaPModel.ServiceRequest" Role="ServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dictionary">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceRequest">
+              <PropertyRef Name="RequestState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceRequest_RequestType_Dictionary">
+          <End Type="SMaPModel.Dictionary" Role="Dictionary" Multiplicity="1" />
+          <End Type="SMaPModel.ServiceRequest" Role="ServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dictionary">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceRequest">
+              <PropertyRef Name="RequestType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1170,11 +1242,13 @@
           <EntitySetMapping Name="ServiceRequest">
             <EntityTypeMapping TypeName="SMaPModel.ServiceRequest">
               <MappingFragment StoreEntitySet="ServiceRequest">
+                <ScalarProperty Name="RequestState" ColumnName="RequestState" />
+                <ScalarProperty Name="RequestDescription" ColumnName="RequestDescription" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="ServiceID" ColumnName="ServiceID" />
                 <ScalarProperty Name="ProviderTeamID" ColumnName="ProviderTeamID" />
                 <ScalarProperty Name="RequesterTeamID" ColumnName="RequesterTeamID" />
-                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

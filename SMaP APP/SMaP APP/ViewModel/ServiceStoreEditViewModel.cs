@@ -91,7 +91,6 @@ namespace SMaP_APP.ViewModel
         private ObservableCollection<TeamIsSelected> LoadTeamList()
         {
             int SessionGroupID = TeamDal.FindAll().FirstOrDefault(x => x.ID == SelectedServiceStore.ProviderTeamID).SessionGroupID;
-            //int SessionGroupID = TeamDal.FindAll().FirstOrDefault(x => x.ID == TeamID).SessionGroupID;
             List<Team> Teams = TeamDal.FindAll(x => x.SessionGroupID == SessionGroupID);
             ObservableCollection<TeamIsSelected> retval = new ObservableCollection<TeamIsSelected>();
             foreach (var item in Teams)
@@ -136,6 +135,7 @@ namespace SMaP_APP.ViewModel
         {
             return new ObservableCollection<ServiceStoreServiceParams>(SelectedServiceStore.ServiceStoreServiceParams1.Where(x=>!x.Deleted));
         }
+
         private void HandleTeamList()
         {
             foreach (var item in RequesterTeamList)

@@ -12,6 +12,8 @@ IF OBJECT_ID('FK_ServiceStore_ProviderTeamID_Team') IS NOT NULL ALTER TABLE Serv
 IF OBJECT_ID('FK_ServiceRequest_RequesterTeamID_Team') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_RequesterTeamID_Team
 IF OBJECT_ID('FK_ServiceRequest_ProviderTeamID_Team') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_ProviderTeamID_Team
 IF OBJECT_ID('FK_ServiceRequest_ServiceID_Service') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_ServiceID_Service
+IF OBJECT_ID('FK_ServiceRequest_RequestState_Dictionary') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_RequestState_Dictionary
+IF OBJECT_ID('FK_ServiceRequest_RequestType_Dictionary') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_RequestType_Dictionary 
 IF OBJECT_ID('FK_ServiceTable_TeamID_Team') IS NOT NULL ALTER TABLE ServiceTable DROP CONSTRAINT FK_ServiceTable_TeamID_Team
 IF OBJECT_ID('FK_ServiceTableField_TableID_ServiceTable') IS NOT NULL ALTER TABLE ServiceTableField DROP CONSTRAINT FK_ServiceTableField_TableID_ServiceTable
 IF OBJECT_ID('FK_ServiceTableField_FieldTypeID_Dictionary') IS NOT NULL ALTER TABLE ServiceTableField DROP CONSTRAINT FK_ServiceTableField_FieldTypeID_Dictionary

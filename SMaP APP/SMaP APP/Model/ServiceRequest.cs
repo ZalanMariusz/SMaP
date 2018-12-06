@@ -15,14 +15,18 @@ namespace SMaP_APP.Model
     public partial class ServiceRequest : IBaseModel
     {
         public int ID { get; set; }
-        public string ServiceName { get; set; }
         public int RequesterTeamID { get; set; }
         public int ProviderTeamID { get; set; }
         public Nullable<int> ServiceID { get; set; }
         public bool Deleted { get; set; }
+        public int RequestType { get; set; }
+        public string RequestDescription { get; set; }
+        public int RequestState { get; set; }
     
         public virtual Team Team { get; set; }
         public virtual Team Team1 { get; set; }
         public virtual ServiceStore ServiceStore { get; set; }
+        public virtual Dictionary Dictionary { get; set; }
+        public virtual Dictionary Dictionary1 { get; set; }
     }
 }

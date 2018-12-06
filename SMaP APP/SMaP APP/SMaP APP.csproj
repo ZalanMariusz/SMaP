@@ -67,8 +67,12 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\BoolNegator.cs" />
     <Compile Include="Converters\DictionaryNameConverter.cs" />
+    <Compile Include="Converters\EntityIsNewToEnabledConverter.cs" />
+    <Compile Include="Converters\IsNewAndModRequestConverter.cs" />
     <Compile Include="Converters\IsProviderToControlEnabledConverter.cs" />
+    <Compile Include="Converters\IsRequestProviderToEnabledConverter.cs" />
     <Compile Include="Converters\RequesterTeamsNameConverter.cs" />
+    <Compile Include="Converters\RequestStateToBrushConverter.cs" />
     <Compile Include="Converters\SemesterIsActiveConverter.cs" />
     <Compile Include="Converters\ServiceParamFieldConverter.cs" />
     <Compile Include="Converters\ServiceParamTableConverter.cs" />
@@ -84,6 +88,7 @@
     <Compile Include="Converters\SessionGroupTeacherNameConverter.cs" />
     <Compile Include="Converters\StudentImportDataTableConverter.cs" />
     <Compile Include="Converters\StudentImportTeamValidationConverter.cs" />
+    <Compile Include="Converters\StudentIsTeamCaptainToVisibilityConverter.cs" />
     <Compile Include="Converters\StudentNameConverter.cs" />
     <Compile Include="Converters\StudentSessionGroupConverter.cs" />
     <Compile Include="Converters\TeamIdToNameConverter.cs" />
@@ -185,6 +190,7 @@
     <Compile Include="ViewModel\MailSender.cs" />
     <Compile Include="ViewModel\SemesterCopyViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
+    <Compile Include="ViewModel\ServiceRequestViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreEditViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreParamAddViewModel.cs" />
     <Compile Include="ViewModel\ServiceStoreServiceParamEditViewModel.cs" />
@@ -213,6 +219,9 @@
     </Compile>
     <Compile Include="View\SemesterWindow.xaml.cs">
       <DependentUpon>SemesterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceRequestWindow.xaml.cs">
+      <DependentUpon>ServiceRequestWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ServiceStoreEditWindow.xaml.cs">
       <DependentUpon>ServiceStoreEditWindow.xaml</DependentUpon>
@@ -275,6 +284,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\SemesterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServiceRequestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -371,6 +384,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\SMaP_16x16.png" />
+    <Resource Include="Images\icons8-ok-16.ico" />
+    <Resource Include="Images\icons8-eye-16.ico" />
     <Content Include="Model\SMaP_Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>SMaP_Model.edmx</DependentUpon>

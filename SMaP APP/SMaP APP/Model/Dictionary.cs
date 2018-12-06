@@ -19,6 +19,8 @@ namespace SMaP_APP.Model
         {
             this.Semester = new HashSet<Semester>();
             this.ServiceTableField = new HashSet<ServiceTableField>();
+            this.ServiceRequest = new HashSet<ServiceRequest>();
+            this.ServiceRequest1 = new HashSet<ServiceRequest>();
         }
     
         public int ID { get; set; }
@@ -33,5 +35,9 @@ namespace SMaP_APP.Model
         public virtual ICollection<Semester> Semester { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceTableField> ServiceTableField { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceRequest> ServiceRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceRequest> ServiceRequest1 { get; set; }
     }
 }
