@@ -19,6 +19,9 @@ namespace SMaP_APP.Model
         {
             this.Team = new HashSet<Team>();
             this.ServiceStore = new HashSet<ServiceStore>();
+            this.ServiceRequest = new HashSet<ServiceRequest>();
+            this.ServiceRequest1 = new HashSet<ServiceRequest>();
+            this.RequestMessage = new HashSet<RequestMessage>();
         }
     
         public int ID { get; set; }
@@ -31,5 +34,11 @@ namespace SMaP_APP.Model
         public virtual ICollection<Team> Team { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceStore> ServiceStore { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceRequest> ServiceRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceRequest> ServiceRequest1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RequestMessage> RequestMessage { get; set; }
     }
 }

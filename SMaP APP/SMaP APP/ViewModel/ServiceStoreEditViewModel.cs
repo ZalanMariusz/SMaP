@@ -49,7 +49,7 @@ namespace SMaP_APP.ViewModel
             this.SelectedServiceStore = selectedServiceStore;
             this.SourceWindow = serviceStoreEditWindow;
 
-            this.SaveCommand = new RelayCommand(SaveServiceStore);
+            this.SaveCommand = new RelayCommand(SaveServiceStore,CanExecute);
             this.InputFieldCreateCommand = new RelayCommand(AddInputParam);
             this.InputFieldDeleteCommand = new RelayCommand(DeleteSelectedInputField, CanEditOrDeleteSelectedItem);
 

@@ -14,6 +14,12 @@ namespace SMaP_APP.Model
     
     public partial class ServiceRequest : IBaseModel
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ServiceRequest()
+        {
+            this.RequestMessage = new HashSet<RequestMessage>();
+        }
+    
         public int ID { get; set; }
         public int RequesterTeamID { get; set; }
         public int ProviderTeamID { get; set; }
@@ -22,11 +28,17 @@ namespace SMaP_APP.Model
         public int RequestType { get; set; }
         public string RequestDescription { get; set; }
         public int RequestState { get; set; }
+        public int CreatorID { get; set; }
+        public Nullable<int> AssigneeID { get; set; }
     
         public virtual Team Team { get; set; }
         public virtual Team Team1 { get; set; }
         public virtual ServiceStore ServiceStore { get; set; }
         public virtual Dictionary Dictionary { get; set; }
         public virtual Dictionary Dictionary1 { get; set; }
+        public virtual Student Student { get; set; }
+        public virtual Student Student1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RequestMessage> RequestMessage { get; set; }
     }
 }

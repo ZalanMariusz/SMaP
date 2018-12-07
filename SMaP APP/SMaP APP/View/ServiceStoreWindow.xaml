@@ -21,6 +21,7 @@
         <conv:ServiceStoreServiceIDToNameConverter x:Key="ServiceStoreServiceIDToNameConverter"/>
         <conv:StudentIsTeamCaptainToVisibilityConverter x:Key="StudentIsTeamCaptainToVisibilityConverter"/>
         <conv:RequestStateToBrushConverter x:Key="RequestStateToBrushConverter"/>
+        <conv:StudentIDToNameConverter x:Key="StudentIDToNameConverter"/>
 
         <BitmapImage x:Key="EditIco" UriSource="/SMaP APP;component/Images/edit-16.ico" />
         <BitmapImage x:Key="AddIco" UriSource="/SMaP APP;component/Images/plus-16.ico" />
@@ -28,13 +29,26 @@
         <BitmapImage x:Key="CopyIco" UriSource="/SMaP APP;component/Images/copy-16.ico" />
         <BitmapImage x:Key="ApproveIco" UriSource="/SMaP APP;component/Images/icons8-ok-16.ico" />
         <BitmapImage x:Key="ViewIco" UriSource="/SMaP APP;component/Images/icons8-eye-16.ico" />
-        
-        <Style TargetType="DataGrid">
+
+        <BitmapImage x:Key="FilterIco" UriSource="/SMaP APP;component/Images/filter.ico" />
+        <BitmapImage x:Key="DeleteFilterIco" UriSource="/SMaP APP;component/Images/clear-filter.ico" />
+
+        <!--<Style TargetType="DataGrid">
             <Style.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey }" Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
             </Style.Resources>
-        </Style>
+        </Style>-->
+        <!--<Style TargetType="DataGridCell" >
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="FontStyle" Value="Oblique"/>
+                    <Setter Property="BorderThickness" Value="0,1,0,1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>-->
+
     </Window.Resources>
     <Window.Title>
         <Binding Path="ContextStudent.Users.FullName" Converter="{StaticResource ServiceStoreWindowHeaderConverter}"/>
@@ -169,46 +183,96 @@
 
             <TabItem Header="Egyéb igények">
                 <Grid Margin="0,0,0,0">
-                    <DataGrid Name="ServiceRequestsToCompleteGrid" AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalAlignment="Left" Height="553" Margin="0,35,0,0" VerticalAlignment="Top" Width="609" ItemsSource="{Binding ProvidedRequestsList}">
+                    <DataGrid CanUserResizeColumns="False" CanUserSortColumns="False" CanUserReorderColumns="False" Name="ServiceRequestsToCompleteGrid" AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalAlignment="Left" Height="553" Margin="0,35,0,0" VerticalAlignment="Top" Width="609" ItemsSource="{Binding ProvidedRequestsList}">
                         <DataGrid.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ServiceRequestEdit}"
                                           CommandParameter="{Binding ElementName=ServiceRequestsToCompleteGrid}"/>
                         </DataGrid.InputBindings>
-                        <DataGrid.CellStyle>
+                        <!--<DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="BorderThickness" Value="0"/>
                                 <Setter Property="Background" Value="{Binding RequestState, Converter={StaticResource RequestStateToBrushConverter}}"/>
                             </Style>
-                        </DataGrid.CellStyle>
+                        </DataGrid.CellStyle>-->
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridCell" >
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="Normal"/>
+                                        <Setter Property="BorderThickness" Value="0,1,0,1"/>
+                                        <Setter Property="BorderBrush" Value="RoyalBlue"/>
+                                        <Setter Property="Background" Value="RoyalBlue"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Background" Value="{Binding RequestState, Converter={StaticResource RequestStateToBrushConverter}}"/>
+                            </Style>
+                        </DataGrid.Resources>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Benyújtó csapat" Binding="{Binding RequesterTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="1*"/>
-                            <DataGridTextColumn Header="Igény típusa" Binding="{Binding RequestType, Converter={StaticResource DictionaryNameConverter}}" Width="1*"/>
-                            <DataGridTextColumn Header="Igény állapota" Binding="{Binding RequestState , Converter={StaticResource DictionaryNameConverter}}" Width="1*"/>
+                            <DataGridTextColumn Header="Nr" Binding="{Binding RequestNumber}" Width="1*"/>
+                            <DataGridTextColumn Header="Benyújtó csapat" Binding="{Binding RequesterTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Igény állapota" Binding="{Binding RequestState , Converter={StaticResource DictionaryNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Igény típusa" Binding="{Binding RequestType, Converter={StaticResource DictionaryNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Igény benyújtója" Binding="{Binding CreatorID , Converter={StaticResource StudentIDToNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Felelős" Binding="{Binding AssigneeID, Converter={StaticResource StudentIDToNameConverter}}" Width="3*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label Padding="0" Content="Kiszolgálandó igények" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
                     <Button  Command="{Binding ServiceRequestEdit}" Margin="0,10,612,612" CommandParameter="{Binding ElementName=ServiceRequestsToCompleteGrid}" ToolTip="Szerkesztés" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20">
                         <Image Source="{StaticResource EditIco}" Stretch="Fill"/>
                     </Button>
-                   
-                    <DataGrid Name="ServiceRequestsGrid" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" HorizontalAlignment="Left" Height="553" Margin="614,35,0,0" VerticalAlignment="Top" Width="607" ItemsSource="{Binding RequestedRequestsList}">
+
+                    <Button ToolTip="Szűrők beállítása" Command="{Binding FilterRequestGrid}" Margin="0,9,1049,615" CommandParameter="{Binding ElementName=ServiceRequestsToCompleteGrid}" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20">
+                        <Image Source="{StaticResource FilterIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button ToolTip="Szűrők törlése" Command="{Binding FilterRequestGrid}" Margin="0,9,1024,615" CommandParameter="{Binding ElementName=ServiceRequestsToCompleteGrid}" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20">
+                        <Image Source="{StaticResource DeleteFilterIco}" Stretch="Fill"/>
+                    </Button>
+                    
+                    <DataGrid CanUserResizeColumns="False" CanUserSortColumns="False" CanUserReorderColumns="False" Name="ServiceRequestsGrid" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" HorizontalAlignment="Left" Height="553" Margin="614,35,0,0" VerticalAlignment="Top" Width="607" ItemsSource="{Binding RequestedRequestsList}">
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridCell" >
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="Normal"/>
+                                        <Setter Property="BorderThickness" Value="0,1,0,1"/>
+                                        <Setter Property="BorderBrush" Value="RoyalBlue"/>
+                                        <Setter Property="Background" Value="RoyalBlue"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Background" Value="{Binding RequestState, Converter={StaticResource RequestStateToBrushConverter}}"/>
+                            </Style>
+                        </DataGrid.Resources>
                         <DataGrid.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ServiceRequestEdit}"
                                           CommandParameter="{Binding ElementName=ServiceRequestsGrid}"/>
                         </DataGrid.InputBindings>
-                        <DataGrid.CellStyle>
+                        <!--<DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="BorderThickness" Value="0"/>
                                 <Setter Property="Background" Value="{Binding RequestState, Converter={StaticResource RequestStateToBrushConverter}}"/>
                             </Style>
-                        </DataGrid.CellStyle>
+                        </DataGrid.CellStyle>-->
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Cél csapat" Binding="{Binding ProviderTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="1*"/>
-                            <DataGridTextColumn Header="Igény típusa" Binding="{Binding RequestType, Converter={StaticResource DictionaryNameConverter}}" Width="1*"/>
-                            <DataGridTextColumn Header="Igény állapota" Binding="{Binding RequestState , Converter={StaticResource DictionaryNameConverter}}" Width="1*"/>
+                            <DataGridTextColumn Header="Nr" Binding="{Binding RequestNumber}" Width="1*"/>
+                            <DataGridTextColumn Header="Cél csapat" Binding="{Binding ProviderTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Igény állapota" Binding="{Binding RequestState , Converter={StaticResource DictionaryNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Igény típusa" Binding="{Binding RequestType, Converter={StaticResource DictionaryNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Igény benyújtója" Binding="{Binding CreatorID , Converter={StaticResource StudentIDToNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn Header="Felelős" Binding="{Binding AssigneeID, Converter={StaticResource StudentIDToNameConverter}}" Width="3*"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                    
                     <Label Padding="0" Content="Benyújtott igények" HorizontalAlignment="Left" Margin="614,13,0,0" VerticalAlignment="Top"/>
+                    <Button Command="{Binding FilterRequestGrid}"  CommandParameter="{Binding ElementName=ServiceRequestsGrid}" ToolTip="Szűrők beállítása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,11,436,613">
+                        <Image Source="{StaticResource FilterIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button Command="{Binding FilterRequestGrid}"  CommandParameter="{Binding ElementName=ServiceRequestsGrid}" ToolTip="Szűrők beállítása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,11,411,613">
+                        <Image Source="{StaticResource DeleteFilterIco}" Stretch="Fill"/>
+                    </Button>
                     <StackPanel Height="20" VerticalAlignment="Top" HorizontalAlignment="Right"  Margin="0,10,0,0" >
                         <Grid  Height="20">
                             <Grid.ColumnDefinitions>

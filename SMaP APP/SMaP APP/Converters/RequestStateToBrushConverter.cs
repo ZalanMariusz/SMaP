@@ -24,25 +24,25 @@ namespace SMaP_APP.Converters
                     secondColor = Colors.AliceBlue;
                     break;
                 case "Módosítás alatt":
-                    secondColor = Colors.MediumAquamarine;
+                    secondColor = Colors.Aquamarine;
                     break;
                 case "Jóváhagyásra vár":
-                    secondColor = Colors.Orange;
+                    secondColor = Colors.Goldenrod;
                     break;
                 case "Jóváhagyva":
-                    secondColor = Colors.Green;
+                    secondColor = Colors.LightGreen;
                     break;
                 case "Visszautasítva":
-                    secondColor = Colors.OrangeRed;
+                    secondColor = Colors.Red;
+                    secondColor.A = 100;
                     break;
             }
-            LinearGradientBrush rowColor = new LinearGradientBrush();
-            rowColor.StartPoint= new Point(0, 0.5);
-            rowColor.StartPoint = new Point(1, 0.5);
-            rowColor.GradientStops.Add(new GradientStop(Colors.LightBlue, 0.0));
-            rowColor.GradientStops.Add(new GradientStop(secondColor, 0.7));
+            //LinearGradientBrush rowColor = new LinearGradientBrush();
+            //rowColor.StartPoint= new Point(0, 0.5);
+            //rowColor.StartPoint = new Point(1, 0.5);
+            //rowColor.GradientStops.Add(new GradientStop(Colors.LightBlue, 0.0));
+            //rowColor.GradientStops.Add(new GradientStop(secondColor, 0.7));
             return new SolidColorBrush(secondColor);
-            
             //return rowColor;
         }
 

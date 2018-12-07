@@ -42,6 +42,7 @@ namespace SMaP_APP.Model
         public virtual DbSet<ServiceStore> ServiceStore { get; set; }
         public virtual DbSet<ServiceTable> ServiceTable { get; set; }
         public virtual DbSet<ServiceStoreUserTeams> ServiceStoreUserTeams { get; set; }
+        public virtual DbSet<RequestMessage> RequestMessage { get; set; }
     
         public virtual int uspCopySemester(Nullable<int> sourceId, string newSemesterName, Nullable<int> newSemesterTypeID, string sessionGroups, string teams, string students)
         {

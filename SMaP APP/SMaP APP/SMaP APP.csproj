@@ -86,6 +86,7 @@
     <Compile Include="Converters\SessionGroupCBVisibilityConverter.cs" />
     <Compile Include="Converters\SessionGroupSemesterNameConverter.cs" />
     <Compile Include="Converters\SessionGroupTeacherNameConverter.cs" />
+    <Compile Include="Converters\StudentIDToNameConverter.cs" />
     <Compile Include="Converters\StudentImportDataTableConverter.cs" />
     <Compile Include="Converters\StudentImportTeamValidationConverter.cs" />
     <Compile Include="Converters\StudentIsTeamCaptainToVisibilityConverter.cs" />
@@ -101,6 +102,8 @@
     <Compile Include="DAL\DictionaryTypeDAL.cs" />
     <Compile Include="DAL\GenericDAL.cs" />
     <Compile Include="DAL\GetContext.cs" />
+    <Compile Include="Converters\MessageConverter.cs" />
+    <Compile Include="DAL\RequestMessageDAL.cs" />
     <Compile Include="DAL\SemesterDAL.cs" />
     <Compile Include="DAL\ServiceRequestDAL.cs" />
     <Compile Include="DAL\ServiceStoreDAL.cs" />
@@ -126,6 +129,9 @@
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\IBaseModel.cs" />
+    <Compile Include="Model\RequestMessage.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Semester.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
@@ -188,6 +194,7 @@
     <Compile Include="ViewModel\DictionaryViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MailSender.cs" />
+    <Compile Include="ViewModel\RequestMessageViewModel.cs" />
     <Compile Include="ViewModel\SemesterCopyViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
     <Compile Include="ViewModel\ServiceRequestViewModel.cs" />
@@ -216,6 +223,9 @@
     </Compile>
     <Compile Include="View\DictionaryTypeEditWindow.xaml.cs">
       <DependentUpon>DictionaryTypeEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RequestMessageWindow.xaml.cs">
+      <DependentUpon>RequestMessageWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SemesterWindow.xaml.cs">
       <DependentUpon>SemesterWindow.xaml</DependentUpon>
@@ -283,6 +293,10 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\RequestMessageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SemesterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -386,6 +400,9 @@
     <Resource Include="Images\SMaP_16x16.png" />
     <Resource Include="Images\icons8-ok-16.ico" />
     <Resource Include="Images\icons8-eye-16.ico" />
+    <Resource Include="Images\Icons8-Ios7-Data-Clear-Filters.ico" />
+    <Resource Include="Images\clear-filter.ico" />
+    <Resource Include="Images\filter.ico" />
     <Content Include="Model\SMaP_Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>SMaP_Model.edmx</DependentUpon>

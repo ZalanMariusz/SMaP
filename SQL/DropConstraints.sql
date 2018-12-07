@@ -14,6 +14,8 @@ IF OBJECT_ID('FK_ServiceRequest_ProviderTeamID_Team') IS NOT NULL ALTER TABLE Se
 IF OBJECT_ID('FK_ServiceRequest_ServiceID_Service') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_ServiceID_Service
 IF OBJECT_ID('FK_ServiceRequest_RequestState_Dictionary') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_RequestState_Dictionary
 IF OBJECT_ID('FK_ServiceRequest_RequestType_Dictionary') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_RequestType_Dictionary 
+IF OBJECT_ID('FK_ServiceRequest_CreatorID_Student') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_CreatorID_Student
+IF OBJECT_ID('FK_ServiceRequest_AssigneeID_Student') IS NOT NULL ALTER TABLE ServiceRequest DROP CONSTRAINT FK_ServiceRequest_AssigneeID_Student
 IF OBJECT_ID('FK_ServiceTable_TeamID_Team') IS NOT NULL ALTER TABLE ServiceTable DROP CONSTRAINT FK_ServiceTable_TeamID_Team
 IF OBJECT_ID('FK_ServiceTableField_TableID_ServiceTable') IS NOT NULL ALTER TABLE ServiceTableField DROP CONSTRAINT FK_ServiceTableField_TableID_ServiceTable
 IF OBJECT_ID('FK_ServiceTableField_FieldTypeID_Dictionary') IS NOT NULL ALTER TABLE ServiceTableField DROP CONSTRAINT FK_ServiceTableField_FieldTypeID_Dictionary
@@ -23,3 +25,5 @@ IF OBJECT_ID('FK_ServiceStoreUserTeams_ServiceID_ServiceStore') IS NOT NULL ALTE
 IF OBJECT_ID('FK_ServiceStoreUserTeams_RequesterTeamID_Team') IS NOT NULL ALTER TABLE ServiceStoreUserTeams DROP CONSTRAINT FK_ServiceStoreUserTeams_RequesterTeamID_Team
 IF OBJECT_ID('FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore') IS NOT NULL ALTER TABLE ServiceStoreServiceParams DROP CONSTRAINT FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore
 IF OBJECT_ID('FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore') IS NOT NULL ALTER TABLE ServiceStoreServiceParams DROP CONSTRAINT FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore
+IF OBJECT_ID('FK_RequestMessage_SenderID_Student') IS NOT NULL ALTER TABLE RequestMessage DROP CONSTRAINT FK_RequestMessage_SenderID_Student
+IF OBJECT_ID('FK_RequestMessage_RequestID_ServiceRequest') IS NOT NULL  ALTER TABLE RequestMessage DROP CONSTRAINT FK_RequestMessage_RequestID_ServiceRequest

@@ -25,6 +25,17 @@
           <Property Name="IsSessionGroup" Type="bit" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="RequestMessage">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="SenderID" Type="int" Nullable="false" />
+          <Property Name="RequestMessage" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Semester">
           <Key>
             <PropertyRef Name="ID" />
@@ -43,10 +54,12 @@
           <Property Name="RequesterTeamID" Type="int" Nullable="false" />
           <Property Name="ProviderTeamID" Type="int" Nullable="false" />
           <Property Name="ServiceID" Type="int" />
-          <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="RequestType" Type="int" Nullable="false" />
-          <Property Name="RequestDescription" Type="nvarchar" MaxLength="600" />
           <Property Name="RequestState" Type="int" Nullable="false" />
+          <Property Name="RequestDescription" Type="nvarchar" MaxLength="600" />
+          <Property Name="CreatorID" Type="int" Nullable="false" />
+          <Property Name="AssigneeID" Type="int" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ServiceStore">
           <Key>
@@ -170,6 +183,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RequestMessage_RequestID_ServiceRequest">
+          <End Role="ServiceRequest" Type="Self.ServiceRequest" Multiplicity="1" />
+          <End Role="RequestMessage" Type="Self.RequestMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceRequest">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RequestMessage">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestMessage_SenderID_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="RequestMessage" Type="Self.RequestMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RequestMessage">
+              <PropertyRef Name="SenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Semester_SemesterType_Dictionary">
           <End Role="Dictionary" Type="Self.Dictionary" Multiplicity="1" />
           <End Role="Semester" Type="Self.Semester" Multiplicity="*" />
@@ -179,6 +216,30 @@
             </Principal>
             <Dependent Role="Semester">
               <PropertyRef Name="SemesterType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceRequest_AssigneeID_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+          <End Role="ServiceRequest" Type="Self.ServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceRequest">
+              <PropertyRef Name="AssigneeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceRequest_CreatorID_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="ServiceRequest" Type="Self.ServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceRequest">
+              <PropertyRef Name="CreatorID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -462,6 +523,7 @@
         <EntityContainer Name="SMaPModelStoreContainer">
           <EntitySet Name="Dictionary" EntityType="Self.Dictionary" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DictionaryType" EntityType="Self.DictionaryType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestMessage" EntityType="Self.RequestMessage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Semester" EntityType="Self.Semester" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceRequest" EntityType="Self.ServiceRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceStore" EntityType="Self.ServiceStore" Schema="dbo" store:Type="Tables" />
@@ -479,9 +541,25 @@
             <End Role="DictionaryType" EntitySet="DictionaryType" />
             <End Role="Dictionary" EntitySet="Dictionary" />
           </AssociationSet>
+          <AssociationSet Name="FK_RequestMessage_RequestID_ServiceRequest" Association="Self.FK_RequestMessage_RequestID_ServiceRequest">
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+            <End Role="RequestMessage" EntitySet="RequestMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestMessage_SenderID_Student" Association="Self.FK_RequestMessage_SenderID_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="RequestMessage" EntitySet="RequestMessage" />
+          </AssociationSet>
           <AssociationSet Name="FK_Semester_SemesterType_Dictionary" Association="Self.FK_Semester_SemesterType_Dictionary">
             <End Role="Dictionary" EntitySet="Dictionary" />
             <End Role="Semester" EntitySet="Semester" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceRequest_AssigneeID_Student" Association="Self.FK_ServiceRequest_AssigneeID_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceRequest_CreatorID_Student" Association="Self.FK_ServiceRequest_CreatorID_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
           </AssociationSet>
           <AssociationSet Name="FK_ServiceRequest_ProviderTeamID_Team" Association="Self.FK_ServiceRequest_ProviderTeamID_Team">
             <End Role="Team" EntitySet="Team" />
@@ -701,6 +779,23 @@
             <End Role="Dictionary" EntitySet="Dictionary" />
             <End Role="ServiceRequest" EntitySet="ServiceRequest" />
           </AssociationSet>
+          <AssociationSet Name="FK_ServiceRequest_AssigneeID_Student" Association="SMaPModel.FK_ServiceRequest_AssigneeID_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceRequest_CreatorID_Student" Association="SMaPModel.FK_ServiceRequest_CreatorID_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+          </AssociationSet>
+          <EntitySet Name="RequestMessage" EntityType="SMaPModel.RequestMessage" />
+          <AssociationSet Name="FK_RequestMessage_RequestID_ServiceRequest" Association="SMaPModel.FK_RequestMessage_RequestID_ServiceRequest">
+            <End Role="ServiceRequest" EntitySet="ServiceRequest" />
+            <End Role="RequestMessage" EntitySet="RequestMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestMessage_SenderID_Student" Association="SMaPModel.FK_RequestMessage_SenderID_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="RequestMessage" EntitySet="RequestMessage" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="uspGetActiveStudents_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -763,6 +858,11 @@
           <Property Name="RequestState" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Dictionary" Relationship="SMaPModel.FK_ServiceRequest_RequestState_Dictionary" FromRole="ServiceRequest" ToRole="Dictionary" />
           <NavigationProperty Name="Dictionary1" Relationship="SMaPModel.FK_ServiceRequest_RequestType_Dictionary" FromRole="ServiceRequest" ToRole="Dictionary" />
+          <Property Name="CreatorID" Type="Int32" Nullable="false" />
+          <Property Name="AssigneeID" Type="Int32" />
+          <NavigationProperty Name="Student" Relationship="SMaPModel.FK_ServiceRequest_AssigneeID_Student" FromRole="ServiceRequest" ToRole="Student" />
+          <NavigationProperty Name="Student1" Relationship="SMaPModel.FK_ServiceRequest_CreatorID_Student" FromRole="ServiceRequest" ToRole="Student" />
+          <NavigationProperty Name="RequestMessage" Relationship="SMaPModel.FK_RequestMessage_RequestID_ServiceRequest" FromRole="ServiceRequest" ToRole="RequestMessage" />
         </EntityType>
         <EntityType Name="ServiceStoreParams">
           <Key>
@@ -813,6 +913,9 @@
           <NavigationProperty Name="Users" Relationship="SMaPModel.FK_Student_UserID_User" FromRole="Student" ToRole="Users" />
           <NavigationProperty Name="Team" Relationship="SMaPModel.FK_Team_TeamCaption_Student" FromRole="Student" ToRole="Team" />
           <NavigationProperty Name="ServiceStore" Relationship="SMaPModel.FK_ServiceStore_CreatorID_User" FromRole="Student" ToRole="ServiceStore" />
+          <NavigationProperty Name="ServiceRequest" Relationship="SMaPModel.FK_ServiceRequest_AssigneeID_Student" FromRole="Student" ToRole="ServiceRequest" />
+          <NavigationProperty Name="ServiceRequest1" Relationship="SMaPModel.FK_ServiceRequest_CreatorID_Student" FromRole="Student" ToRole="ServiceRequest" />
+          <NavigationProperty Name="RequestMessage" Relationship="SMaPModel.FK_RequestMessage_SenderID_Student" FromRole="Student" ToRole="RequestMessage" />
         </EntityType>
         <EntityType Name="Teacher">
           <Key>
@@ -1197,6 +1300,67 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ServiceRequest_AssigneeID_Student">
+          <End Type="SMaPModel.Student" Role="Student" Multiplicity="0..1" />
+          <End Type="SMaPModel.ServiceRequest" Role="ServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceRequest">
+              <PropertyRef Name="AssigneeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceRequest_CreatorID_Student">
+          <End Type="SMaPModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="SMaPModel.ServiceRequest" Role="ServiceRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ServiceRequest">
+              <PropertyRef Name="CreatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="RequestMessage">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SenderID" Type="Int32" Nullable="false" />
+          <Property Name="RequestMessage1" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="RequestID" Type="Int32" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ServiceRequest" Relationship="SMaPModel.FK_RequestMessage_RequestID_ServiceRequest" FromRole="RequestMessage" ToRole="ServiceRequest" />
+          <NavigationProperty Name="Student" Relationship="SMaPModel.FK_RequestMessage_SenderID_Student" FromRole="RequestMessage" ToRole="Student" />
+        </EntityType>
+        <Association Name="FK_RequestMessage_RequestID_ServiceRequest">
+          <End Type="SMaPModel.ServiceRequest" Role="ServiceRequest" Multiplicity="1" />
+          <End Type="SMaPModel.RequestMessage" Role="RequestMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceRequest">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RequestMessage">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestMessage_SenderID_Student">
+          <End Type="SMaPModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="SMaPModel.RequestMessage" Role="RequestMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RequestMessage">
+              <PropertyRef Name="SenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1242,6 +1406,8 @@
           <EntitySetMapping Name="ServiceRequest">
             <EntityTypeMapping TypeName="SMaPModel.ServiceRequest">
               <MappingFragment StoreEntitySet="ServiceRequest">
+                <ScalarProperty Name="AssigneeID" ColumnName="AssigneeID" />
+                <ScalarProperty Name="CreatorID" ColumnName="CreatorID" />
                 <ScalarProperty Name="RequestState" ColumnName="RequestState" />
                 <ScalarProperty Name="RequestDescription" ColumnName="RequestDescription" />
                 <ScalarProperty Name="RequestType" ColumnName="RequestType" />
@@ -1370,6 +1536,18 @@
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="ServiceID" ColumnName="ServiceID" />
                 <ScalarProperty Name="RequesterTeamID" ColumnName="RequesterTeamID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestMessage">
+            <EntityTypeMapping TypeName="SMaPModel.RequestMessage">
+              <MappingFragment StoreEntitySet="RequestMessage">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+                <ScalarProperty Name="RequestMessage1" ColumnName="RequestMessage" />
+                <ScalarProperty Name="SenderID" ColumnName="SenderID" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

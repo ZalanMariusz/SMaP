@@ -12,16 +12,17 @@ namespace SMaP_APP.DAL
         public List<ServiceRequest> ReloadRequestedRequests(Student ContextStudent)
         {
             RefreshContext();
-            return FindAll(x => x.RequesterTeamID == ContextStudent.TeamID).ToList();
+            return FindAll(x => x.RequesterTeamID == ContextStudent.TeamID).OrderBy(x => x.RequestState).ToList();
         }
 
         public List<ServiceRequest> ReloadProvidedRequestsList(Student ContextStudent)
         {
             RefreshContext();
             int ApprovedID = StateListByName().FirstOrDefault(y => y.ItemName == "Jóváhagyva").ID;
-            return FindAll(x => x.ProviderTeamID == ContextStudent.TeamID && x.RequestState != ApprovedID);
+            int DeclineID= StateListByName().FirstOrDefault(y => y.ItemName == "Visszautasítva").ID;
+            return FindAll(x => x.ProviderTeamID == ContextStudent.TeamID && x.RequestState != ApprovedID && x.RequestState!=DeclineID).OrderBy(x=>x.RequestState).ToList();
         }
-        private List<Dictionary> StateListByName()
+        public List<Dictionary> StateListByName()
         {
             DictionaryDAL DD = new DictionaryDAL();
             return DD.DictionaryListByType("Igény állapota");

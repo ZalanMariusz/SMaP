@@ -44,7 +44,12 @@
         <AssociationConnector Association="SMaPModel.FK_ServiceStoreUserTeams_RequesterTeamID_Team" />
         <AssociationConnector Association="SMaPModel.FK_ServiceRequest_RequestState_Dictionary" />
         <AssociationConnector Association="SMaPModel.FK_ServiceRequest_RequestType_Dictionary" />
-      </Diagram>
+        <AssociationConnector Association="SMaPModel.FK_ServiceRequest_AssigneeID_Student" />
+        <AssociationConnector Association="SMaPModel.FK_ServiceRequest_CreatorID_Student" />
+        <EntityTypeShape EntityType="SMaPModel.RequestMessage" Width="1.5" PointX="16" PointY="17.125" />
+        <AssociationConnector Association="SMaPModel.FK_RequestMessage_RequestID_ServiceRequest" />
+        <AssociationConnector Association="SMaPModel.FK_RequestMessage_SenderID_Student" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
