@@ -10,17 +10,21 @@ using System.Windows.Data;
 
 namespace SMaP_APP.Converters
 {
-    class ServiceParamFieldConverter : IValueConverter
+    class RequestTypeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            ServiceStoreParams param = (ServiceStoreParams)value;
-            if (param.IsCustom)
+            ServiceRequest sr = (ServiceRequest)value;
+            ServiceStoreDAL srd = new ServiceStoreDAL();
+            DictionaryDAL dd = new DictionaryDAL();
+            if (sr.RequestType== 19)
             {
-                return "-";
+                return String.Format("{0}({1})", dd.FindById(sr.RequestType).ItemName,srd.FindById((int)sr.ServiceID).ServiceNumber);
             }
-            ServiceTableFieldDAL ServiceTableFieldDal = new ServiceTableFieldDAL();
-            return ServiceTableFieldDal.FindById((int)param.ServiceTableFieldID)?.FieldName;
+            else
+            {
+                return dd.FindById(sr.RequestType).ItemName;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -30,6 +30,7 @@ namespace SMaP_APP.Model
         public int RequestState { get; set; }
         public int CreatorID { get; set; }
         public Nullable<int> AssigneeID { get; set; }
+        public Nullable<int> RequestNumber { get; set; }
     
         public virtual Team Team { get; set; }
         public virtual Team Team1 { get; set; }

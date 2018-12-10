@@ -19,7 +19,8 @@ namespace SMaP_APP.Converters
             {
                 if (!item.Team.Deleted)
                 {
-                    retval += item.Team.TeamName + ", ";
+                    string shortTeamName = String.IsNullOrEmpty(item.Team.ShortTeamName) ? item.Team.TeamName : item.Team.ShortTeamName;
+                    retval += shortTeamName + ", ";
                 }    
             }
             if (!string.IsNullOrEmpty(retval))

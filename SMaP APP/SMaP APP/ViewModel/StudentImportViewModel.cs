@@ -103,6 +103,7 @@ namespace SMaP_APP.ViewModel
                         TeamID = t.ID
                     };
                     Users u = (Users)item["User"];
+                    u.IsPasswordChangeRequired = true;
                     ud.Create(u);
                     st.UserID = u.ID;
                     u.Student.Add(st);

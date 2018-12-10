@@ -20,10 +20,9 @@ namespace SMaP_APP.DAL
         {
             return this.DictionaryTypeDal.FindAll().ToList();
         }
-        public List<Dictionary> DictionaryListByType(string typeName)
+        public List<Dictionary> DictionaryListByType(int typeID)
         {
-            int TypeID = DictionaryTypeDal.FindAll(x => x.TypeName == typeName).FirstOrDefault().ID;
-            return FindAll(x => x.DictionaryTypeID == TypeID);
+            return FindAll(x => x.DictionaryTypeID == typeID);
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP.View"
         mc:Ignorable="d"
-        Title="Szótár típus szerkesztése" Height="143.909" Width="300"
+        Title="Szótár típus szerkesztése" Height="160.909" Width="300"
         Background="LightBlue"
         xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
@@ -15,15 +15,17 @@
         >
     <Grid>
         <Label Content="Típus neve" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top"/>
-        <Button Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Margin="10,69,0,0" RenderTransformOrigin="0.494,-0.577"/>
-        <Button Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="123" Margin="159,69,0,0"/>
-        <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Margin="116,23,0,0">
+        <Button Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Width="100" Margin="10,0,0,10" VerticalAlignment="Bottom"/>
+        <Button Content="Mégsem" Command="{Binding CloseCommand}" VerticalAlignment="Bottom" Margin="0,0,10,10" Width="100" HorizontalAlignment="Right"/>
+        <TextBox HorizontalAlignment="Right" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Margin="0,23,10,0">
             <Binding Path="SelectedDictionaryType.TypeName" UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
                     <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
                 </Binding.ValidationRules>
             </Binding>
         </TextBox>
+        <CheckBox IsEnabled="False" IsChecked="{Binding SelectedDictionaryType.IsSessionGroup}" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="118,52,0,0" Height="22" VerticalContentAlignment="Center"/>
+        <Label Content="Csoport típus" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

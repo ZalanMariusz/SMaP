@@ -3,6 +3,7 @@ IF OBJECT_ID('ServiceRequest') IS NOT NULL
 GO
 CREATE TABLE ServiceRequest(
 	 ID INT IDENTITY(1,1) PRIMARY KEY
+	,RequestNumber INT DEFAULT 0 NOT NULL
 	,RequesterTeamID int NOT NULL
 	,ProviderTeamID int NOT NULL
 	,ServiceID int null

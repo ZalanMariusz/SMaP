@@ -285,6 +285,22 @@
 
                 </Grid>
             </TabItem>
+            <TabItem Header="Szolgáltatás tár">
+                <Grid>
+                    <ListBox Name="mySessionGroupLB" Margin="10,41,10,480" ItemsSource="{Binding MySessionGroups}">
+                      
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Label Padding="0" Content="{Binding SessionGroupName}">
+                                </Label>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Label Content="Csoportjaim" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Button Command="{Binding ShowServiceStore}" CommandParameter="{Binding ElementName=mySessionGroupLB}" Content="Kijelölt csoport szolgáltatásai >>" HorizontalAlignment="Left" Margin="325,161,0,0" VerticalAlignment="Top" Width="193"/>
+                </Grid>
+            </TabItem>
+
 
 
 

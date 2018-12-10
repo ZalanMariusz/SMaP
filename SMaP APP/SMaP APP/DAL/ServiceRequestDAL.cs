@@ -9,23 +9,28 @@ namespace SMaP_APP.DAL
 {
     class ServiceRequestDAL : GenericDAL<ServiceRequest>
     {
-        public List<ServiceRequest> ReloadRequestedRequests(Student ContextStudent)
+        public List<ServiceRequest> ReloadRequestedRequests(Student ContextStudent, int? rowNumber, int? providerTeamID, int? requestState, int? requestType, int? creatorId, int? assigneeID)
         {
             RefreshContext();
-            return FindAll(x => x.RequesterTeamID == ContextStudent.TeamID).OrderBy(x => x.RequestState).ToList();
+            return applicationDbContext.uspGetRequestedRequests(ContextStudent.TeamID, rowNumber, providerTeamID, requestState, requestType, creatorId, assigneeID).ToList();
         }
 
-        public List<ServiceRequest> ReloadProvidedRequestsList(Student ContextStudent)
+        public List<ServiceRequest> ReloadProvidedRequestsList(Student ContextStudent,int? rowNumber,int? requesterTeamID,int? requestState, int? requestType,int? creatorId,int? assigneeID)
         {
             RefreshContext();
-            int ApprovedID = StateListByName().FirstOrDefault(y => y.ItemName == "Jóváhagyva").ID;
-            int DeclineID= StateListByName().FirstOrDefault(y => y.ItemName == "Visszautasítva").ID;
-            return FindAll(x => x.ProviderTeamID == ContextStudent.TeamID && x.RequestState != ApprovedID && x.RequestState!=DeclineID).OrderBy(x=>x.RequestState).ToList();
+            return applicationDbContext.uspGetProvidedRequests(ContextStudent.TeamID, rowNumber, requesterTeamID, requestState, requestType, creatorId, assigneeID).ToList();
         }
+
+        public List<ServiceRequest> ReloadAllServiceRequests(int SessionGroupID, int? rowNumber, int? requesterTeamID, int? providerTeamID, int? requestState, int? requestType, int? creatorId, int? assigneeID)
+        {
+            RefreshContext();
+            return applicationDbContext.uspGetAllServiceRequests(SessionGroupID, rowNumber, requesterTeamID, providerTeamID ,requestState, requestType, creatorId, assigneeID).ToList();
+        }
+
         public List<Dictionary> StateListByName()
         {
             DictionaryDAL DD = new DictionaryDAL();
-            return DD.DictionaryListByType("Igény állapota");
+            return DD.DictionaryListByType(5);
         }
     }
 }

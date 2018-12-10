@@ -18,7 +18,7 @@ namespace SMaP_APP.ViewModel
         public RelayCommand SaveCommand { get; set; }
         public ObservableCollection<DictionaryType> DictionaryTypeList { get; set; }
         public bool IsProtected { get; set; }
-
+        public bool EditAble { get; set; }
         public DictionaryViewModel(DictionaryEditWindow dictionaryEditWindow,Dictionary SelectedDictionary)
         {
             this.SelectedDictionary = SelectedDictionary;
@@ -27,6 +27,7 @@ namespace SMaP_APP.ViewModel
             this._contextDal = new DictionaryDAL();
             this.DictionaryTypeList = new ObservableCollection<DictionaryType>(((DictionaryDAL)_contextDal).DictionaryTypeList());
             IsProtected = SelectedDictionary.IsProtected;
+            EditAble = SelectedDictionary.ID == 0;
         }
         public void SaveDictionary()
         {

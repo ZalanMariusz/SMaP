@@ -27,8 +27,8 @@ namespace SMaP_APP.Model
         public bool Deleted { get; set; }
     
         public virtual Dictionary Dictionary { get; set; }
+        public virtual ServiceTable ServiceTable { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceStoreParams> ServiceStoreParams { get; set; }
-        public virtual ServiceTable ServiceTable { get; set; }
     }
 }

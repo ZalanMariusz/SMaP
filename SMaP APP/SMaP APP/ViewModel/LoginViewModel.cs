@@ -12,29 +12,41 @@ using System.Windows.Input;
 
 namespace SMaP_APP.ViewModel
 {
-    class LoginWindowViewModel:BaseViewModel<Users>
+    class LoginWindowViewModel : BaseViewModel<Users>
     {
         //private UsersDAL UsersDAL { get; set; }
         private Users User { get; set; }
         private LoginWindow LoginWindow { get; set; }
         public RelayCommand LoginCommand { get; set; }
+        public RelayCommand ChangePassword { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+
 
         public LoginWindowViewModel(LoginWindow loginWindow)
         {
             this._contextDal = new UsersDAL();
             this.LoginCommand = new RelayCommand(LoginUser, CanLogin);
             this.SourceWindow = loginWindow;
+            this.ChangePassword = new RelayCommand(PasswordChange);
+        }
+
+        private void PasswordChange()
+        {
+            SwitchWindows(new PasswordChangeWindow());
         }
 
         public void LoginUser()
         {
             string passwordHash = UsersDAL.ComputeSha256Hash(Password);
-            User = _contextDal.FindAll(x => x.UserName==UserName && x.UserPassword == passwordHash).FirstOrDefault();
+            User = _contextDal.FindAll(x => x.UserName == UserName && x.UserPassword == passwordHash).FirstOrDefault();
             if (User == null)
             {
                 MessageBox.Show("Ismeretlen felhasználónév vagy jelszó!", "Sikertelen belépés", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else if (User.IsPasswordChangeRequired)
+            {
+                SwitchWindows(new PasswordChangeWindow());
             }
             else
             {
@@ -48,7 +60,7 @@ namespace SMaP_APP.ViewModel
                     }
                     else
                     {
-                        SwitchWindows(new ServiceStoreWindow(contextStudent));
+                        SwitchWindows(new ServiceStoreWindow(contextStudent, null));
                     }
                 }
                 else

@@ -48,7 +48,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Button Content="Mentés" Margin="10,0,0,10" IsDefault="True" Command="{Binding SaveCommand}" VerticalAlignment="Bottom" CommandParameter="{Binding ElementName=ServiceStoreGrid}" HorizontalAlignment="Left"  Height="20" Width="200"/>
+        <Button Content="Mentés" Margin="10,0,0,10" IsDefault="True" Command="{Binding SaveCommand}" VerticalAlignment="Bottom" CommandParameter="{Binding ElementName=ServiceStoreGrid}" HorizontalAlignment="Left"  Height="20" Width="200" Visibility="{Binding HideSaveButton}"/>
         <Button Content="Mégsem" IsCancel="True" Margin="0,0,10,10" Command="{Binding CloseCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="20" Width="200" Grid.Column="1"/>
         <Label Content="Igény típusa" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label Content="Igény állapota" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>

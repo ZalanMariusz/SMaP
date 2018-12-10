@@ -23,10 +23,10 @@ namespace SMaP_APP.View
     public partial class ServiceRequestWindow : Window
     {
 
-        public ServiceRequestWindow(ServiceRequest selectedServiceRequest,Student contextStudent, string semiReadOnly)
+        public ServiceRequestWindow(int SessionGroupID,ServiceRequest selectedServiceRequest,Student contextStudent, string semiReadOnly)
         {
             InitializeComponent();
-            this.DataContext = new ServiceRequestViewModel(selectedServiceRequest, this, contextStudent, semiReadOnly);
+            this.DataContext = new ServiceRequestViewModel(SessionGroupID,selectedServiceRequest, this, contextStudent, semiReadOnly);
         }
     }
 }

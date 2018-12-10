@@ -15,18 +15,22 @@ namespace SMaP_APP.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             ServiceStore serviceStore = (ServiceStore)values[0];
-            Student contextStudend = (Student)values[1];
-            if (parameter!=null && parameter.ToString()=="V" && serviceStore.ProviderTeamID != contextStudend.TeamID)
+            Student contextStudent = (Student)values[1];
+            if (contextStudent==null)
             {
                 return Visibility.Hidden;
             }
-            else if (parameter != null && parameter.ToString() == "V" && serviceStore.ProviderTeamID == contextStudend.TeamID)
+            if (parameter!=null && parameter.ToString()=="V" && (contextStudent==null || serviceStore.ProviderTeamID != contextStudent.TeamID))
+            {
+                return Visibility.Hidden;
+            }
+            else if (parameter != null && parameter.ToString() == "V" && serviceStore.ProviderTeamID == contextStudent.TeamID)
             {
                 return Visibility.Visible;
             }
             else
             {
-                return serviceStore.ProviderTeamID == contextStudend.TeamID;
+                return serviceStore.ProviderTeamID == contextStudent.TeamID;
             }
 
         }

@@ -20,7 +20,7 @@ namespace SMaP_APP.ViewModel
                 Credentials = new NetworkCredential(MailResources.MailUserName, MailResources.MailPassword)
             };
             userMailAddress = MailResources.IsRelease == "false" ? MailResources.MailUserName : userMailAddress;
-            MailMessage mail = new MailMessage(MailResources.MailUserName, userMailAddress, "regisztráció", "regisztráció");
+            MailMessage mail = new MailMessage(MailResources.MailUserName, userMailAddress, "SMaP regisztráció", "Ön regisztrálva lett az SMaP rendszerbe. Az alapértelmezett belépési azonosítója és jelszava az email címe.A jelszavát első belépéskor meg kell változtatnia!");
             client.SendAsync(mail, null);
         }
         

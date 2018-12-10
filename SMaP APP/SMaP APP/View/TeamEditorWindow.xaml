@@ -9,7 +9,7 @@
         Background="LightBlue"
         ResizeMode="NoResize"
         Icon="/SMaP APP;component/Images/SMaP_16x16.png"
-        Title="Csapat szerkesztése" Height="214.925" Width="300" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="Csapat szerkesztése" Height="240.163" Width="334.193" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Window.Resources>
         <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
             <Style.Triggers>
@@ -31,19 +31,19 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Button IsDefault="True" Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="10,137,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button IsCancel="True"  Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Left" Margin="207,137,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button IsDefault="True" Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="100"/>
+        <Button IsCancel="True"  Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100"/>
         <Label Content="Csapat neve" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Width="105"/>
-        <Label Content="Féléves csoport" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Width="105"/>
-        <Label Content="Csapatvezető" HorizontalAlignment="Left" Margin="10,87,0,0" VerticalAlignment="Top" Width="105"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="120,28,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="162" Style="{StaticResource textBoxError}">
+        <Label Content="Féléves csoport" HorizontalAlignment="Left" Margin="12,87,0,0" VerticalAlignment="Top" Width="105"/>
+        <Label Content="Csapatvezető" HorizontalAlignment="Left" Margin="12,118,0,0" VerticalAlignment="Top" Width="105"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,28,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="162" Style="{StaticResource textBoxError}">
             <Binding Path="SelectedTeam.TeamName" UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
                     <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
                 </Binding.ValidationRules>
             </Binding>
         </TextBox>
-        <ComboBox HorizontalAlignment="Left" Margin="120,60,0,0" VerticalAlignment="Top" Width="162" Style="{StaticResource comboBoxError}"
+        <ComboBox HorizontalAlignment="Right" Margin="0,91,10,0" VerticalAlignment="Top" Width="162" Style="{StaticResource comboBoxError}"
             ItemsSource="{Binding SessionGroupList}"
             DisplayMemberPath="SessionGroupName"
             SelectedValuePath="ID"
@@ -56,11 +56,13 @@
                 </Binding>
             </ComboBox.SelectedValue>
         </ComboBox>
-        <ComboBox HorizontalAlignment="Left" Margin="120,91,0,0" VerticalAlignment="Top" Width="162"
+        <ComboBox HorizontalAlignment="Right" Margin="0,122,10,0" VerticalAlignment="Top" Width="162"
             ItemsSource="{Binding StudentList}"
             DisplayMemberPath="Users.FullName"
             SelectedValuePath="ID"
             SelectedValue="{Binding SelectedTeam.TeamCaptain}"
             ToolTipService.InitialShowDelay="0"/>
+        <Label Content="Csapat rövid neve" HorizontalAlignment="Left" Margin="12,56,0,0" VerticalAlignment="Top" Width="105"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,59,10,0" TextWrapping="Wrap" Text="{Binding SelectedTeam.ShortTeamName}" VerticalAlignment="Top" Width="162"/>
     </Grid>
 </Window>

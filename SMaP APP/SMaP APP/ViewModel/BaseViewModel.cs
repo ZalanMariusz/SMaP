@@ -53,6 +53,7 @@ namespace SMaP_APP.ViewModel
 
         public virtual bool IsValid(DependencyObject obj)
         {
+    
             // The dependency object is valid if it has no errors and all
             // of its children (that are dependency objects) are error-free.
             return !Validation.GetHasError(obj) &&

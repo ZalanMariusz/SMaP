@@ -16,8 +16,12 @@ namespace SMaP_APP.Converters
         {
             ServiceStoreParams param = (ServiceStoreParams)value;
             DictionaryDAL DictionaryDal = new DictionaryDAL();
+            if (param.IsCustom)
+            {
+                return DictionaryDal.FindById((int)param.CustomParamTypeID).ItemName;
+            }
             ServiceTableFieldDAL serviceTableFieldDal = new ServiceTableFieldDAL();
-            ServiceTableField field = serviceTableFieldDal.FindById(param.ServiceTableFieldID);
+            ServiceTableField field = serviceTableFieldDal.FindById((int)param.ServiceTableFieldID);
             return DictionaryDal.FindById(field.FieldTypeID).ItemName;
         }
 

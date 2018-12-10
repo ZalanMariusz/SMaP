@@ -19,6 +19,7 @@ namespace SMaP_APP.ViewModel
         public DictionaryTypeViewModel(DictionaryTypeEditWindow dictionaryEditWindow, DictionaryType SelectedDictionaryType)
         {
             this.SelectedDictionaryType = SelectedDictionaryType;
+            SelectedDictionaryType.IsSessionGroup = true;
             this.SourceWindow = dictionaryEditWindow;
             this.SaveCommand = new RelayCommand(SaveDictionaryType, CanExecute);
             this._contextDal = new DictionaryTypeDAL();

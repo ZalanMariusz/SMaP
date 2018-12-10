@@ -17,7 +17,7 @@ namespace SMaP_APP.Converters
 
             ServiceRequest val = (ServiceRequest)values[0];
             DictionaryDAL dd = new DictionaryDAL();
-            int ApprovedID = dd.DictionaryListByType("Igény állapota").Where(x => x.ItemName == "Jóváhagyva").FirstOrDefault().ID;
+            int ApprovedID = dd.DictionaryListByType(5).Where(x => x.ID == 24).FirstOrDefault().ID;
             if ((parameter.ToString() == "NewNotEditable" && val.ID == 0) || ApprovedID == val.RequestState || (bool)values[2])
             {
                 return false;

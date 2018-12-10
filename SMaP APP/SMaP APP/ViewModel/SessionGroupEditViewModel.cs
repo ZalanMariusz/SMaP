@@ -23,8 +23,15 @@ namespace SMaP_APP.ViewModel
         public RelayCommand SaveCommand { get; set; }
         public ObservableCollection<Teacher> TeacherList { get; set; }
         public ObservableCollection<Semester> SemesterList { get; set; }
+        public ObservableCollection<DictionaryType> SessionGroupTypes { get; set; }
+        public int SelectedSessionGroupTypeID { get; set; }
+        public Visibility IsNew
+        {
+            get { return SelectedSessionGroup.ID == 0 ? Visibility.Visible : Visibility.Hidden; }
+            set { }
+        }
         public bool GenerateTeams { get; set; }
-
+        private DictionaryTypeDAL DictionaryDal { get; set; }
         public SessionGroupEditViewModel(SessionGroupEditWindow sessionGroupEditWindow, SessionGroup selectedSessionGroup)
         {
             this.SourceWindow = sessionGroupEditWindow;
@@ -33,6 +40,8 @@ namespace SMaP_APP.ViewModel
             this.SaveCommand = new RelayCommand(SaveSessionGroup, CanExecute);
             this.TeacherList = new ObservableCollection<Teacher>(((SessionGroupDAL)_contextDal).TeacherList);
             this.SemesterList = new ObservableCollection<Semester>(((SessionGroupDAL)_contextDal).SemesterList);
+            this.DictionaryDal = new DictionaryTypeDAL();
+            this.SessionGroupTypes = new ObservableCollection<DictionaryType>(DictionaryDal.FindAll(x => x.IsSessionGroup != null && x.IsSessionGroup == true));
             if (SelectedSessionGroup.Semester == null)
             {
                 if (SemesterList.Where(x => x.IsActive).SingleOrDefault() != null)
@@ -40,6 +49,10 @@ namespace SMaP_APP.ViewModel
                     this.SelectedSessionGroup.SemesterID = SemesterList.Where(x => x.IsActive).FirstOrDefault().ID;
                     GenerateTeams = true;
                 }
+            }
+            if (SelectedSessionGroup.ID!=0)
+            {
+                SelectedSessionGroupTypeID = SessionGroupTypes.First().ID;
             }
         }
 
@@ -61,7 +74,7 @@ namespace SMaP_APP.ViewModel
                 }
                 if (GenerateTeams)
                 {
-                    ((SessionGroupDAL)_contextDal).AddTeams(SelectedSessionGroup.ID);
+                    ((SessionGroupDAL)_contextDal).AddTeams(SelectedSessionGroup.ID, SelectedSessionGroupTypeID);
                 }
                 this.SourceWindow.Close();
             }

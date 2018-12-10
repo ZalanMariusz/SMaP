@@ -31,7 +31,6 @@ namespace SMaP_APP.Model
         public virtual DbSet<DictionaryType> DictionaryType { get; set; }
         public virtual DbSet<Semester> Semester { get; set; }
         public virtual DbSet<ServiceRequest> ServiceRequest { get; set; }
-        public virtual DbSet<ServiceStoreParams> ServiceStoreParams { get; set; }
         public virtual DbSet<ServiceTableField> ServiceTableField { get; set; }
         public virtual DbSet<SessionGroup> SessionGroup { get; set; }
         public virtual DbSet<Student> Student { get; set; }
@@ -43,6 +42,7 @@ namespace SMaP_APP.Model
         public virtual DbSet<ServiceTable> ServiceTable { get; set; }
         public virtual DbSet<ServiceStoreUserTeams> ServiceStoreUserTeams { get; set; }
         public virtual DbSet<RequestMessage> RequestMessage { get; set; }
+        public virtual DbSet<ServiceStoreParams> ServiceStoreParams { get; set; }
     
         public virtual int uspCopySemester(Nullable<int> sourceId, string newSemesterName, Nullable<int> newSemesterTypeID, string sessionGroups, string teams, string students)
         {
@@ -105,6 +105,212 @@ namespace SMaP_APP.Model
                 new ObjectParameter("TeacherID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Student>("uspGetActiveStudents", mergeOption, sessionGroupIDParameter, teamIDParameter, teacherIDParameter);
+        }
+    
+        public virtual ObjectResult<ServiceRequest> uspGetProvidedRequests(Nullable<int> teamID, Nullable<int> rowNumber, Nullable<int> requesterTeamId, Nullable<int> requestState, Nullable<int> requestType, Nullable<int> creatorId, Nullable<int> assigneeId)
+        {
+            var teamIDParameter = teamID.HasValue ?
+                new ObjectParameter("teamID", teamID) :
+                new ObjectParameter("teamID", typeof(int));
+    
+            var rowNumberParameter = rowNumber.HasValue ?
+                new ObjectParameter("rowNumber", rowNumber) :
+                new ObjectParameter("rowNumber", typeof(int));
+    
+            var requesterTeamIdParameter = requesterTeamId.HasValue ?
+                new ObjectParameter("requesterTeamId", requesterTeamId) :
+                new ObjectParameter("requesterTeamId", typeof(int));
+    
+            var requestStateParameter = requestState.HasValue ?
+                new ObjectParameter("requestState", requestState) :
+                new ObjectParameter("requestState", typeof(int));
+    
+            var requestTypeParameter = requestType.HasValue ?
+                new ObjectParameter("requestType", requestType) :
+                new ObjectParameter("requestType", typeof(int));
+    
+            var creatorIdParameter = creatorId.HasValue ?
+                new ObjectParameter("creatorId", creatorId) :
+                new ObjectParameter("creatorId", typeof(int));
+    
+            var assigneeIdParameter = assigneeId.HasValue ?
+                new ObjectParameter("assigneeId", assigneeId) :
+                new ObjectParameter("assigneeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ServiceRequest>("uspGetProvidedRequests", teamIDParameter, rowNumberParameter, requesterTeamIdParameter, requestStateParameter, requestTypeParameter, creatorIdParameter, assigneeIdParameter);
+        }
+    
+        public virtual ObjectResult<ServiceRequest> uspGetProvidedRequests(Nullable<int> teamID, Nullable<int> rowNumber, Nullable<int> requesterTeamId, Nullable<int> requestState, Nullable<int> requestType, Nullable<int> creatorId, Nullable<int> assigneeId, MergeOption mergeOption)
+        {
+            var teamIDParameter = teamID.HasValue ?
+                new ObjectParameter("teamID", teamID) :
+                new ObjectParameter("teamID", typeof(int));
+    
+            var rowNumberParameter = rowNumber.HasValue ?
+                new ObjectParameter("rowNumber", rowNumber) :
+                new ObjectParameter("rowNumber", typeof(int));
+    
+            var requesterTeamIdParameter = requesterTeamId.HasValue ?
+                new ObjectParameter("requesterTeamId", requesterTeamId) :
+                new ObjectParameter("requesterTeamId", typeof(int));
+    
+            var requestStateParameter = requestState.HasValue ?
+                new ObjectParameter("requestState", requestState) :
+                new ObjectParameter("requestState", typeof(int));
+    
+            var requestTypeParameter = requestType.HasValue ?
+                new ObjectParameter("requestType", requestType) :
+                new ObjectParameter("requestType", typeof(int));
+    
+            var creatorIdParameter = creatorId.HasValue ?
+                new ObjectParameter("creatorId", creatorId) :
+                new ObjectParameter("creatorId", typeof(int));
+    
+            var assigneeIdParameter = assigneeId.HasValue ?
+                new ObjectParameter("assigneeId", assigneeId) :
+                new ObjectParameter("assigneeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ServiceRequest>("uspGetProvidedRequests", mergeOption, teamIDParameter, rowNumberParameter, requesterTeamIdParameter, requestStateParameter, requestTypeParameter, creatorIdParameter, assigneeIdParameter);
+        }
+    
+        public virtual ObjectResult<ServiceRequest> uspGetRequestedRequests(Nullable<int> teamID, Nullable<int> rowNumber, Nullable<int> providerTeamID, Nullable<int> requestState, Nullable<int> requestType, Nullable<int> creatorId, Nullable<int> assigneeId)
+        {
+            var teamIDParameter = teamID.HasValue ?
+                new ObjectParameter("teamID", teamID) :
+                new ObjectParameter("teamID", typeof(int));
+    
+            var rowNumberParameter = rowNumber.HasValue ?
+                new ObjectParameter("rowNumber", rowNumber) :
+                new ObjectParameter("rowNumber", typeof(int));
+    
+            var providerTeamIDParameter = providerTeamID.HasValue ?
+                new ObjectParameter("ProviderTeamID", providerTeamID) :
+                new ObjectParameter("ProviderTeamID", typeof(int));
+    
+            var requestStateParameter = requestState.HasValue ?
+                new ObjectParameter("requestState", requestState) :
+                new ObjectParameter("requestState", typeof(int));
+    
+            var requestTypeParameter = requestType.HasValue ?
+                new ObjectParameter("requestType", requestType) :
+                new ObjectParameter("requestType", typeof(int));
+    
+            var creatorIdParameter = creatorId.HasValue ?
+                new ObjectParameter("creatorId", creatorId) :
+                new ObjectParameter("creatorId", typeof(int));
+    
+            var assigneeIdParameter = assigneeId.HasValue ?
+                new ObjectParameter("assigneeId", assigneeId) :
+                new ObjectParameter("assigneeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ServiceRequest>("uspGetRequestedRequests", teamIDParameter, rowNumberParameter, providerTeamIDParameter, requestStateParameter, requestTypeParameter, creatorIdParameter, assigneeIdParameter);
+        }
+    
+        public virtual ObjectResult<ServiceRequest> uspGetRequestedRequests(Nullable<int> teamID, Nullable<int> rowNumber, Nullable<int> providerTeamID, Nullable<int> requestState, Nullable<int> requestType, Nullable<int> creatorId, Nullable<int> assigneeId, MergeOption mergeOption)
+        {
+            var teamIDParameter = teamID.HasValue ?
+                new ObjectParameter("teamID", teamID) :
+                new ObjectParameter("teamID", typeof(int));
+    
+            var rowNumberParameter = rowNumber.HasValue ?
+                new ObjectParameter("rowNumber", rowNumber) :
+                new ObjectParameter("rowNumber", typeof(int));
+    
+            var providerTeamIDParameter = providerTeamID.HasValue ?
+                new ObjectParameter("ProviderTeamID", providerTeamID) :
+                new ObjectParameter("ProviderTeamID", typeof(int));
+    
+            var requestStateParameter = requestState.HasValue ?
+                new ObjectParameter("requestState", requestState) :
+                new ObjectParameter("requestState", typeof(int));
+    
+            var requestTypeParameter = requestType.HasValue ?
+                new ObjectParameter("requestType", requestType) :
+                new ObjectParameter("requestType", typeof(int));
+    
+            var creatorIdParameter = creatorId.HasValue ?
+                new ObjectParameter("creatorId", creatorId) :
+                new ObjectParameter("creatorId", typeof(int));
+    
+            var assigneeIdParameter = assigneeId.HasValue ?
+                new ObjectParameter("assigneeId", assigneeId) :
+                new ObjectParameter("assigneeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ServiceRequest>("uspGetRequestedRequests", mergeOption, teamIDParameter, rowNumberParameter, providerTeamIDParameter, requestStateParameter, requestTypeParameter, creatorIdParameter, assigneeIdParameter);
+        }
+    
+        public virtual ObjectResult<ServiceRequest> uspGetAllServiceRequests(Nullable<int> sessionGroupID, Nullable<int> rowNumber, Nullable<int> requesterTeamID, Nullable<int> providerTeamID, Nullable<int> requestState, Nullable<int> requestType, Nullable<int> creatorId, Nullable<int> assigneeId)
+        {
+            var sessionGroupIDParameter = sessionGroupID.HasValue ?
+                new ObjectParameter("SessionGroupID", sessionGroupID) :
+                new ObjectParameter("SessionGroupID", typeof(int));
+    
+            var rowNumberParameter = rowNumber.HasValue ?
+                new ObjectParameter("rowNumber", rowNumber) :
+                new ObjectParameter("rowNumber", typeof(int));
+    
+            var requesterTeamIDParameter = requesterTeamID.HasValue ?
+                new ObjectParameter("requesterTeamID", requesterTeamID) :
+                new ObjectParameter("requesterTeamID", typeof(int));
+    
+            var providerTeamIDParameter = providerTeamID.HasValue ?
+                new ObjectParameter("providerTeamID", providerTeamID) :
+                new ObjectParameter("providerTeamID", typeof(int));
+    
+            var requestStateParameter = requestState.HasValue ?
+                new ObjectParameter("requestState", requestState) :
+                new ObjectParameter("requestState", typeof(int));
+    
+            var requestTypeParameter = requestType.HasValue ?
+                new ObjectParameter("requestType", requestType) :
+                new ObjectParameter("requestType", typeof(int));
+    
+            var creatorIdParameter = creatorId.HasValue ?
+                new ObjectParameter("creatorId", creatorId) :
+                new ObjectParameter("creatorId", typeof(int));
+    
+            var assigneeIdParameter = assigneeId.HasValue ?
+                new ObjectParameter("assigneeId", assigneeId) :
+                new ObjectParameter("assigneeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ServiceRequest>("uspGetAllServiceRequests", sessionGroupIDParameter, rowNumberParameter, requesterTeamIDParameter, providerTeamIDParameter, requestStateParameter, requestTypeParameter, creatorIdParameter, assigneeIdParameter);
+        }
+    
+        public virtual ObjectResult<ServiceRequest> uspGetAllServiceRequests(Nullable<int> sessionGroupID, Nullable<int> rowNumber, Nullable<int> requesterTeamID, Nullable<int> providerTeamID, Nullable<int> requestState, Nullable<int> requestType, Nullable<int> creatorId, Nullable<int> assigneeId, MergeOption mergeOption)
+        {
+            var sessionGroupIDParameter = sessionGroupID.HasValue ?
+                new ObjectParameter("SessionGroupID", sessionGroupID) :
+                new ObjectParameter("SessionGroupID", typeof(int));
+    
+            var rowNumberParameter = rowNumber.HasValue ?
+                new ObjectParameter("rowNumber", rowNumber) :
+                new ObjectParameter("rowNumber", typeof(int));
+    
+            var requesterTeamIDParameter = requesterTeamID.HasValue ?
+                new ObjectParameter("requesterTeamID", requesterTeamID) :
+                new ObjectParameter("requesterTeamID", typeof(int));
+    
+            var providerTeamIDParameter = providerTeamID.HasValue ?
+                new ObjectParameter("providerTeamID", providerTeamID) :
+                new ObjectParameter("providerTeamID", typeof(int));
+    
+            var requestStateParameter = requestState.HasValue ?
+                new ObjectParameter("requestState", requestState) :
+                new ObjectParameter("requestState", typeof(int));
+    
+            var requestTypeParameter = requestType.HasValue ?
+                new ObjectParameter("requestType", requestType) :
+                new ObjectParameter("requestType", typeof(int));
+    
+            var creatorIdParameter = creatorId.HasValue ?
+                new ObjectParameter("creatorId", creatorId) :
+                new ObjectParameter("creatorId", typeof(int));
+    
+            var assigneeIdParameter = assigneeId.HasValue ?
+                new ObjectParameter("assigneeId", assigneeId) :
+                new ObjectParameter("assigneeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ServiceRequest>("uspGetAllServiceRequests", mergeOption, sessionGroupIDParameter, rowNumberParameter, requesterTeamIDParameter, providerTeamIDParameter, requestStateParameter, requestTypeParameter, creatorIdParameter, assigneeIdParameter);
         }
     }
 }

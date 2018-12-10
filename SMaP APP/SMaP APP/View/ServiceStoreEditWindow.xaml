@@ -120,16 +120,18 @@
             </Button.Visibility>
             <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
         </Button>
-        <DataGrid  HorizontalAlignment="Left" Height="96" Margin="10,301,0,0" VerticalAlignment="Top" Width="414" Name="InputFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding InputFieldList}">
+        <DataGrid  HorizontalAlignment="Left" Height="96" Margin="10,302,0,0" VerticalAlignment="Top" Width="414" Name="InputFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding InputFieldList}">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <Setter Property="BorderThickness" Value="0"/>
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Paramáter neve" Binding="{Binding ParamName}" Width="2*"/>
                 <DataGridTextColumn Header="Tábla" Binding="{Binding Converter={StaticResource ServiceParamTableConverter}}" Width="2*"/>
                 <DataGridTextColumn Header="Mező" Binding="{Binding Converter={StaticResource ServiceParamFieldConverter}}" Width="2*"/>
                 <DataGridTextColumn Header="Típus" Binding="{Binding Converter={StaticResource ServiceParamTypeConverter}}" Width="1*"/>
+                <DataGridCheckBoxColumn Header="Egyedi" Binding="{Binding IsCustom}" Width="1*"/>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid HorizontalAlignment="Left" Height="100" Margin="10,427,0,0" VerticalAlignment="Top" Width="414"
@@ -140,9 +142,11 @@
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Paramáter neve" Binding="{Binding ParamName}" Width="2*"/>
                 <DataGridTextColumn Header="Tábla" Binding="{Binding Converter={StaticResource ServiceParamTableConverter}}" Width="2*"/>
                 <DataGridTextColumn Header="Mező" Binding="{Binding Converter={StaticResource ServiceParamFieldConverter}}" Width="2*"/>
                 <DataGridTextColumn Header="Típus" Binding="{Binding Converter={StaticResource ServiceParamTypeConverter}}" Width="1*"/>
+                <DataGridCheckBoxColumn Header="Egyedi" Binding="{Binding IsCustom}" Width="1*"/>
             </DataGrid.Columns>
         </DataGrid>
         <Label Padding="0" Content="Kimenő paraméterek" HorizontalAlignment="Left" Margin="14,406,0,0" VerticalAlignment="Top"/>

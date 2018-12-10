@@ -72,19 +72,42 @@ namespace SMaP_APP.ViewModel
 
         public bool CanEditRequestDescription
         {
-            get { return SelectedServiceRequest.ID == 0 || (ContextStudent.TeamID==SelectedServiceRequest.RequesterTeamID && SemiReadOnly) && !IsAcceptedOrDeclined(); }
+            get
+            {
+                if (ContextStudent == null)
+                    return false;
+                else
+                    return SelectedServiceRequest.ID == 0 || (ContextStudent.TeamID == SelectedServiceRequest.RequesterTeamID && SemiReadOnly) && !IsAcceptedOrDeclined();
+            }
             set { }
         }
 
         public bool CanPickAssignee
         {
-            get { return SelectedServiceRequest.ID != 0 && ContextStudent.TeamID == SelectedServiceRequest.ProviderTeamID && !SemiReadOnly; }
+            get
+            {
+                if (ContextStudent == null)
+                    return false;
+                else
+                    return SelectedServiceRequest.ID != 0 && ContextStudent.TeamID == SelectedServiceRequest.ProviderTeamID && !SemiReadOnly;
+            }
             set { }
         }
         public bool CanChangeState
         {
-            get { return SelectedServiceRequest.ID != 0 && ContextStudent.TeamID == SelectedServiceRequest.ProviderTeamID && !SemiReadOnly && SelectedServiceRequest.AssigneeID==ContextStudent.ID; }
+            get
+            {
+                if (ContextStudent == null)
+                    return false;
+                else
+                    return SelectedServiceRequest.ID != 0 && ContextStudent.TeamID == SelectedServiceRequest.ProviderTeamID && !SemiReadOnly && SelectedServiceRequest.AssigneeID == ContextStudent.ID;
+            }
             set { }
+        }
+
+        public Visibility HideSaveButton
+        {
+            get { return ContextStudent == null ? Visibility.Hidden : Visibility.Visible; }
         }
 
         private bool IsAcceptedOrDeclined()
@@ -102,7 +125,7 @@ namespace SMaP_APP.ViewModel
         public bool SemiReadOnly { get; set; }
 
         public RelayCommand CreateRequestMessage { get; set; }
-        public ServiceRequestViewModel(ServiceRequest selectedServiceRequest, ServiceRequestWindow sourceWindow, Student contextStudent, string semiReadOnly)
+        public ServiceRequestViewModel(int sessionGroupID, ServiceRequest selectedServiceRequest, ServiceRequestWindow sourceWindow, Student contextStudent, string semiReadOnly)
         {
             _contextDal = new ServiceRequestDAL();
             this.DictionaryDal = new DictionaryDAL();
@@ -119,32 +142,42 @@ namespace SMaP_APP.ViewModel
             this.SelectedServiceStore = ServiceStoreDal.FindAll(x => x.ID == SelectedServiceRequest.ServiceID).FirstOrDefault();
             this.SelectedServiceRequestTypeID = SelectedServiceRequest.RequestType;
 
-            
+
             this.AssigneeList = ReloadAssigneeList();
 
             RequestMessageList = ReloadRequestMessageList();
-            this.CreateRequestMessage = new RelayCommand(RequestMessageCreate,CanCreateRequestMessage);
+            this.CreateRequestMessage = new RelayCommand(RequestMessageCreate, CanCreateRequestMessage);
             this.ContextStudent = contextStudent;
             this.SaveCommand = new RelayCommand(SaveRequest, CanSave);
-            if (DictionaryDal.DictionaryListByType("Igény állapota").Where(x => x.ItemName == "Jóváhagyva").FirstOrDefault().ID == SelectedServiceRequest.RequestState)
+            if (DictionaryDal.DictionaryListByType(5).Where(x => x.ID == 24).FirstOrDefault().ID == SelectedServiceRequest.RequestState)
             {
-                this.RequestStateList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType("Igény állapota").Where(x => x.ItemName == "Jóváhagyva"));
+                this.RequestStateList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType(5).Where(x => x.ID == 24));
             }
             else
             {
-                this.RequestStateList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType("Igény állapota").Where(x => x.ItemName != "Jóváhagyva"));
+                this.RequestStateList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType(5).Where(x => x.ID != 24));
             }
-            this.RequestTypeList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType("Igény típus"));
-            int SessionGroupID = TeamDal.FindById(ContextStudent.TeamID).SessionGroupID;
+            this.RequestTypeList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType(4));
+            int SessionGroupID;
+            if (ContextStudent == null)
+            {
+                SessionGroupID = sessionGroupID;
+            }
+            else
+            {
+                SessionGroupID = TeamDal.FindById(ContextStudent.TeamID).SessionGroupID;
+            }
             this.ProviderTeamList = new ObservableCollection<Team>(TeamDal.FindAll(x => x.SessionGroupID == SessionGroupID));
             this.AvailableServiceStoreList = ReloadServiceStoreList();
         }
 
         private void RequestMessageCreate()
         {
-            RequestMessage message = new RequestMessage();
-            message.SenderID = ContextStudent.ID;
-            message.RequestID = SelectedServiceRequest.ID;
+            RequestMessage message = new RequestMessage
+            {
+                SenderID = ContextStudent.ID,
+                RequestID = SelectedServiceRequest.ID
+            };
             RequestMessageWindow window = new RequestMessageWindow(message)
             {
                 Owner = this.SourceWindow
@@ -155,7 +188,11 @@ namespace SMaP_APP.ViewModel
 
         private bool CanCreateRequestMessage()
         {
-            return SelectedServiceRequest.ProviderTeamID == ContextStudent.TeamID || SelectedServiceRequest.RequesterTeamID == ContextStudent.TeamID;
+            if (ContextStudent == null)
+            {
+                return false;
+            }
+            return SelectedServiceRequest.ID != 0 && (SelectedServiceRequest.ProviderTeamID == ContextStudent.TeamID || SelectedServiceRequest.RequesterTeamID == ContextStudent.TeamID);
         }
 
         private bool CanSave(object param)
@@ -167,13 +204,13 @@ namespace SMaP_APP.ViewModel
         {
             ServiceStore selectedServiceStore = (ServiceStore)((DataGrid)param).SelectedItem;
             SelectedServiceRequest.RequestType = SelectedServiceRequestTypeID;
-            if (SelectedServiceRequest.RequestType == DictionaryDal.DictionaryListByType("Igény típus").Where(x => x.ItemName == "Módosítás").FirstOrDefault().ID && selectedServiceStore == null)
+            if (SelectedServiceRequest.RequestType == DictionaryDal.DictionaryListByType(4).Where(x => x.ID == 19).FirstOrDefault().ID && selectedServiceStore == null)
             {
                 MessageBox.Show("Módosítási igényhez szolgáltatás kijelölése szükséges!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
-                if (SelectedServiceRequest.RequestType == DictionaryDal.DictionaryListByType("Igény típus").Where(x => x.ItemName == "Módosítás").FirstOrDefault().ID && selectedServiceStore != null)
+                if (SelectedServiceRequest.RequestType == DictionaryDal.DictionaryListByType(4).Where(x => x.ID == 19).FirstOrDefault().ID && selectedServiceStore != null)
                 {
                     SelectedServiceRequest.ServiceID = selectedServiceStore.ID;
                 }
@@ -183,9 +220,9 @@ namespace SMaP_APP.ViewModel
                 }
                 SelectedServiceRequest.ProviderTeamID = SelectedProviderTeamID;
 
-                if (SelectedServiceRequest.AssigneeID!=null && SelectedServiceRequest.RequestState== DictionaryDal.DictionaryListByType("Igény állapota").Where(x => x.ItemName == "Új").FirstOrDefault().ID)
+                if (SelectedServiceRequest.AssigneeID != null && SelectedServiceRequest.RequestState == DictionaryDal.DictionaryListByType(5).Where(x => x.ID == 21).FirstOrDefault().ID)
                 {
-                    SelectedServiceRequest.RequestState = DictionaryDal.DictionaryListByType("Igény állapota").Where(x => x.ItemName == "Módosítás alatt").FirstOrDefault().ID;
+                    SelectedServiceRequest.RequestState = DictionaryDal.DictionaryListByType(5).Where(x => x.ID == 22).FirstOrDefault().ID;
                 }
                 if (SelectedServiceRequest.ID == 0)
                 {
@@ -218,6 +255,6 @@ namespace SMaP_APP.ViewModel
         {
             return new ObservableCollection<RequestMessage>(RequestMessageDal.MessagesByRequest(SelectedServiceRequest.ID));
         }
-        
+
     }
 }

@@ -29,6 +29,7 @@ namespace SMaP_APP.Model
         public string TeamName { get; set; }
         public Nullable<int> TeamCaptain { get; set; }
         public bool Deleted { get; set; }
+        public string ShortTeamName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceRequest> ServiceRequest { get; set; }

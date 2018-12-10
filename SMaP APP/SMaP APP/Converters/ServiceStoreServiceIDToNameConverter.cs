@@ -19,7 +19,8 @@ namespace SMaP_APP.Converters
             string retval = "";
             foreach (var item in items)
             {
-                retval += item.ServiceStore.Team.TeamName + "." + item.ServiceStore.ServiceName + ", ";
+                string TeamName = String.IsNullOrEmpty(item.ServiceStore.Team.ShortTeamName) ? item.ServiceStore.Team.TeamName : item.ServiceStore.Team.ShortTeamName;
+                retval += TeamName + "(" + item.ServiceStore.ServiceNumber + "), ";
             }
             if (!string.IsNullOrEmpty(retval))
             {

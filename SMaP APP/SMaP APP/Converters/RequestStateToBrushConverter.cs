@@ -18,21 +18,21 @@ namespace SMaP_APP.Converters
             DictionaryDAL dd = new DictionaryDAL();
             string state=dd.FindById((int)value).ItemName;
             Color secondColor=new Color();
-            switch (state)
+            switch ((int)value)
             {
-                case "Új":
+                case 21:
                     secondColor = Colors.AliceBlue;
                     break;
-                case "Módosítás alatt":
+                case 22:
                     secondColor = Colors.Aquamarine;
                     break;
-                case "Jóváhagyásra vár":
+                case 23:
                     secondColor = Colors.Goldenrod;
                     break;
-                case "Jóváhagyva":
+                case 24:
                     secondColor = Colors.LightGreen;
                     break;
-                case "Visszautasítva":
+                case 25:
                     secondColor = Colors.Red;
                     secondColor.A = 100;
                     break;

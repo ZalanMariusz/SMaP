@@ -12,7 +12,7 @@
         Background="LightBlue"
         ResizeMode="NoResize"
         Icon="/SMaP APP;component/Images/SMaP_16x16.png"
-        Title="Csoport szerkesztése" Height="221.608" Width="300">
+        Title="Csoport szerkesztése" Height="248.608" Width="323">
     <Window.Resources>
         <conv:SemesterIsActiveConverter x:Key="SemesterIsActiveConverter" />
         <conv:SessionGroupCBVisibilityConverter x:Key="SessionGroupCBVisibilityConverter" />
@@ -40,14 +40,14 @@
         <Label Content="Csoport neve" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.241,0.297" Width="87"/>
         <Label Content="Félév" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.241,0.297" Width="87"/>
         <Label Content="Vezető tanár" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.241,0.297" Width="87"/>
-        <TextBox  HorizontalAlignment="Left" Height="23" Margin="132,20,0,0" TextWrapping="Wrap" Style="{StaticResource textBoxError}" VerticalAlignment="Top" Width="150">
+        <TextBox  HorizontalAlignment="Right" Height="23" Margin="0,20,10,0" TextWrapping="Wrap" Style="{StaticResource textBoxError}" VerticalAlignment="Top" Width="150">
             <Binding Path="SelectedSessionGroup.SessionGroupName" UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
                     <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
                 </Binding.ValidationRules>
             </Binding>
         </TextBox>
-        <ComboBox Style="{StaticResource comboBoxError}" HorizontalAlignment="Left" Margin="132,52,0,0" VerticalAlignment="Top" Width="150" IsEnabled="False"
+        <ComboBox Style="{StaticResource comboBoxError}" HorizontalAlignment="Right" Margin="0,52,10,0" VerticalAlignment="Top" Width="150" IsEnabled="False"
             ItemsSource="{Binding SemesterList}"
             SelectedValuePath="ID"
             ToolTipService.InitialShowDelay="0">
@@ -64,7 +64,7 @@
                 </Binding>
             </ComboBox.SelectedValue>
         </ComboBox>
-        <ComboBox Style="{StaticResource comboBoxError}" HorizontalAlignment="Left" Margin="132,83,0,0" VerticalAlignment="Top" Width="150"
+        <ComboBox Style="{StaticResource comboBoxError}" HorizontalAlignment="Right" Margin="0,83,10,0" VerticalAlignment="Top" Width="150"
             ItemsSource="{Binding TeacherList}"
             DisplayMemberPath="Users.FullName"
             SelectedValuePath="ID"
@@ -77,8 +77,20 @@
                 </Binding>
             </ComboBox.SelectedValue>
         </ComboBox>
-        <Button IsDefault="True" Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="10,152,0,0" Width="102" Height="21" VerticalAlignment="Top"/>
-        <Button IsCancel="True"  Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Left" Margin="180,152,0,0" Width="102" Height="21" VerticalAlignment="Top"/>
-        <CheckBox IsChecked="{Binding GenerateTeams}" Visibility="{Binding Path=SelectedSessionGroup.ID, Converter={StaticResource SessionGroupCBVisibilityConverter}}" Content="Csapatok generálása" HorizontalAlignment="Left" Height="17" Margin="132,116,0,0" VerticalAlignment="Top" Width="150"/>
+        <Button IsDefault="True" Content="Mentés" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="10,152,0,10" Width="102" Height="21" VerticalAlignment="Bottom"/>
+        <Button IsCancel="True"  Content="Mégsem" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="0,152,10,10" Width="102" Height="21" VerticalAlignment="Bottom"/>
+        <CheckBox IsChecked="{Binding GenerateTeams}" Visibility="{Binding Path=SelectedSessionGroup.ID, Converter={StaticResource SessionGroupCBVisibilityConverter}}" Content="Csapatok generálása" HorizontalAlignment="Right" Height="17" Margin="0,147,10,0" VerticalAlignment="Top" Width="150"/>
+        <Label Visibility="{Binding IsNew}" Content="Csoport típusa" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top"/>
+        <ComboBox Visibility="{Binding IsNew}" ItemsSource="{Binding SessionGroupTypes}" Style="{StaticResource comboBoxError}" HorizontalAlignment="Right" Margin="132,114,10,0" VerticalAlignment="Top" Width="150"
+                  DisplayMemberPath="TypeName"
+                  SelectedValuePath="ID">
+            <ComboBox.SelectedValue>
+                <Binding Path="SelectedSessionGroupTypeID" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <valid:EmptyIntValueValidation ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.SelectedValue>
+        </ComboBox>
     </Grid>
 </Window>

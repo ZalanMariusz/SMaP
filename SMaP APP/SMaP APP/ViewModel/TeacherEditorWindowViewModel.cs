@@ -49,6 +49,7 @@ namespace SMaP_APP.ViewModel
                     this.SelectedTeacher.Users.UserPassword = UsersDAL.ComputeSha256Hash(SelectedTeacher.Users.Email);
 
                     Users u = SelectedTeacher.Users;
+                    u.IsPasswordChangeRequired = true;
                     this.UsersDal.Create(u);
                     SelectedTeacher.UserID = u.ID;
                     u.Teacher.Add(SelectedTeacher);

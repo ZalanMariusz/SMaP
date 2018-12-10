@@ -73,6 +73,7 @@
     <Compile Include="Converters\IsRequestProviderToEnabledConverter.cs" />
     <Compile Include="Converters\RequesterTeamsNameConverter.cs" />
     <Compile Include="Converters\RequestStateToBrushConverter.cs" />
+    <Compile Include="Converters\RequestTypeConverter.cs" />
     <Compile Include="Converters\SemesterIsActiveConverter.cs" />
     <Compile Include="Converters\ServiceParamFieldConverter.cs" />
     <Compile Include="Converters\ServiceParamTableConverter.cs" />
@@ -189,11 +190,16 @@
     <Compile Include="Model\uspGetActiveStudents_Result.cs">
       <DependentUpon>SMaP_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\uspGetRequestedRequests_Result.cs">
+      <DependentUpon>SMaP_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\DictionaryTypeViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModel.cs" />
+    <Compile Include="ViewModel\EveryServiceStoreViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MailSender.cs" />
+    <Compile Include="ViewModel\PasswordChangeViewModel.cs" />
     <Compile Include="ViewModel\RequestMessageViewModel.cs" />
     <Compile Include="ViewModel\SemesterCopyViewModel.cs" />
     <Compile Include="ViewModel\SemesterWindowViewModel.cs" />
@@ -224,6 +230,9 @@
     <Compile Include="View\DictionaryTypeEditWindow.xaml.cs">
       <DependentUpon>DictionaryTypeEditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PasswordChangeWindow.xaml.cs">
+      <DependentUpon>PasswordChangeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\RequestMessageWindow.xaml.cs">
       <DependentUpon>RequestMessageWindow.xaml</DependentUpon>
     </Compile>
@@ -241,6 +250,9 @@
     </Compile>
     <Compile Include="View\ServiceStoreServiceParamEditWindow.xaml.cs">
       <DependentUpon>ServiceStoreServiceParamEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EveryServiceStoreWindow.xaml.cs">
+      <DependentUpon>EveryServiceStoreWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ServiceStoreWindow.xaml.cs">
       <DependentUpon>ServiceStoreWindow.xaml</DependentUpon>
@@ -293,6 +305,10 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\PasswordChangeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\RequestMessageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -316,6 +332,10 @@
     <Page Include="View\ServiceStoreServiceParamEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EveryServiceStoreWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ServiceStoreWindow.xaml">
       <SubType>Designer</SubType>

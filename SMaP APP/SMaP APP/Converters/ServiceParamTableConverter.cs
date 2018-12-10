@@ -15,9 +15,13 @@ namespace SMaP_APP.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             ServiceStoreParams param = (ServiceStoreParams)value;
+            if (param.IsCustom)
+            {
+                return "-";
+            }
             ServiceTableFieldDAL ServiceTableFieldDal = new ServiceTableFieldDAL();
             ServiceTableDAL ServiceTableDal = new ServiceTableDAL();
-            ServiceTableField sf = ServiceTableFieldDal.FindById(param.ServiceTableFieldID);
+            ServiceTableField sf = ServiceTableFieldDal.FindById((int)param.ServiceTableFieldID);
             return ServiceTableDal.FindAll(x => x.ID == sf.TableID).FirstOrDefault().TableName;
         }
 

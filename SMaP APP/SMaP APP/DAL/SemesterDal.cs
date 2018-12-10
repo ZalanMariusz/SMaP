@@ -13,8 +13,7 @@ namespace SMaP_APP.DAL
         public List<Dictionary> SemesterTypes { get; private set; }
         public SemesterDAL()
         {
-            int TypeID = applicationDbContext.Set<DictionaryType>().Where(x => !x.Deleted && x.TypeName == "Félév típusok").SingleOrDefault().ID;
-            this.SemesterTypes = applicationDbContext.Set<Dictionary>().Where(x => !x.Deleted && x.DictionaryTypeID==TypeID).ToList();
+            this.SemesterTypes = applicationDbContext.Set<Dictionary>().Where(x => !x.Deleted && x.DictionaryTypeID==1).ToList();
         }
         public void CopySemester(int sourceId,string newSemesterName, int newSemesterTypedId,string SessionGroups,string Teams,string Students)
         {

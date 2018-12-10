@@ -1,6 +1,7 @@
 USE [SMaP]
 :r e:\M\Szakdolgozat\SMaP\SQL\DropConstraints.sql
 GO
+--Tables
 :r e:\M\Szakdolgozat\SMaP\SQL\DictionaryType.sql
 GO
 :r e:\M\Szakdolgozat\SMaP\SQL\Dictionary.sql
@@ -17,10 +18,6 @@ GO
 GO
 :r e:\M\Szakdolgozat\SMaP\SQL\Team.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceRequest.sql
-GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStore.sql
-GO
 :r e:\M\Szakdolgozat\SMaP\SQL\ServiceTable.sql
 GO
 :r e:\M\Szakdolgozat\SMaP\SQL\ServiceTableField.sql
@@ -31,13 +28,31 @@ GO
 GO
 :r e:\M\Szakdolgozat\SMaP\SQL\ServiceStoreServiceParams.sql
 GO
+:r e:\M\Szakdolgozat\SMaP\SQL\RequestMessage.sql
+GO
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceRequest.sql
+GO
+:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStore.sql
+GO
+--Other
 :r e:\M\Szakdolgozat\SMaP\SQL\TR_SemesterActivate.sql
+GO
+:r e:\M\Szakdolgozat\SMaP\SQL\TR_RequestRowNumber.sql
+GO
+:r e:\M\Szakdolgozat\SMaP\SQL\TR_ServiceRowNumber.sql
 GO
 :r e:\M\Szakdolgozat\SMaP\SQL\uspGetActiveStudents.sql
 GO
 :r e:\M\Szakdolgozat\SMaP\SQL\uspCopySemester.sql
 GO
+:r e:\M\Szakdolgozat\SMaP\SQL\uspGetAllServiceRequests.sql
+GO
+:r e:\M\Szakdolgozat\SMaP\SQL\uspGetProvidedRequests.sql
+GO
+:r e:\M\Szakdolgozat\SMaP\SQL\uspGetRequestedRequests.sql
+GO
 :r e:\M\Szakdolgozat\SMaP\SQL\AddConstraits.sql
 GO
 --:r e:\M\Szakdolgozat\SMaP\SQL\DefaultData.sql
 --GO
+

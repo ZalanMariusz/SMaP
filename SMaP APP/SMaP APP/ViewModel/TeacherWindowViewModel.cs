@@ -146,6 +146,12 @@ namespace SMaP_APP.ViewModel
             get { return ReloadStudentList(); }
             set { studentList = value; NotifyPropertyChanged(); }
         }
+        private ObservableCollection<SessionGroup> mySessionGroups;
+        public ObservableCollection<SessionGroup> MySessionGroups
+        {
+            get { return mySessionGroups; }
+            set { mySessionGroups = value; NotifyPropertyChanged(); }
+        }
         #endregion Properties and Fields
 
         private ObservableCollection<SessionGroup> ReloadActiveSessionGroupList()
@@ -194,6 +200,7 @@ namespace SMaP_APP.ViewModel
             return new ObservableCollection<DictionaryType>(((TeacherDAL)_contextDal).DictionaryTypeList());
         }
 
+        public RelayCommand ShowServiceStore { get; set; }
 
         public TeacherWindowViewModel(TeacherWindow teacherWindow, Teacher ContextTeacher)
         {
@@ -232,6 +239,8 @@ namespace SMaP_APP.ViewModel
             this.DeleteFilter = new RelayCommand(DeleteSelectedFilter);
             this.DownloadImportTemplate = new RelayCommand(DownloadTemplate);
             this.ImportStudents = new RelayCommand(ImportStudentsFromFile);
+
+            this.ShowServiceStore = new RelayCommand(SwitchToServiceStoreWindow,canSwitch);
             this._contextDal = new TeacherDAL();
 
             this.SemesterList = ReloadSemesterList();
@@ -243,9 +252,23 @@ namespace SMaP_APP.ViewModel
             this.DictionaryTypeList = ReloadDictionaryTypeList();
             this.TeamFilterList = ReloadTeamFilterList();
 
+            this.MySessionGroups = new ObservableCollection<SessionGroup>(ReloadActiveSessionGroupList().Where(x => x.TeacherID == ContextTeacher.ID));
+
             this.LogoutCommand = new RelayCommand(Logout);
             this.TeacherFilter = _contextDal.FindById(ContextTeacher.ID);
             this.DictionaryTypeFilter = DictionaryTypeList[0];
+        }
+
+        private bool canSwitch(object param)
+        {
+            return ((ListBox)param).SelectedItem != null;
+        }
+
+        private void SwitchToServiceStoreWindow(object param)
+        {
+            SessionGroup sg = (SessionGroup)((ListBox)param).SelectedItem;
+            EveryServiceStoreWindow ssw = new EveryServiceStoreWindow(sg.ID, ContextTeacher);
+            SwitchWindows(ssw);
         }
 
         private void DeleteSelectedFilter(object param)
@@ -287,6 +310,14 @@ namespace SMaP_APP.ViewModel
             };
             SwitchWindows(target, true);
             this.SemesterList = ReloadSemesterList();
+            this.SessionGroupList = ReloadActiveSessionGroupList();
+            if (newSemester.IsActive)
+            {
+                this.TeamList = ReloadActiveTeamList();
+                this.TeamFilterList = ReloadTeamFilterList();
+                this.StudentList = ReloadStudentList();
+                this.MySessionGroups = new ObservableCollection<SessionGroup>(ReloadActiveSessionGroupList().Where(x => x.TeacherID == ContextTeacher.ID));
+            }
         }
         private void EditSemester(object param)
         {
@@ -300,6 +331,7 @@ namespace SMaP_APP.ViewModel
             this.TeamList = ReloadActiveTeamList();
             this.TeamFilterList = ReloadTeamFilterList();
             this.StudentList = ReloadStudentList();
+            this.MySessionGroups = new ObservableCollection<SessionGroup>(ReloadActiveSessionGroupList().Where(x => x.TeacherID == ContextTeacher.ID));
         }
         private void DeleteSemester(object param)
         {
@@ -382,6 +414,7 @@ namespace SMaP_APP.ViewModel
             this.SessionGroupList = ReloadActiveSessionGroupList();
             this.TeamList = ReloadActiveTeamList();
             this.TeamFilterList = ReloadTeamFilterList();
+            this.MySessionGroups = new ObservableCollection<SessionGroup>(ReloadActiveSessionGroupList().Where(x => x.TeacherID == ContextTeacher.ID));
         }
         private void EditSessionGroup(object param)
         {
@@ -394,6 +427,7 @@ namespace SMaP_APP.ViewModel
             this.TeamList = ReloadActiveTeamList();
             this.StudentList = ReloadStudentList();
             this.TeamFilterList = ReloadTeamFilterList();
+            this.MySessionGroups = new ObservableCollection<SessionGroup>(ReloadActiveSessionGroupList().Where(x => x.TeacherID == ContextTeacher.ID));
         }
         private void DeleteSessionGroup(object param)
         {
@@ -581,18 +615,19 @@ namespace SMaP_APP.ViewModel
 
         private void DownloadTemplate()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = "import_minta";
-            saveFileDialog.Filter = "Excel fileok (*.xls)|*.xls";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                FileName = "import_minta",
+                Filter = "Excel fileok (*.xls)|*.xls"
+            };
             saveFileDialog.ShowDialog();
 
             if (!string.IsNullOrEmpty(saveFileDialog.FileName))
             {
-                //string fileName="ich_will.mp3";
-                //string path=Path.Combine(Environment.CurrentDirectory, @"Data\", fileName);
-                //File.Copy(fileName,);
-                StreamWriter sw = new StreamWriter(saveFileDialog.FileName);
-                sw.AutoFlush = true;
+                StreamWriter sw = new StreamWriter(saveFileDialog.FileName)
+                {
+                    AutoFlush = true
+                };
                 sw.Write(
                     @"<?xml version=""1.0""?>
                 <?mso-application progid=""Excel.Sheet""?>
@@ -663,8 +698,10 @@ xmlns:html=""http://www.w3.org/TR/REC-html40"">
         }
         private void ImportStudentsFromFile()
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Excel fileok (*.xls)|*.xls";
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Filter = "Excel fileok (*.xls)|*.xls"
+            };
             fileDialog.ShowDialog();
             if (!String.IsNullOrEmpty(fileDialog.FileName))
             {
@@ -685,11 +722,13 @@ xmlns:html=""http://www.w3.org/TR/REC-html40"">
                     for (int i = 1; i < nodes.Count; i++)
                     {
                         XmlNodeList dataNodes = nodes[i].SelectNodes("ss:Cell/ss:Data", nsmgr);
-                        Users u = new Users();
-                        u.LastName = dataNodes[0].InnerText;
-                        u.FirstName = dataNodes[1].InnerText;
-                        u.NEPTUN = dataNodes[2].InnerText;
-                        u.Email = dataNodes[3].InnerText;
+                        Users u = new Users
+                        {
+                            LastName = dataNodes[0].InnerText,
+                            FirstName = dataNodes[1].InnerText,
+                            NEPTUN = dataNodes[2].InnerText,
+                            Email = dataNodes[3].InnerText
+                        };
                         u.FullName = u.LastName + " " + u.FirstName;
                         u.UserName = u.Email;
                         u.UserPassword = UsersDAL.ComputeSha256Hash(u.Email);

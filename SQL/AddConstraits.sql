@@ -21,6 +21,7 @@ ALTER TABLE ServiceTableField ADD CONSTRAINT FK_ServiceTableField_TableID_Servic
 ALTER TABLE ServiceTableField ADD CONSTRAINT FK_ServiceTableField_FieldTypeID_Dictionary FOREIGN KEY (FieldTypeID) REFERENCES Dictionary(ID)
 ALTER TABLE ServiceStoreParams ADD CONSTRAINT FK_ServiceStoreParams_ServiceTableFieldID_ServiceTableField FOREIGN KEY (ServiceTableFieldID) REFERENCES ServiceTableField(ID)
 ALTER TABLE ServiceStoreParams ADD CONSTRAINT FK_ServiceStoreParams_ServiceID_ServiceStore FOREIGN KEY (ServiceID) REFERENCES ServiceStore(ID)
+ALTER TABLE ServiceStoreParams ADD CONSTRAINT FK_ServiceStoreParams_CustomParamTypeID_Dictionary FOREIGN KEY (CustomParamTypeID) REFERENCES Dictionary(ID)
 ALTER TABLE ServiceStoreUserTeams ADD CONSTRAINT FK_ServiceStoreUserTeams_ServiceID_ServiceStore FOREIGN KEY (ServiceID) REFERENCES ServiceStore(ID)
 ALTER TABLE ServiceStoreUserTeams ADD CONSTRAINT FK_ServiceStoreUserTeams_RequesterTeamID_Team FOREIGN KEY (RequesterTeamID) REFERENCES Team(ID)
 ALTER TABLE ServiceStoreServiceParams ADD CONSTRAINT FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore FOREIGN KEY (ParentServiceStoreID) REFERENCES ServiceStore(ID)

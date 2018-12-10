@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SMaP_APP.View"
         xmlns:conv="clr-namespace:SMaP_APP.Converters"
+        xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow"
@@ -12,50 +13,90 @@
         ResizeMode="NoResize"
         Title="Paraméter szerkesztése"
         Icon="/SMaP APP;component/Images/SMaP_16x16.png"
-        Height="330" Width="543">
+        Height="433.126" Width="560.812">
     <Window.Resources>
         <conv:DictionaryNameConverter x:Key="DictionaryNameConverter"/>
         <conv:TeamIdToNameConverter x:Key="TeamIdToNameConverter"/>
-        
+        <conv:BoolNegator x:Key="BoolNegator"/>
+        <Style x:Key="textBoxError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
-        <DataGrid SelectedItem="{Binding SelectedTable}" HorizontalAlignment="Left" Height="190" Margin="10,72,0,0" VerticalAlignment="Top" Width="324" Name="TableListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding TableList}">
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="BorderThickness" Value="0"/>
-                </Style>
-            </DataGrid.CellStyle>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Csapat neve" Binding="{Binding TeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="2*"/>
-                <DataGridTextColumn Header="Tábla neve" Binding="{Binding TableName}" Width="2*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <DataGrid HorizontalAlignment="Left" Height="190" Margin="339,72,0,0" VerticalAlignment="Top" Width="181" Name="TableFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding TableFieldList}">
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="BorderThickness" Value="0"/>
-                </Style>
-            </DataGrid.CellStyle>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Mező neve" Binding="{Binding FieldName}" Width="2*"/>
-                <DataGridTextColumn Header="Mező típusa" Binding="{Binding FieldTypeID, Converter={StaticResource DictionaryNameConverter}}" Width="2*"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <Border BorderBrush="Black" BorderThickness="1" Height="252" Margin="10,41,10,0" VerticalAlignment="Top" HorizontalAlignment="Left" >
+            <Grid>
+                <DataGrid SelectedItem="{Binding SelectedTable}" HorizontalAlignment="Left" Margin="10,72,0,10" Width="324" Name="TableListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding TableList}" 
+                          IsEnabled="{Binding SelectedServiceStoreParam.IsCustom, Converter={StaticResource BoolNegator}}">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Csapat neve" Binding="{Binding TeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="2*"/>
+                        <DataGridTextColumn Header="Tábla neve" Binding="{Binding TableName}" Width="2*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <DataGrid Margin="339,72,10,10" Name="TableFieldListGrid" AlternatingRowBackground="LightBlue" SelectionMode="Single" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding TableFieldList}"
+                          IsEnabled="{Binding SelectedServiceStoreParam.IsCustom, Converter={StaticResource BoolNegator}}">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mező neve" Binding="{Binding FieldName}" Width="2*"/>
+                        <DataGridTextColumn Header="Mező típusa" Binding="{Binding FieldTypeID, Converter={StaticResource DictionaryNameConverter}}" Width="2*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
 
-        <Label Content="Táblák" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-        <Label Content="Mezők" HorizontalAlignment="Left" Margin="339,41,0,0" VerticalAlignment="Top"/>
+                <Label Content="Táblák" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <Label Content="Mezők" HorizontalAlignment="Left" Margin="339,41,0,0" VerticalAlignment="Top"/>
 
-        <ComboBox HorizontalAlignment="Left" Margin="89,45,0,0" VerticalAlignment="Top" Width="120"
-                  ItemsSource="{Binding SessionGroupTeamList}"
-                  SelectedItem="{Binding TeamFilter}"
-                  DisplayMemberPath="TeamName"
-                  SelectedValuePath="ID" RenderTransformOrigin="0.324,0.333"
-                  />
-        <Label Content="Csapatszűrő:" HorizontalAlignment="Left" Margin="89,14,0,0" VerticalAlignment="Top"/>
-        <Label Content="Tábla neve:" HorizontalAlignment="Left" Margin="214,13,0,0" VerticalAlignment="Top"/>
-        <TextBox  HorizontalAlignment="Left" Height="23" Margin="214,44,0,0" TextWrapping="Wrap" Text="{Binding TableNameFilter, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Hozzáadás" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=TableFieldListGrid}" IsDefault="True" HorizontalAlignment="Left" Margin="10,267,0,0" VerticalAlignment="Top" Width="181"/>
-        <Button Content="Mégsem" Command="{Binding CloseCommand}" IsCancel="True" HorizontalAlignment="Left" Margin="339,267,0,0" VerticalAlignment="Top" Width="181"/>
+                <ComboBox HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Width="156"
+                ItemsSource="{Binding SessionGroupTeamList}"
+                SelectedItem="{Binding TeamFilter}"
+                DisplayMemberPath="TeamName"
+                SelectedValuePath="ID" RenderTransformOrigin="0.324,0.333"
+                IsEnabled="{Binding SelectedServiceStoreParam.IsCustom, Converter={StaticResource BoolNegator} }"/>
+                <TextBox HorizontalAlignment="Left" Height="23" Margin="171,44,0,0" TextWrapping="Wrap" Text="{Binding TableNameFilter, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="163"
+                         IsEnabled="{Binding SelectedServiceStoreParam.IsCustom, Converter={StaticResource BoolNegator}}"/>
+            </Grid>
+        </Border>
+        <Button Content="Hozzáadás" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=TableFieldListGrid}" IsDefault="True" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="181"/>
+        <Button Content="Mégsem" Command="{Binding CloseCommand}" IsCancel="True" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="181"/>
+
+        <Border BorderBrush="Black" BorderThickness="1" Height="45" Margin="10,298,10,0" VerticalAlignment="Top">
+            <Grid>
+                <ComboBox Margin="339,10,10,0" VerticalAlignment="Top" ItemsSource="{Binding CustomFieldTypeList}" IsEnabled="{Binding SelectedServiceStoreParam.IsCustom}" DisplayMemberPath="ItemName" SelectedValuePath="ID">
+                    <ComboBox.SelectedValue>
+                        <Binding Path="SelectedServiceStoreParam.CustomParamTypeID" UpdateSourceTrigger="PropertyChanged">
+                            <!--<Binding.ValidationRules>
+                                <valid:EmptyIntValueValidation ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>-->
+                        </Binding>
+                    </ComboBox.SelectedValue>
+                </ComboBox>
+                <CheckBox IsChecked="{Binding SelectedServiceStoreParam.IsCustom}" Content="Egyedi paraméter" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="22" VerticalContentAlignment="Center" Width="121"/>
+                <Label Padding="0" Content="Típusa" Margin="291,12,199,0" VerticalAlignment="Top"/>
+            </Grid>
+        </Border>
+        <Label Content="Paraméter neve" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource textBoxError}" HorizontalAlignment="Left" Height="23" Margin="108,13,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="198">
+            <Binding Path="SelectedServiceStoreParam.ParamName" UpdateSourceTrigger="PropertyChanged">
+                <Binding.ValidationRules>
+                    <valid:EmptyStringValidation ValidatesOnTargetUpdated="True"/>
+                </Binding.ValidationRules>
+            </Binding>
+        </TextBox>
+
+
 
     </Grid>
 </Window>

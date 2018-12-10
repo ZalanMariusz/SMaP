@@ -20,7 +20,7 @@ namespace SMaP_APP.Converters
             ServiceRequest val = (ServiceRequest)values[1];
             Student contextStudent = (Student)values[2];
             DictionaryDAL dd = new DictionaryDAL();
-            int ModID = dd.DictionaryListByType("Igény típus").Where(x => x.ItemName == "Módosítás").FirstOrDefault().ID;
+            int ModID = dd.DictionaryListByType(4).Where(x => x.ID==19).FirstOrDefault().ID;
             if (val.ID == 0 && contextStudent.TeamID == val.RequesterTeamID && type == ModID)
             {
                 return true;

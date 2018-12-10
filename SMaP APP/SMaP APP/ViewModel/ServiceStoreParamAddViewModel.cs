@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace SMaP_APP.ViewModel
@@ -53,8 +54,9 @@ namespace SMaP_APP.ViewModel
         }
         private int SessionGroupID { get; set; }
 
-        private ServiceStoreParams SelectedServiceStoreParam { get; set; }
-
+        public ServiceStoreParams SelectedServiceStoreParam { get; set; }
+        private DictionaryDAL DictionaryDal { get; set; }
+        public ObservableCollection<Dictionary> CustomFieldTypeList { get; set; }
         public ServiceStoreParamAddViewModel(ServiceStoreParamAddWindow sourceWindow, ServiceStore selectedServiceStore, ServiceStoreParams serviceStoreParam)
         {
             this.SourceWindow = sourceWindow;
@@ -65,6 +67,7 @@ namespace SMaP_APP.ViewModel
             this.ServiceTableFieldDal = new ServiceTableFieldDAL();
             this.ServiceStoreParamsDal = new ServiceStoreParamsDAL();
             this.ServiceStoreDal = new ServiceStoreDAL();
+            this.DictionaryDal = new DictionaryDAL();
 
             this.SessionGroupID = TeamDal.FindById(selectedServiceStore.ProviderTeamID).SessionGroupID;
             this.TeamFilter = TeamDal.FindById(SelectedServiceStore.ProviderTeamID);
@@ -73,19 +76,34 @@ namespace SMaP_APP.ViewModel
             this.TableFieldList = ReloadServiceTableFieldList();
             this.SelectedServiceStoreParam = serviceStoreParam;
             SelectedServiceStoreParam.ServiceStore = SelectedServiceStore;
-
+            CustomFieldTypeList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType(3));
             this.SaveCommand = new RelayCommand(SaveParameter, CanSaveParameter);
         }
 
         private bool CanSaveParameter(object param)
         {
-            return ((DataGrid)param).SelectedItem != null;
+            return this.CanExecute() && ((SelectedServiceStoreParam.IsCustom && SelectedServiceStoreParam.CustomParamTypeID!=null)
+                || (!SelectedServiceStoreParam.IsCustom && ((DataGrid)param).SelectedItem != null));
         }
 
         private void SaveParameter(object param)
         {
-            SelectedServiceStoreParam.ServiceTableFieldID = ((ServiceTableField)((DataGrid)param).SelectedItem).ID;
-            this.SourceWindow.Close();
+            if (ServiceStoreParamsDal.FindAll().Exists(x=>
+                x.ID!= SelectedServiceStoreParam.ID 
+                && x.ServiceID== SelectedServiceStore.ID
+                && x.ParamName== SelectedServiceStoreParam.ParamName))
+            {
+                MessageBox.Show("A szolgáltatáshoz már tartozik ilyen nevű paraméter!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                if (!SelectedServiceStoreParam.IsCustom)
+                {
+                    SelectedServiceStoreParam.ServiceTableFieldID = ((ServiceTableField)((DataGrid)param).SelectedItem).ID;
+                    SelectedServiceStoreParam.CustomParamTypeID = null;
+                }
+                this.SourceWindow.Close();
+            }
         }
 
         public override void Close()

@@ -22,11 +22,11 @@ namespace SMaP_APP.Converters
             }
             foreach (var item in param.ServiceStoreParams.Where(x=>!x.Deleted && x.InOut==inout))
             {
-                retval += item.ServiceTableField.ServiceTable.TableName+"."+item.ServiceTableField.FieldName+", ";
+                retval += item.ParamName+",";
             }
             if (!string.IsNullOrEmpty(retval))
             {
-                return retval.Substring(0, retval.Length - 2);
+                return retval.Substring(0, retval.Length - 1);
             }
             return "";
             

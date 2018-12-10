@@ -4,12 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="746cb66ede3a4477af8c16ddd95939fc" Name="Diagram1" ZoomLevel="85">
+      <Diagram DiagramId="746cb66ede3a4477af8c16ddd95939fc" Name="Diagram1" ZoomLevel="71">
         <EntityTypeShape EntityType="SMaPModel.Dictionary" Width="1.5" PointX="0.75" PointY="1.25" />
         <EntityTypeShape EntityType="SMaPModel.DictionaryType" Width="1.5" PointX="1.5" PointY="15.75" />
         <EntityTypeShape EntityType="SMaPModel.Semester" Width="1.5" PointX="3" PointY="1.5" />
         <EntityTypeShape EntityType="SMaPModel.ServiceRequest" Width="1.5" PointX="10.75" PointY="12.125" />
-        <EntityTypeShape EntityType="SMaPModel.ServiceStoreParams" Width="1.5" PointX="5.5" PointY="11.75" />
         <EntityTypeShape EntityType="SMaPModel.ServiceTableField" Width="1.5" PointX="13" PointY="8.75" />
         <EntityTypeShape EntityType="SMaPModel.SessionGroup" Width="1.5" PointX="5.25" PointY="5.375" />
         <EntityTypeShape EntityType="SMaPModel.Student" Width="1.5" PointX="3" PointY="12.5" />
@@ -22,7 +21,6 @@
         <AssociationConnector Association="SMaPModel.FK_SessionGroup_SemesterID_Semester" />
         <AssociationConnector Association="SMaPModel.FK_ServiceRequest_ProviderTeamID_Team" />
         <AssociationConnector Association="SMaPModel.FK_ServiceRequest_RequesterTeamID_Team" />
-        <AssociationConnector Association="SMaPModel.FK_ServiceStoreParams_ServiceTableFieldID_ServiceTableField" />
         <AssociationConnector Association="SMaPModel.FK_SessionGroup_TeacherID_Teacher" />
         <AssociationConnector Association="SMaPModel.FK_Team_SessionGroupID_SessionGroup" />
         <AssociationConnector Association="SMaPModel.FK_Student_UserID_User" />
@@ -33,10 +31,9 @@
         <AssociationConnector Association="SMaPModel.FK_ServiceRequest_ServiceID_Service" />
         <AssociationConnector Association="SMaPModel.FK_ServiceStore_CreatorID_User" />
         <AssociationConnector Association="SMaPModel.FK_ServiceStore_ProviderTeamID_Team" />
-        <AssociationConnector Association="SMaPModel.FK_ServiceStoreParams_ServiceID_ServiceStore" />
         <AssociationConnector Association="SMaPModel.FK_ServiceStoreServiceParams_ParamServiceStoreID_ServiceStore" />
         <AssociationConnector Association="SMaPModel.FK_ServiceStoreServiceParams_ParentServiceStoreID_ServiceStore" />
-        <EntityTypeShape EntityType="SMaPModel.ServiceTable" Width="1.5" PointX="10.75" PointY="9" />
+        <EntityTypeShape EntityType="SMaPModel.ServiceTable" Width="1.5" PointX="11.25" PointY="8.375" />
         <AssociationConnector Association="SMaPModel.FK_ServiceTable_TeamID_Team" />
         <AssociationConnector Association="SMaPModel.FK_ServiceTableField_TableID_ServiceTable" />
         <EntityTypeShape EntityType="SMaPModel.ServiceStoreUserTeams" Width="1.5" PointX="16" PointY="10.375" />
@@ -49,6 +46,10 @@
         <EntityTypeShape EntityType="SMaPModel.RequestMessage" Width="1.5" PointX="16" PointY="17.125" />
         <AssociationConnector Association="SMaPModel.FK_RequestMessage_RequestID_ServiceRequest" />
         <AssociationConnector Association="SMaPModel.FK_RequestMessage_SenderID_Student" />
+        <EntityTypeShape EntityType="SMaPModel.ServiceStoreParams" Width="1.5" PointX="14.625" PointY="1.375" />
+        <AssociationConnector Association="SMaPModel.FK_ServiceStoreParams_CustomParamTypeID_Dictionary" />
+        <AssociationConnector Association="SMaPModel.FK_ServiceStoreParams_ServiceID_ServiceStore" />
+        <AssociationConnector Association="SMaPModel.FK_ServiceStoreParams_ServiceTableFieldID_ServiceTableField" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

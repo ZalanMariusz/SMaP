@@ -17,10 +17,14 @@ namespace SMaP_APP.Model
         public int ID { get; set; }
         public int ServiceID { get; set; }
         public bool InOut { get; set; }
-        public int ServiceTableFieldID { get; set; }
+        public Nullable<int> ServiceTableFieldID { get; set; }
+        public string ParamName { get; set; }
+        public bool IsCustom { get; set; }
+        public Nullable<int> CustomParamTypeID { get; set; }
         public bool Deleted { get; set; }
     
-        public virtual ServiceTableField ServiceTableField { get; set; }
+        public virtual Dictionary Dictionary { get; set; }
         public virtual ServiceStore ServiceStore { get; set; }
+        public virtual ServiceTableField ServiceTableField { get; set; }
     }
 }

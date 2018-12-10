@@ -47,8 +47,8 @@
                 </Binding.ValidationRules>
             </Binding>
         </TextBox>
-        <TextBox Text="{Binding SelectedDictionary.ShortItemName}" HorizontalAlignment="Left" Height="23" Margin="169,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" RenderTransformOrigin="0.509,0.29"/>
-        <ComboBox HorizontalAlignment="Left" Margin="169,87,0,0" VerticalAlignment="Top" Width="178"
+        <TextBox Text="{Binding SelectedDictionary.ShortItemName}" HorizontalAlignment="Left" Height="23" Margin="169,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178"/>
+        <ComboBox IsEnabled="{Binding EditAble}" HorizontalAlignment="Left" Margin="169,87,0,0" VerticalAlignment="Top" Width="178"
             ItemsSource="{Binding DictionaryTypeList}"
             DisplayMemberPath="TypeName"
             SelectedValuePath="ID"

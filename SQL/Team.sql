@@ -6,6 +6,7 @@ CREATE TABLE Team(
 	 ID int Identity(1,1) PRIMARY KEY CLUSTERED
 	,SessionGroupID int NOT NULL
 	,TeamName nvarchar(100) NOT NULL
+	,ShortTeamName NVARCHAR(10) NULL
 	,TeamCaptain int NULL
 	,Deleted bit default 0 NOT NULL
 )

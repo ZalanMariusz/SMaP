@@ -1,0 +1,192 @@
+﻿<Window x:Class="SMaP_APP.View.EveryServiceStoreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SMaP_APP.View"
+        mc:Ignorable="d"
+        Background="LightBlue"
+        xmlns:valid="clr-namespace:SMaP_APP.ViewModel.ValidationRules"
+        xmlns:conv="clr-namespace:SMaP_APP.Converters"
+        WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow"
+        ResizeMode="NoResize"
+        Height="735" Width="1260" Icon="/SMaP APP;component/Images/SMaP_16x16.png">
+    <Window.Resources>
+        <conv:ServiceStoreWindowHeaderConverter x:Key="ServiceStoreWindowHeaderConverter"/>
+        <conv:ServiceTableTeamConverter x:Key="ServiceTableTeamConverter"/>
+        <conv:DictionaryNameConverter x:Key="DictionaryNameConverter"/>
+        <conv:TeamIdToNameConverter x:Key="TeamIdToNameConverter"/>
+        <conv:ServiceStoreParamConverter x:Key="ServiceStoreParamConverter"/>
+        <conv:RequesterTeamsNameConverter x:Key="RequesterTeamsNameConverter"/>
+        <conv:ServiceStoreServiceIDToNameConverter x:Key="ServiceStoreServiceIDToNameConverter"/>
+        <conv:StudentIsTeamCaptainToVisibilityConverter x:Key="StudentIsTeamCaptainToVisibilityConverter"/>
+        <conv:RequestStateToBrushConverter x:Key="RequestStateToBrushConverter"/>
+        <conv:StudentIDToNameConverter x:Key="StudentIDToNameConverter"/>
+        <conv:RequestTypeConverter x:Key="RequestTypeConverter"/>
+
+        <BitmapImage x:Key="EditIco" UriSource="/SMaP APP;component/Images/edit-16.ico" />
+        <BitmapImage x:Key="AddIco" UriSource="/SMaP APP;component/Images/plus-16.ico" />
+        <BitmapImage x:Key="DeleteIco" UriSource="/SMaP APP;component/Images/x-mark-16.ico" />
+        <BitmapImage x:Key="CopyIco" UriSource="/SMaP APP;component/Images/copy-16.ico" />
+        <BitmapImage x:Key="ApproveIco" UriSource="/SMaP APP;component/Images/icons8-ok-16.ico" />
+        <BitmapImage x:Key="ViewIco" UriSource="/SMaP APP;component/Images/icons8-eye-16.ico" />
+
+        <BitmapImage x:Key="FilterIco" UriSource="/SMaP APP;component/Images/filter.ico" />
+        <BitmapImage x:Key="DeleteFilterIco" UriSource="/SMaP APP;component/Images/clear-filter.ico" />
+
+        <!--<Style TargetType="DataGrid">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey }" Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+            </Style.Resources>
+        </Style>-->
+        <!--<Style TargetType="DataGridCell" >
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="FontStyle" Value="Oblique"/>
+                    <Setter Property="BorderThickness" Value="0,1,0,1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>-->
+
+    </Window.Resources>
+    <Window.Title>
+        Szolgáltatástár
+    </Window.Title>
+
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Height="671" Margin="10,26,0,0" VerticalAlignment="Top" Width="1225" Background="LightBlue" BorderThickness="0,1,0,0" BorderBrush="Black">
+            <TabItem Header="Szolgáltatások">
+                <Grid Background="LightBlue">
+                    <Button Command="{Binding ServiceStoreEdit}" CommandParameter="{Binding ElementName=ServiceStoreGrid}" ToolTip="Megtekintés" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" Margin="1199,5,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource ViewIco}" Stretch="Fill"/>
+                    </Button>
+                    <DataGrid Name="ServiceStoreGrid"  AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" ItemsSource="{Binding ServiceStoreList}" HorizontalAlignment="Left" Height="560" Margin="0,30,0,0" VerticalAlignment="Top" Width="1221">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ServiceStoreEdit}"
+                                          CommandParameter="{Binding ElementName=ServiceStoreGrid}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn CanUserSort="False" Header="Nr" Binding="{Binding ServiceNumber}" Width="1*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Nyújtó csapat" Binding="{Binding ProviderTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="4*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Igénylő csapatok" Binding="{Binding Converter={StaticResource RequesterTeamsNameConverter}}" Width="4*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Szolg. neve" Binding="{Binding ServiceName}" Width="4*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Bejövő paraméterek" Binding="{Binding Converter={StaticResource ServiceStoreParamConverter}, ConverterParameter=IN}" Width="4*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Kimenő paraméterek" Binding="{Binding Converter={StaticResource ServiceStoreParamConverter}, ConverterParameter=OUT}" Width="4*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Használt szolgáltatások" Binding="{Binding ID,Converter={StaticResource ServiceStoreServiceIDToNameConverter}, ConverterParameter=OUT}" Width="4*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Adattáblák">
+                <Grid>
+
+                    <DataGrid SelectedItem="{Binding SelectedServiceTable}" Name="ServiceTableGrid" HorizontalAlignment="Left" Height="476" Margin="0,70,0,0" VerticalAlignment="Top" Width="270"
+                    AlternatingRowBackground="LightBlue" SelectionMode="Single"  ItemsSource="{Binding ServiceTableList}" AutoGenerateColumns="False" IsReadOnly="True" >
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tábla neve" Binding="{Binding TableName}" Width="3*"/>
+                            <DataGridTextColumn Header="Csapat" Binding="{Binding TeamID, Converter={StaticResource ServiceTableTeamConverter}}" Width="2*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid Name="ServiceTableFieldGrid" HorizontalAlignment="Left" Height="476" Margin="275,70,0,0" VerticalAlignment="Top" Width="302"
+                              AlternatingRowBackground="LightBlue" SelectionMode="Single" ItemsSource="{Binding ServiceTableFieldList}" AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Mező neve" Binding="{Binding FieldName}" Width="3*"/>
+                            <DataGridTextColumn Header="Típus" Binding="{Binding FieldTypeID, Converter={StaticResource DictionaryNameConverter}}" Width="2*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Padding="0" Content="Adattáblák" HorizontalAlignment="Left" Margin="0,49,0,0" VerticalAlignment="Top" Width="106"/>
+                    <Label Padding="0" Content="Mezők" HorizontalAlignment="Left" Margin="275,49,0,0" VerticalAlignment="Top" Width="106"/>
+                    <Button ToolTip="Törlés" ToolTipService.InitialShowDelay="0" Command="{Binding DeleteFilter}" CommandParameter="{Binding ElementName=TeamCB}" HorizontalAlignment="Left" Margin="250,14,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource DeleteIco}" Stretch="Fill"/>
+                    </Button>
+                    <Label Padding="0" Content="Csapatszűrő" HorizontalAlignment="Left" Margin="0,18,0,0" VerticalAlignment="Top" Width="106"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="77,14,0,0" VerticalAlignment="Top" Width="168"
+                              Name="TeamCB"
+                              ItemsSource="{Binding TeamList}"
+                              DisplayMemberPath="TeamName"
+                              SelectedValuePath="ID"
+                              SelectedItem="{Binding TeamIDFilterForTables}"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Egyéb igények">
+                <Grid Margin="0,0,0,0">
+                    <DataGrid CanUserResizeColumns="False" CanUserSortColumns="False" CanUserReorderColumns="False" Name="ServiceRequests" AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="LightBlue" SelectionMode="Single" HorizontalAlignment="Left" Height="526" Margin="0,62,0,0" VerticalAlignment="Top" Width="1221" ItemsSource="{Binding ServiceRequestList}">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ServiceRequestEdit}"
+                                          CommandParameter="{Binding ElementName=ServiceRequests}"/>
+                        </DataGrid.InputBindings>
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridCell" >
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="Normal"/>
+                                        <Setter Property="BorderThickness" Value="0,1,0,1"/>
+                                        <Setter Property="BorderBrush" Value="RoyalBlue"/>
+                                        <Setter Property="Background" Value="RoyalBlue"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Background" Value="{Binding RequestState, Converter={StaticResource RequestStateToBrushConverter}}"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn CanUserSort="False" Header="Nr" Binding="{Binding RequestNumber}" Width="1*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Benyújtó csapat" Binding="{Binding RequesterTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Kiszolgáló csapat" Binding="{Binding ProviderTeamID, Converter={StaticResource TeamIdToNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Igény állapota" Binding="{Binding RequestState , Converter={StaticResource DictionaryNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Igény típusa" Binding="{Binding Converter={StaticResource RequestTypeConverter}}" Width="3*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Igény benyújtója" Binding="{Binding CreatorID , Converter={StaticResource StudentIDToNameConverter}}" Width="3*"/>
+                            <DataGridTextColumn CanUserSort="False" Header="Felelős" Binding="{Binding AssigneeID, Converter={StaticResource StudentIDToNameConverter}}" Width="3*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Padding="0" Content="Igények" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
+                    <Button  Command="{Binding ServiceRequestEdit}" Margin="0,10,0,0" CommandParameter="{Binding ElementName=ServiceRequests}" ToolTip="Megtekintés" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="20" Height="20">
+                        <Image Source="{StaticResource ViewIco}" Stretch="Fill"/>
+                    </Button>
+
+                    <!--<Button ToolTip="Szűrők beállítása" Command="{Binding FilterRequestGrid}" Margin="0,9,1049,615" CommandParameter="{Binding ElementName=ServiceRequestsToCompleteGrid}" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20">
+                        <Image Source="{StaticResource FilterIco}" Stretch="Fill"/>
+                    </Button>-->
+                    <Button ToolTip="Szűrők törlése" Command="{Binding DeleteRequestFilters}" Margin="0,10,25,614" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20">
+                        <Image Source="{StaticResource DeleteFilterIco}" Stretch="Fill"/>
+                    </Button>
+                    <!--<Button Command="{Binding FilterRequestGrid}"  CommandParameter="{Binding ElementName=ServiceRequestsGrid}" ToolTip="Szűrők beállítása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,11,436,613">
+                        <Image Source="{StaticResource FilterIco}" Stretch="Fill"/>
+                    </Button>
+                    <Button Command="{Binding FilterRequestGrid}"  CommandParameter="{Binding ElementName=ServiceRequestsGrid}" ToolTip="Szűrők beállítása" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="20" Height="20" Margin="0,11,411,613">
+                        <Image Source="{StaticResource DeleteFilterIco}" Stretch="Fill"/>
+                    </Button>-->
+
+                    <ComboBox ItemsSource="{Binding RequesterTeamList}" HorizontalAlignment="Left" Margin="69,35,0,0" VerticalAlignment="Top" Width="188" SelectedItem="{Binding RequesterTeamFilter}" DisplayMemberPath="TeamName" SelectedValuePath="ID"/>
+                    <ComboBox ItemsSource="{Binding ProviderTeamList}" HorizontalAlignment="Left" Margin="262,35,0,0" VerticalAlignment="Top" Width="188" SelectedItem="{Binding ProviderTeamFilter}" DisplayMemberPath="TeamName" SelectedValuePath="ID"/>
+                    <TextBox Text="{Binding RequestNrFilter}" HorizontalAlignment="Left" Height="22" Margin="0,35,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="64" PreviewTextInput="TextBox_PreviewTextInput"/>
+                    <ComboBox ItemsSource="{Binding RequestStateList}" HorizontalAlignment="Left" Margin="455,35,0,0" VerticalAlignment="Top" Width="187" SelectedItem="{Binding RequestStateFilter}" DisplayMemberPath="ItemName" SelectedValuePath="ID"/>
+                    <ComboBox ItemsSource="{Binding RequestTypeList}" HorizontalAlignment="Left" Margin="647,35,0,0" VerticalAlignment="Top" Width="185" SelectedItem="{Binding RequestTypeFilter}" DisplayMemberPath="ItemName" SelectedValuePath="ID"/>
+                    <ComboBox ItemsSource="{Binding RequestCreatorList}" SelectedItem="{Binding RequestCreatorFilter}" HorizontalAlignment="Left" Margin="837,35,0,0" VerticalAlignment="Top" Width="189" DisplayMemberPath="Users.FullName" SelectedValuePath="ID"/>
+                    <ComboBox ItemsSource="{Binding RequestAssigneeList}" SelectedItem="{Binding RequestAssigneeFilter}" DisplayMemberPath="Users.FullName" SelectedValuePath="ID" HorizontalAlignment="Left" Margin="1031,35,0,0" VerticalAlignment="Top" Width="190"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Button Content="Kijelentkezés" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Margin="10,656,0,0" VerticalAlignment="Top" Width="131"/>
+        <Button Content="Vissza a tanári felületre" Command="{Binding BackToStartWindow}" HorizontalAlignment="Left" Margin="146,656,0,0" VerticalAlignment="Top" Width="161"/>
+    </Grid>
+</Window>

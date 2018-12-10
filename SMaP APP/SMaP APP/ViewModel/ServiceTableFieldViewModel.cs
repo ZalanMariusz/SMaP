@@ -28,7 +28,7 @@ namespace SMaP_APP.ViewModel
             this.SaveCommand = new RelayCommand(SaveServiceTableField, CanExecute);
             this.DictionaryDal = new DictionaryDAL();
             this.ServiceTableDal = new ServiceTableDAL();
-            this.TableFieldList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType("Adattípusok"));
+            this.TableFieldList = new ObservableCollection<Dictionary>(DictionaryDal.DictionaryListByType(3));
             ServiceTable st = ServiceTableDal.FindById((int)selectedServiceTableField.TableID);
             int contextSessionGroupID= st.Team.SessionGroupID;
 

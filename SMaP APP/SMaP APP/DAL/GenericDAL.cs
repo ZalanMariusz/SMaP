@@ -70,17 +70,12 @@ namespace SMaP_APP.DAL
         {
             try
             {
-                List<EntityState> asd = new List<EntityState>();
                 applicationDbContext.Set<TEntity>().Attach(entity);
                 applicationDbContext.Set<TEntity>().Add(entity);
+                var itemsToDelete = applicationDbContext.ChangeTracker.Entries().Where(x => x.State == EntityState.Added);
+                var itemsToDelete2 = applicationDbContext.ChangeTracker.Entries().Where(x => x.State == EntityState.Detached);
+                var itemsToDelete3 = applicationDbContext.ChangeTracker.Entries().Where(x => x.State == EntityState.Modified);
                 applicationDbContext.SaveChanges();
-                if (entity is Users)
-                {
-                    foreach (var item in applicationDbContext.Set<Teacher>().Where(x => !x.Deleted))
-                    {
-                        asd.Add(applicationDbContext.Entry(item).State);
-                    }
-                }
             }
             catch (Exception e)
             {
@@ -98,6 +93,7 @@ namespace SMaP_APP.DAL
                 {
                     item.State = EntityState.Detached;
                 }
+                RefreshContext();
             }
             catch (Exception e)
             {

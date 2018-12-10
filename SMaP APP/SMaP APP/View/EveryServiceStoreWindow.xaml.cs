@@ -19,12 +19,12 @@ namespace SMaP_APP.View
     /// <summary>
     /// Interaction logic for ServiceStoreWindow.xaml
     /// </summary>
-    public partial class ServiceStoreWindow : Window
+    public partial class EveryServiceStoreWindow : Window
     {
-        public ServiceStoreWindow(Student contextStudent,Teacher ContextTeacher)
+        public EveryServiceStoreWindow(int SessionGroupID, Teacher ContextTeacher)
         {
             InitializeComponent();
-            this.DataContext = new ServiceStoreViewModel(this, contextStudent,ContextTeacher);
+            this.DataContext = new EveryServiceStoreViewModel(this, SessionGroupID, ContextTeacher);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

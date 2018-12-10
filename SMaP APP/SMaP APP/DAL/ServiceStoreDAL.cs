@@ -13,7 +13,7 @@ namespace SMaP_APP.DAL
         public List<ServiceStore> ProvidedServices(int TeamID)
         {
             RefreshContext();
-            return FindAll(x => x.ProviderTeamID == TeamID);
+            return FindAll(x => x.ProviderTeamID == TeamID).OrderBy(x => x.ServiceNumber).ToList();
         }
 
         public List<ServiceStore> RequestedServices(int TeamID)
@@ -23,7 +23,17 @@ namespace SMaP_APP.DAL
             return FindAll(x=>x.ProviderTeamID!=TeamID).Join(serviceStoreUserTeamsDal.FindAll(x => x.RequesterTeamID == TeamID),
                     ServiceStore => ServiceStore.ID, 
                     Request => Request.ServiceID, 
-                    (ServiceStore, Request) => ServiceStore).ToList();
+                    (ServiceStore, Request) => ServiceStore).OrderBy(x=>x.ServiceNumber).ToList();
+        }
+
+        public List<ServiceStore> AllServicesForSessionGroup(int SessionGroupID)
+        {
+            RefreshContext();
+            TeamDAL td = new TeamDAL();
+            return FindAll().Join(td.FindAll(x => x.SessionGroupID == SessionGroupID),
+                    ServiceStore => ServiceStore.ProviderTeamID,
+                    Team => Team.ID,
+                    (ServiceStore, Team) => ServiceStore).OrderBy(x => x.ServiceNumber).ToList();
         }
 
 

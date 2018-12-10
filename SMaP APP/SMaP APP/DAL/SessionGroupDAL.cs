@@ -18,15 +18,15 @@ namespace SMaP_APP.DAL
             SemesterList = applicationDbContext.Set<Semester>().Where(x => !x.Deleted && x.IsActive).ToList();
         }
 
-        public void AddTeams(int sessionGroupID)
+        public void AddTeams(int sessionGroupID,int GroupTypeID)
         {
             TeamDAL TeamDal = new TeamDAL();
             DictionaryDAL dd = new DictionaryDAL();
 
-            List<Dictionary> teams= dd.FindAll(x => !x.Deleted && x.DictionaryType.TypeName == "Csapatok");
+            List<Dictionary> teams= dd.FindAll(x => !x.Deleted && x.DictionaryType.ID == GroupTypeID);
             foreach (Dictionary item in teams)
             {
-                TeamDal.Create(new Team { SessionGroupID = sessionGroupID, TeamName = item.ItemName });
+                TeamDal.Create(new Team { SessionGroupID = sessionGroupID, TeamName = item.ItemName ,ShortTeamName=item.ShortItemName });
             }
         }
     }
