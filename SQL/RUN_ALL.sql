@@ -1,58 +1,58 @@
 USE [SMaP]
-:r e:\M\Szakdolgozat\SMaP\SQL\DropConstraints.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\DropConstraints.sql
 GO
 --Tables
-:r e:\M\Szakdolgozat\SMaP\SQL\DictionaryType.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\DictionaryType.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\Dictionary.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\Dictionary.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\Semester.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\Semester.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\SessionGroup.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\SessionGroup.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\Student.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\Student.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\Teacher.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\Teacher.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\Users.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\Users.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\Team.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\Team.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceTable.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceTable.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceTableField.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceTableField.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStoreParams.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceStoreParams.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStoreUserTeams.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceStoreUserTeams.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStoreServiceParams.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceStoreServiceParams.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\RequestMessage.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\RequestMessage.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceRequest.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceRequest.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\ServiceStore.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\ServiceStore.sql
 GO
 --Other
-:r e:\M\Szakdolgozat\SMaP\SQL\TR_SemesterActivate.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\TR_SemesterActivate.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\TR_RequestRowNumber.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\TR_RequestRowNumber.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\TR_ServiceRowNumber.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\TR_ServiceRowNumber.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\uspGetActiveStudents.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\uspGetActiveStudents.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\uspCopySemester.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\uspCopySemester.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\uspGetAllServiceRequests.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\uspGetAllServiceRequests.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\uspGetProvidedRequests.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\uspGetProvidedRequests.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\uspGetRequestedRequests.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\uspGetRequestedRequests.sql
 GO
-:r e:\M\Szakdolgozat\SMaP\SQL\AddConstraits.sql
+:r d:\NIK\Szakdolgozat\SMaP\SQL\AddConstraits.sql
 GO
---:r e:\M\Szakdolgozat\SMaP\SQL\DefaultData.sql
+--:r d:\NIK\Szakdolgozat\SMaP\SQL\DefaultData.sql
 --GO
 

@@ -532,7 +532,8 @@ namespace SMaP_APP.ViewModel
             ServiceRequest newRequest = new ServiceRequest
             {
                 RequesterTeamID = ContextStudent.TeamID,
-                RequestState = DictionaryDal.DictionaryListByType(5).Where(x => x.ID == 21).FirstOrDefault().ID
+                RequestState = DictionaryDal.DictionaryListByType(5).Where(x => x.ID == 21).FirstOrDefault().ID,
+                RequestNumber = 0
             };
             ServiceRequestWindow target = new ServiceRequestWindow(0,newRequest, ContextStudent, "")
             {
